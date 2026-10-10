@@ -1,6 +1,10 @@
 name: CI
 on:
   workflow_dispatch:
+    inputs:
+      soak_control:
+        type: boolean
+        default: false
 permissions:
   contents: read
 env:
@@ -13,6 +17,7 @@ defaults:
     shell: bash
 jobs:
   paired-performance-control:
+    if: ${{ !inputs.soak_control }}
     runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
     timeout-minutes: 80
     steps:
@@ -68,4 +73,58 @@ jobs:
         with:
           name: paired-performance-control
           path: .build/results/paired/
+          retention-days: 14
+  soak-collector-control:
+    if: ${{ inputs.soak_control }}
+    runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
+    timeout-minutes: 60
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Select Xcode
+        run: scripts/ci/select-xcode.sh
+      - name: Install XcodeGen
+        run: command -v xcodegen >/dev/null || brew install xcodegen
+      - name: Pick simulator
+        id: simulator
+        run: scripts/ci/simulator-destination.sh
+      - name: Build soak tests
+        env:
+          DESTINATION: ${{ steps.simulator.outputs.destination }}
+        run: make build-perf-tests
+      - name: Warm simulator
+        timeout-minutes: 15
+        env:
+          UDID: ${{ steps.simulator.outputs.udid }}
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
+      - name: Without, with, without external leak scans
+        env:
+          DESTINATION: ${{ steps.simulator.outputs.destination }}
+          XCODEBUILD_FLAGS: "-parallel-testing-enabled NO -collect-test-diagnostics never"
+        run: |
+          mkdir -p .build/results/collector-control
+          for phase in unprofiled-first scanned unprofiled-last; do
+            collect=0
+            if [ "$phase" = scanned ]; then collect=1; fi
+            set +e
+            SOAK_LEAKS=$collect make soak SOAK_MINUTES=20 SOAK_SPEED=10 SOAK_ASR=scripted SOAK_OUTPUT=".build/results/collector-control/$phase" >".build/results/collector-control/$phase.log" 2>&1
+            status=$?
+            set -e
+            printf '%s %s\n' "$phase" "$status" | tee -a .build/results/collector-control/statuses.txt
+            # Acquisition only: retain each phase's real pass/fail report.
+            python3 -c 'import json,sys; r=json.load(open(sys.argv[1])); assert len(r["checks"])==8 and len(r["samples"])>100; print(r["outcome"],r["wallSeconds"],[(c["name"],c["passed"]) for c in r["checks"]])' ".build/results/collector-control/$phase/report.json"
+          done
+      - name: Shut down simulator
+        if: always()
+        env:
+          UDID: ${{ steps.simulator.outputs.udid }}
+        run: xcrun simctl shutdown "$UDID" || true
+      - name: Upload comparison
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: soak-collector-control
+          path: .build/results/collector-control/
           retention-days: 14
