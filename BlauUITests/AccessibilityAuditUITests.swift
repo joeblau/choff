@@ -316,9 +316,30 @@ final class AccessibilityAuditUITests: XCTestCase {
         let list = app.collectionViews[Identifier.settingsList]
         XCTAssertTrue(list.waitForExistence(timeout: 10), "Settings did not open")
         waitUntilStill(list)
-        app.navigationBars["Settings"].swipeUp()
+        let bar = app.navigationBars["Settings"]
+        let window = app.windows.firstMatch
+        // Opening a pane selects the large detent. Return to the root list
+        // there, rather than relying on a swipe over its short navigation bar.
+        app.buttons["settings.pane.voice"].tap()
+        let voiceBar = app.navigationBars["Voice"]
+        XCTAssertTrue(voiceBar.waitForExistence(timeout: 10))
+        // Some runtimes expose Back in a separate toolbar.
+        let toolbarBack = app.buttons["BackButton"].firstMatch
+        let back =
+            toolbarBack.exists
+            ? toolbarBack
+            : voiceBar.buttons.matching(NSPredicate(format: "identifier != %@", "settings.done")).firstMatch
+        XCTAssertTrue(back.exists, "No back button from Voice")
+        back.tap()
+        XCTAssertTrue(bar.waitForExistence(timeout: 10))
+        let expandedTop = window.frame.minY + window.frame.height * 0.25
+        let deadline = Date().addingTimeInterval(10)
+        while bar.frame.minY > expandedTop, Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        }
+        XCTAssertLessThanOrEqual(bar.frame.minY, expandedTop, "Settings did not reach the large detent")
         waitUntilStill(list)
-        let navigationBar = app.navigationBars["Settings"].frame
+        let navigationBar = bar.frame
         let area = CGRect(
             x: list.frame.minX, y: navigationBar.maxY, width: list.frame.width,
             height: list.frame.maxY - navigationBar.maxY)

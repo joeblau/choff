@@ -25,8 +25,6 @@ struct TopicActionsLayout: Layout {
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) -> CGSize {
-        ExpansionDiagnostic.mark("actions size begins")
-        defer { ExpansionDiagnostic.mark("actions size returns") }
         let ideal = horizontal.sizeThatFits(
             proposal: .unspecified, subviews: subviews, cache: &cache.horizontal)
         cache.stacksVertically = proposal.width.map { ideal.width > $0 } ?? false
@@ -37,8 +35,6 @@ struct TopicActionsLayout: Layout {
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) {
-        ExpansionDiagnostic.mark("actions place begins")
-        defer { ExpansionDiagnostic.mark("actions place returns") }
         if cache.stacksVertically {
             vertical.placeSubviews(in: bounds, proposal: proposal, subviews: subviews, cache: &cache.vertical)
         } else {

@@ -202,12 +202,6 @@ final class TopicDetailUITests: XCTestCase {
                 XCTFail("No expansion latency was measured")
                 return
             }
-            let phases = app.staticTexts["blau.timeline.expansionDiagnostic"].label
-            print("BLAU_EXPANSION_PHASES: " + phases)
-            let phasesAttachment = XCTAttachment(string: phases)
-            phasesAttachment.name = "Expansion phases"
-            phasesAttachment.lifetime = .keepAlways
-            add(phasesAttachment)
             samples.append(sample.milliseconds)
             last = sample.value
             previous.tap()

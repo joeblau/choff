@@ -29,7 +29,6 @@ struct TopicTranscriptRows: View {
     @Environment(AppEnvironment.self) private var environment
 
     var body: some View {
-        let _ = ExpansionDiagnostic.mark("transcript body")
         TopicFinishedRows(
             conversationID: topic.conversationID, topicID: topic.isSynthetic ? nil : topic.id,
             membership: membership, model: environment.chat, rail: rail,
@@ -70,15 +69,11 @@ private struct TopicFinishedRows: View {
         self.split = split
         // The whole conversation: whether a reply was cut off depends on the
         // line after it, which can be in the next topic.
-        ExpansionDiagnostic.mark("query init begins")
         _utterances = Query(ChatTranscript.utterances(in: conversationID))
-        ExpansionDiagnostic.mark("query init returns")
     }
 
     var body: some View {
-        let _ = ExpansionDiagnostic.mark("finished rows body begins")
         let rows = rows
-        let _ = ExpansionDiagnostic.mark("finished rows query returns")
         let firstID = rows.first?.id
         ForEach(rows) { row in
             ChatRowView(row: row, onSplit: splitAction(for: row, isFirst: row.id == firstID))
