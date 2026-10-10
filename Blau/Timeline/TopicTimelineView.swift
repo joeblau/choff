@@ -706,8 +706,12 @@ private struct NowButton: View {
         Button(action: action) {
             Label("Now", systemImage: "arrow.down")
                 .font(.subheadline.weight(.semibold))
+                .padding(.horizontal, 14)
+                .frame(minHeight: 44)
+                .contentShape(Capsule())
+                .glassEffect(.regular.interactive(), in: .capsule)
         }
-        .buttonStyle(.glass)
+        .buttonStyle(.plain)
         .accessibilityIdentifier(TopicTimelineAccessibility.now)
         .accessibilityHint("Returns to the current topic")
     }
