@@ -54,7 +54,7 @@ jobs:
             source=$reference
             if [ "$phase" = candidate ]; then source=$candidate; fi
             printf '%s %s\n' "$phase" "$source" | tee -a .build/results/paired/sources.txt
-            git restore --source="$source" -- . ':(exclude).github/workflows/ci.yml'
+            git restore --source="$source" --staged --worktree -- . ':(exclude).github/workflows/ci.yml'
             git diff --exit-code "$source" -- . ':(exclude).github/workflows/ci.yml'
             make generate
             xcodebuild build-for-testing -project Blau.xcodeproj -scheme Blau-Perf -testPlan BlauPerf -destination "$DESTINATION" -derivedDataPath .build/DerivedData CODE_SIGNING_ALLOWED=NO 'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) BLAU_PERF' ONLY_ACTIVE_ARCH=YES XAI_DEV_API_KEY= 2>&1 | tee ".build/results/paired/$phase-build.log"
