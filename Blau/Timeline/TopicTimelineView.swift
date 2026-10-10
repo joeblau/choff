@@ -214,11 +214,6 @@ private struct TopicTimelineScrollView: View {
     @State private var expansion = TopicExpansion()
     /// Rename, merge and split from any bullet, detail or line (#54, #58).
     @State private var editor = TopicEditor()
-    /// One edit presentation host for every expanded header. Opening a
-    /// topic doesn't register another presentation in the lazy stack.
-    @State private var actionTopic: TimelineTopic?
-    @State private var actionCanMerge = false
-    @State private var showsTopicActions = false
     /// Tap-to-expand latency (#58): the `timeline.expand` signpost.
     @State private var expansionTimer = TopicExpansionTimer()
     /// Whether the latest line is in view. Only the scroll geometry writes
@@ -342,12 +337,6 @@ private struct TopicTimelineScrollView: View {
             expansionTimer.retain(only: Set(ids))
         }
         .topicEditorAlerts(editor)
-        .confirmationDialog("Topic Actions", isPresented: $showsTopicActions, titleVisibility: .hidden) {
-            if let topic = actionTopic {
-                TopicEditMenuItems(
-                    topicID: topic.id, title: topic.title, canMerge: actionCanMerge, editor: editor)
-            }
-        }
         .overlay(alignment: .topLeading) {
             if environment.kind == .uiTest {
                 ExpandLatencyProbe(timer: expansionTimer)
@@ -387,13 +376,8 @@ private struct TopicTimelineScrollView: View {
                 if isExpanded {
                     if !placement.isCurrent {
                         TopicDetailHeader(
-                            topic: topic, placement: placement,
-                            onContinue: continueAction(for: topic),
-                            onMore: {
-                                actionTopic = topic
-                                actionCanMerge = placement.canMerge
-                                showsTopicActions = true
-                            }
+                            topic: topic, placement: placement, editor: editor,
+                            onContinue: continueAction(for: topic)
                         ) { [expansionTimer] in
                             expansionTimer.appeared(topic.id)
                         }

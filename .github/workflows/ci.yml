@@ -1,4 +1,3 @@
-# Targeted benchmark repetitions; app and test sources match the integration branch.
 name: CI
 on:
   workflow_dispatch:
@@ -13,56 +12,60 @@ defaults:
   run:
     shell: bash
 jobs:
-  topic-expansion-diagnostic:
+  paired-performance-control:
     runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
-    timeout-minutes: 40
+    timeout-minutes: 80
     steps:
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Select Xcode
         id: xcode
         run: scripts/ci/select-xcode.sh
       - name: Install XcodeGen
         run: command -v xcodegen >/dev/null || brew install xcodegen
-      - name: Generate project
-        run: make generate
-      - name: Cache Swift packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          path: .build/DerivedData/SourcePackages
-          key: spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-${{ hashFiles('Packages/BlauKit/Package.swift', 'Packages/BlauKit/Package.resolved') }}
-          restore-keys: |
-            spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-
       - name: Pick simulator
         id: simulator
         run: scripts/ci/simulator-destination.sh
-      - name: Build
+      - name: Record host
+        run: |
+          mkdir -p .build/results/paired
+          sysctl hw.model hw.ncpu hw.memsize | tee .build/results/paired/host.txt
+          xcodebuild -version | tee -a .build/results/paired/host.txt
+          xcrun simctl list runtimes | tee -a .build/results/paired/host.txt
+      - name: Reference, candidate, reference on one host
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-          XCODEBUILD_FLAGS: "SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
-        run: make build-tests
-      - name: Warm up simulator
-        timeout-minutes: 15
-        continue-on-error: true
+          UDID: ${{ steps.simulator.outputs.udid }}
+        run: |
+          reference=$(git rev-parse 0957864^{commit})
+          candidate=26b765859a65695fcf22fb0a114cc0a98746ccf3
+          git cat-file -e "$candidate^{commit}"
+          for phase in reference-first candidate reference-last; do
+            source=$reference
+            if [ "$phase" = candidate ]; then source=$candidate; fi
+            printf '%s %s\n' "$phase" "$source" | tee -a .build/results/paired/sources.txt
+            git restore --source="$source" -- . ':(exclude).github/workflows/ci.yml'
+            git diff --exit-code "$source" -- . ':(exclude).github/workflows/ci.yml'
+            make build-perf-tests 2>&1 | tee ".build/results/paired/$phase-build.log"
+            scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
+            uptime | tee ".build/results/paired/$phase-host.txt"
+            xcodebuild test-without-building -project Blau.xcodeproj -scheme Blau-Perf -testPlan BlauPerf -destination "$DESTINATION" -derivedDataPath .build/DerivedData -resultBundlePath ".build/results/paired/$phase.xcresult" -only-testing:BlauPerfTests/PerformanceHUDOverheadTests -only-testing:BlauPerfTests/ReplaySessionPerformanceTests -parallel-testing-enabled NO -collect-test-diagnostics never CODE_SIGNING_ALLOWED=NO XAI_DEV_API_KEY= 2>&1 | tee ".build/results/paired/$phase-test.log"
+            passed=$(grep -c 'Test Case.*passed (' ".build/results/paired/$phase-test.log")
+            test "$passed" -eq 3
+            scripts/perf/perf-gate.py extract --xcresult ".build/results/paired/$phase.xcresult" --output ".build/results/paired/$phase.json"
+          done
+      - name: Shut down simulator
+        if: always()
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app
-      - name: Three cold launches
-        timeout-minutes: 12
-        env:
-          DESTINATION: ${{ steps.simulator.outputs.destination }}
-        run: |
-          mkdir -p .build/results
-          xcodebuild test-without-building -project Blau.xcodeproj -scheme Blau -testPlan Blau -destination "$DESTINATION" -derivedDataPath .build/DerivedData -resultBundlePath .build/results/cold-expansion.xcresult -only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds -test-iterations 3 -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO CODE_SIGNING_ALLOWED=NO XAI_DEV_API_KEY= 2>&1 | tee .build/results/cold-expansion.log
-          count=$(grep -c "testTappingExpandsWithinAHundredMilliseconds]' passed" .build/results/cold-expansion.log)
-          test "$count" -eq 3
-          xcrun xcresulttool export attachments --path .build/results/cold-expansion.xcresult --output-path .build/results/attachments
-      - name: Upload results
+        run: xcrun simctl shutdown "$UDID" || true
+      - name: Upload comparison
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: topic-expansion-diagnostic
-          path: .build/results/
-          retention-days: 7
+          name: paired-performance-control
+          path: .build/results/paired/
+          retention-days: 14

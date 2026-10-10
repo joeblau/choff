@@ -490,12 +490,12 @@ public actor TranscriberRouter: Transcriber {
             return
         }
         guard request.settleCheck == nil else { return }
-        let wait = configuration.settleDelay - quiet
+        let deadline = (lastEventAt ?? clock.uptime) + configuration.settleDelay
         let clock = self.clock
         let id = request.id
         request.settleCheck = Task { [weak self] in
             do {
-                try await clock.sleep(for: wait)
+                try await clock.sleep(until: deadline)
             } catch {
                 return
             }
