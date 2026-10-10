@@ -183,6 +183,17 @@ private final class PrependScrollTracker {
     /// The scroll view's `UIScrollView`, to put the rows back in the frame
     /// they strayed.
     let scrollView = EnclosingScrollView()
+
+    /// Corrects an expanding bullet using the live tracker, without capturing
+    /// the timeline view and all of its state in every geometry callback.
+    func bulletMoved(_ id: UUID, to y: CGFloat) {
+        bulletPositions[id] = y
+        guard let held = expandingBullet, held.id == id, isIdle else { return }
+        let distance = y - held.y
+        if abs(distance) > 0.5 {
+            _ = scrollView.shiftContent(by: distance)
+        }
+    }
 }
 
 /// The scroll view, its position and which bullets are expanded. Separate
@@ -367,7 +378,7 @@ private struct TopicTimelineScrollView: View {
                         TopicDetailHeader(
                             topic: topic, placement: placement, editor: editor,
                             onContinue: continueAction(for: topic)
-                        ) {
+                        ) { [expansionTimer] in
                             expansionTimer.appeared(topic.id)
                         }
                     }
@@ -390,10 +401,10 @@ private struct TopicTimelineScrollView: View {
                 .prependAnchor(item.id == anchorID, moved: anchorMoved)
                 .onGeometryChange(for: CGFloat.self) {
                     $0.frame(in: .global).minY
-                } action: { y in
-                    bulletMoved(topic.id, to: y)
+                } action: { [tracker] y in
+                    tracker.bulletMoved(topic.id, to: y)
                 }
-                .onDisappear { tracker.bulletPositions[topic.id] = nil }
+                .onDisappear { [tracker] in tracker.bulletPositions[topic.id] = nil }
             }
         }
     }
@@ -511,17 +522,6 @@ private struct TopicTimelineScrollView: View {
     private static let maximumHold = Duration.seconds(2)
 
     // MARK: Taps
-
-    /// Lazy rows may change the content above the tapped bullet as they are
-    /// measured. Hold its rendered position, rather than an estimated offset.
-    private func bulletMoved(_ id: UUID, to y: CGFloat) {
-        tracker.bulletPositions[id] = y
-        guard let held = tracker.expandingBullet, held.id == id, tracker.isIdle else { return }
-        let distance = y - held.y
-        if abs(distance) > 0.5 {
-            _ = tracker.scrollView.shiftContent(by: distance)
-        }
-    }
 
     /// The current bullet returns to the latest line; any other expands or
     /// compresses.
