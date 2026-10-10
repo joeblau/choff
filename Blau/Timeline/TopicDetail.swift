@@ -27,14 +27,14 @@ enum TopicDetailAccessibility {
 struct TopicDetailHeader: View {
     let topic: TimelineTopic
     let placement: TopicTimeline.Placement
-    let editor: TopicEditor
     /// Continues the topic; `nil` hides Continue.
     let onContinue: (() -> Void)?
+    /// Presents the topic's edit actions from the timeline's shared host.
+    let onMore: () -> Void
     /// Called once the header is laid out.
     let onAppear: () -> Void
 
     @Environment(AppEnvironment.self) private var environment
-    @State private var showsActions = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -93,9 +93,7 @@ struct TopicDetailHeader: View {
                 .accessibilityIdentifier(TopicDetailAccessibility.share)
             }
             if !topic.isSynthetic {
-                Button {
-                    showsActions = true
-                } label: {
+                Button(action: onMore) {
                     Label("More", systemImage: "ellipsis")
                         .labelStyle(.iconOnly)
                         .frame(minWidth: 20, minHeight: 20)
@@ -103,12 +101,6 @@ struct TopicDetailHeader: View {
                 .buttonStyle(TopicActionButtonStyle())
                 .accessibilityLabel("More Actions")
                 .accessibilityIdentifier(TopicDetailAccessibility.more)
-                // Build the edit presentation when requested rather than
-                // inserting a menu control into the expansion's layout.
-                .confirmationDialog("Topic Actions", isPresented: $showsActions, titleVisibility: .hidden) {
-                    TopicEditMenuItems(
-                        topicID: topic.id, title: topic.title, canMerge: placement.canMerge, editor: editor)
-                }
             }
         }
     }

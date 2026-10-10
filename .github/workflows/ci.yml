@@ -1,230 +1,68 @@
-# Final-source validation only: these two job definitions are copied unchanged.
+# Targeted benchmark repetitions; app and test sources match the integration branch.
 name: CI
-
 on:
   workflow_dispatch:
-    inputs:
-      perf:
-        description: Also run the performance suite
-        type: boolean
-        default: false
-      record_baselines:
-        description: Record new performance baselines instead of checking them (artifacts to commit)
-        type: boolean
-        default: false
-      asr_eval:
-        description: Also run the ASR evaluation (downloads the models)
-        type: boolean
-        default: false
-      memory_eval:
-        description: Also run the memory retrieval and answer evaluation
-        type: boolean
-        default: false
-      soak:
-        description: Also run the long-session soak test on the simulator
-        type: boolean
-        default: false
-      soak_minutes:
-        description: Soak length in minutes of audio (played at 10x)
-        type: string
-        default: "20"
-
 permissions:
   contents: read
-
 env:
   XCODE_VERSION: ${{ vars.BLAU_CI_XCODE_VERSION }}
   SIMULATOR_NAME: ${{ vars.BLAU_CI_SIMULATOR || 'iPhone 17' }}
   HOMEBREW_NO_AUTO_UPDATE: "1"
-  HOMEBREW_NO_INSTALL_CLEANUP: "1"
-  HOMEBREW_NO_ENV_HINTS: "1"
-  # Stream xcodebuild output instead of buffering it.
   NSUnbufferedIO: "YES"
-
 defaults:
   run:
     shell: bash
-
 jobs:
-  perf:
-    name: perf
-    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.perf) }}
+  topic-expansion-diagnostic:
     runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
-    timeout-minutes: 90
+    timeout-minutes: 40
     steps:
       - name: Check out
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-
       - name: Select Xcode
         id: xcode
         run: scripts/ci/select-xcode.sh
-
       - name: Install XcodeGen
-        run: |
-          command -v xcodegen >/dev/null || brew install xcodegen
-          xcodegen --version
-
+        run: command -v xcodegen >/dev/null || brew install xcodegen
       - name: Generate project
         run: make generate
-
       - name: Cache Swift packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: .build/DerivedData/SourcePackages
           key: spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-${{ hashFiles('Packages/BlauKit/Package.swift', 'Packages/BlauKit/Package.resolved') }}
           restore-keys: |
             spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-
-
       - name: Pick simulator
         id: simulator
         run: scripts/ci/simulator-destination.sh
-
-      # Writes .build/results/perf.xcresult (the Makefile's PERF_RESULT).
-      - name: Build performance test bundles
+      - name: Build
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-        run: make build-perf-tests
-
-      - name: Warm up performance simulator
+          XCODEBUILD_FLAGS: "SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
+        run: make build-tests
+      - name: Warm up simulator
+        timeout-minutes: 15
+        continue-on-error: true
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
-
-      # One retry: the runner's simulator sometimes crashes the test runner
-      # before any test starts ("never finished bootstrapping"), which would
-      # fail the night with nothing measured. A real failure fails twice.
-      - name: Performance tests
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app
+      - name: Three cold launches
+        timeout-minutes: 12
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-          XCODEBUILD_FLAGS: "-parallel-testing-enabled NO -collect-test-diagnostics never"
         run: |
-          if ! make perf; then
-            echo "::warning::The performance tests failed; retrying once."
-            make perf
-          fi
-
-      - name: Shut down simulator
-        if: ${{ always() && steps.simulator.outputs.udid != '' }}
-        env:
-          UDID: ${{ steps.simulator.outputs.udid }}
-        run: xcrun simctl shutdown "$UDID" || true
-
-      - name: Regression gate
-        if: ${{ !cancelled() && !(github.event_name == 'workflow_dispatch' && inputs.record_baselines) }}
-        run: make perf-check
-
-      - name: Record baseline
-        if: ${{ !cancelled() && github.event_name == 'workflow_dispatch' && inputs.record_baselines }}
-        # The extracted results too, so several runs can be pooled into one
-        # calibrated baseline (docs/performance.md, "Updating baselines").
-        run: |
-          make perf-baseline
-          cp BlauPerfTests/Baselines/ci-simulator.json .build/results/
-          scripts/perf/perf-gate.py extract --xcresult .build/results/perf.xcresult \
-            --output .build/results/perf-results.json
-
-      - name: Job summary
-        if: ${{ !cancelled() }}
-        run: |
-          if [ -f .build/results/perf-report.md ]; then
-            cat .build/results/perf-report.md >>"$GITHUB_STEP_SUMMARY"
-          fi
-
+          mkdir -p .build/results
+          xcodebuild test-without-building -project Blau.xcodeproj -scheme Blau -testPlan Blau -destination "$DESTINATION" -derivedDataPath .build/DerivedData -resultBundlePath .build/results/cold-expansion.xcresult -only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds -test-iterations 3 -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO CODE_SIGNING_ALLOWED=NO XAI_DEV_API_KEY= 2>&1 | tee .build/results/cold-expansion.log
+          count=$(grep -c "testTappingExpandsWithinAHundredMilliseconds]' passed" .build/results/cold-expansion.log)
+          test "$count" -eq 3
+          xcrun xcresulttool export attachments --path .build/results/cold-expansion.xcresult --output-path .build/results/attachments
       - name: Upload results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: perf-results-${{ github.run_attempt }}
-          path: |
-            .build/results/perf.xcresult
-            .build/results/perf-report.md
-            .build/results/perf-results.json
-            .build/results/ci-simulator.json
-          if-no-files-found: warn
-          retention-days: 90
-
-  # Nightly (and on demand) long-session soak test (#76) at reduced length:
-  # 20 minutes of mixed audio (the user, a TV, silence) at 10x through the
-  # app's pipeline on the simulator, against a local fake realtime server.
-  # Fails on memory growth, latency drift, dropped frames, a missed session
-  # renewal, a stalled conversation or a topic count out of range, and on
-  # leaked memory growing between the app's leak readings. The report goes on
-  # the run's summary page and is kept 90 days. The full two hours run weekly
-  # on a device (docs/soak.md).
-  soak:
-    name: soak
-    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.soak) }}
-    runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
-    timeout-minutes: 75
-    steps:
-      - name: Check out
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Select Xcode
-        id: xcode
-        run: scripts/ci/select-xcode.sh
-
-      - name: Install XcodeGen
-        run: |
-          command -v xcodegen >/dev/null || brew install xcodegen
-          xcodegen --version
-
-      - name: Generate project
-        run: make generate
-
-      - name: Cache Swift packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .build/DerivedData/SourcePackages
-          key: spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-${{ hashFiles('Packages/BlauKit/Package.swift', 'Packages/BlauKit/Package.resolved') }}
-          restore-keys: |
-            spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-
-
-      - name: Pick simulator
-        id: simulator
-        run: scripts/ci/simulator-destination.sh
-
-      # Writes .build/results/soak (the Makefile's SOAK_OUTPUT).
-      - name: Build soak test bundles
-        env:
-          DESTINATION: ${{ steps.simulator.outputs.destination }}
-        run: make build-perf-tests
-
-      - name: Warm up soak simulator
-        env:
-          UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
-
-      - name: Soak
-        env:
-          DESTINATION: ${{ steps.simulator.outputs.destination }}
-          SOAK_MINUTES: ${{ inputs.soak_minutes || vars.BLAU_CI_SOAK_MINUTES || '20' }}
-          SOAK_LEAKS: ${{ vars.BLAU_CI_SOAK_LEAKS || '1' }}
-          XCODEBUILD_FLAGS: "-parallel-testing-enabled NO -collect-test-diagnostics never"
-        run: make soak SOAK_MINUTES="$SOAK_MINUTES"
-
-      - name: Shut down simulator
-        if: ${{ always() && steps.simulator.outputs.udid != '' }}
-        env:
-          UDID: ${{ steps.simulator.outputs.udid }}
-        run: xcrun simctl shutdown "$UDID" || true
-
-      - name: Job summary
-        if: ${{ !cancelled() }}
-        run: |
-          if [ -f .build/results/soak/summary.md ]; then
-            cat .build/results/soak/summary.md >>"$GITHUB_STEP_SUMMARY"
-          fi
-
-      - name: Upload results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: soak-results-${{ github.run_attempt }}
-          path: .build/results/soak/
-          if-no-files-found: warn
-          retention-days: 90
+          name: topic-expansion-diagnostic
+          path: .build/results/
+          retention-days: 7
