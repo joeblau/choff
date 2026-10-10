@@ -56,7 +56,7 @@ struct TopicDetailHeader: View {
         .padding(.leading, TopicTimelineLayout.textInset)
         .padding(.trailing)
         .padding(.top, 2)
-        .padding(.bottom, 8)
+        .padding(.bottom, 12)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(TopicDetailAccessibility.detail)
         .timelineRail(placement.railBelow)
@@ -66,8 +66,6 @@ struct TopicDetailHeader: View {
     /// Side by side when they fit, stacked at large text sizes (#81).
     private var actions: some View {
         TopicActionsLayout { actionButtons }
-            .controlSize(.small)
-            .buttonBorderShape(.capsule)
             .font(.subheadline.weight(.medium))
     }
 
@@ -78,7 +76,7 @@ struct TopicDetailHeader: View {
                 Button(action: onContinue) {
                     Label("Continue", systemImage: "arrow.uturn.forward")
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(TopicActionButtonStyle(prominent: true))
                 .accessibilityHint("Starts a conversation that picks up this topic")
                 .accessibilityIdentifier(TopicDetailAccessibility.continueTopic)
             }
@@ -89,7 +87,7 @@ struct TopicDetailHeader: View {
                 ) {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(TopicActionButtonStyle())
                 .accessibilityHint("Shares the topic as Markdown")
                 .accessibilityIdentifier(TopicDetailAccessibility.share)
             }
@@ -102,11 +100,32 @@ struct TopicDetailHeader: View {
                         .labelStyle(.iconOnly)
                         .frame(minWidth: 20, minHeight: 20)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(TopicActionButtonStyle())
                 .accessibilityLabel("More Actions")
                 .accessibilityIdentifier(TopicDetailAccessibility.more)
             }
         }
+    }
+}
+
+/// These controls are inserted during a tap's layout transaction. Keep
+/// their first sizing pass simple while preserving the native button,
+/// sharing and menu behavior.
+private struct TopicActionButtonStyle: ButtonStyle {
+    var prominent = false
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.horizontal, 12)
+            .frame(minHeight: 44)
+            .foregroundStyle(prominent ? Color.white : Color.brand(.accent))
+            .background(
+                prominent ? Color.brand(.accentFill) : Color(uiColor: .secondarySystemFill),
+                in: Capsule()
+            )
+            .contentShape(Capsule())
+            .opacity(isEnabled ? (configuration.isPressed ? 0.72 : 1) : 0.4)
     }
 }
 
