@@ -1,4 +1,4 @@
-# Targeted benchmark repetitions; app and test sources match the integration branch.
+# Diagnostic-only controls/layout isolation. Temporary variants must not be merged.
 name: CI
 on:
   workflow_dispatch:
@@ -16,6 +16,10 @@ jobs:
   topic-expansion-diagnostic:
     runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
     timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [share, more, layout]
     steps:
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -26,6 +30,28 @@ jobs:
         run: scripts/ci/select-xcode.sh
       - name: Install XcodeGen
         run: command -v xcodegen >/dev/null || brew install xcodegen
+      - name: Prepare diagnostic variant
+        env:
+          DIAGNOSTIC_VARIANT: ${{ matrix.variant }}
+        run: |
+          python3 - <<'PYTHON'
+          import os
+          from pathlib import Path
+          p = Path("Blau/Timeline/TopicDetail.swift")
+          s = p.read_text()
+          variant = os.environ["DIAGNOSTIC_VARIANT"]
+          if variant == "share":
+              old = "TopicShareAction(topic: topic, container: container)"
+              new = 'Text("Share").frame(minHeight: 44)'
+          elif variant == "more":
+              old = "TopicMoreAction(\n                    topicID: topic.id, title: topic.title, canMerge: placement.canMerge, editor: editor)"
+              new = 'Text("More").frame(minHeight: 44)'
+          else:
+              old = "TopicActionsLayout {"
+              new = "HStack(spacing: 8) {"
+          assert s.count(old) == 1, (variant, s.count(old))
+          p.write_text(s.replace(old, new, 1))
+          PYTHON
       - name: Generate project
         run: make generate
       - name: Cache Swift packages
@@ -63,6 +89,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: topic-expansion-diagnostic
+          name: topic-expansion-${{ matrix.variant }}
           path: .build/results/
           retention-days: 7
