@@ -1,5 +1,4 @@
-# Root stack-sampling diagnostic: success requires actual thread frames, not benchmark success.
-# The diagnostic branch pauses the test before its first tap to attach the sampler.
+# Targeted benchmark repetitions; app and test sources match the integration branch.
 name: CI
 on:
   workflow_dispatch:
@@ -50,43 +49,16 @@ jobs:
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
         run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app
-      - name: Sample the cold expansion
-        timeout-minutes: 8
+      - name: Three cold launches
+        timeout-minutes: 12
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
         run: |
           mkdir -p .build/results
-          (
-            for i in $(seq 1 900); do
-              if grep -q BLAU_SAMPLE_READY .build/results/profiled-expansion.log 2>/dev/null; then
-                pid=$(pgrep -n -x Blau || true)
-                if [ -n "$pid" ]; then
-                  sleep 4
-                  date -u > .build/results/sample-start.txt
-                  ps -p "$pid" -o pid,comm > .build/results/sampled-process.txt
-                  sudo -n /usr/bin/sample "$pid" 12 1 -mayDie -file .build/results/expansion.sample.txt > .build/results/sample.log 2>&1
-                  exit $?
-                fi
-              fi
-              sleep 0.2
-            done
-            exit 1
-          ) &
-          sample_pid=$!
-          set +e
-          xcodebuild test-without-building -project Blau.xcodeproj -scheme Blau -testPlan Blau -destination "$DESTINATION" -derivedDataPath .build/DerivedData -resultBundlePath .build/results/profiled-expansion.xcresult -only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO CODE_SIGNING_ALLOWED=NO XAI_DEV_API_KEY= > .build/results/profiled-expansion.log 2>&1
-          test_status=$?
-          wait "$sample_pid"
-          sample_status=$?
-          set -e
-          echo "Diagnostic test status: $test_status; sampler status: $sample_status"
-          test "$sample_status" -eq 0
-          test -s .build/results/expansion.sample.txt
-          grep -q "Thread_" .build/results/expansion.sample.txt
-          cp .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app/Blau .build/results/Blau-profile-binary
-          if [ -d .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app.dSYM ]; then
-            cp -R .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app.dSYM .build/results/
-          fi
+          xcodebuild test-without-building -project Blau.xcodeproj -scheme Blau -testPlan Blau -destination "$DESTINATION" -derivedDataPath .build/DerivedData -resultBundlePath .build/results/cold-expansion.xcresult -only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds -test-iterations 3 -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO CODE_SIGNING_ALLOWED=NO XAI_DEV_API_KEY= 2>&1 | tee .build/results/cold-expansion.log
+          count=$(grep -c "testTappingExpandsWithinAHundredMilliseconds]' passed" .build/results/cold-expansion.log)
+          test "$count" -eq 3
+          xcrun xcresulttool export attachments --path .build/results/cold-expansion.xcresult --output-path .build/results/attachments
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

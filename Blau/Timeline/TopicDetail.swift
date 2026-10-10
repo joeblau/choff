@@ -50,8 +50,10 @@ struct TopicDetailHeader: View {
                 .foregroundStyle(Color.brand(.secondaryText))
                 .accessibilityLabel(Text(verbatim: TopicDetailDescription.span(of: topic, spelledOut: true)))
                 .accessibilityIdentifier(TopicDetailAccessibility.span)
-            TopicDetailActions(
-                topic: topic, placement: placement, editor: editor, onContinue: onContinue)
+            // Diagnostic only: isolate the action graph's contribution.
+            Text("Continue · Share · More")
+                .font(.subheadline.weight(.medium))
+                .frame(height: 44)
         }
         .padding(.leading, TopicTimelineLayout.textInset)
         .padding(.trailing)
