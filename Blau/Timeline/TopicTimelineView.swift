@@ -339,7 +339,13 @@ private struct TopicTimelineScrollView: View {
         .topicEditorAlerts(editor)
         .overlay(alignment: .topLeading) {
             if environment.kind == .uiTest {
-                ExpandLatencyProbe(timer: expansionTimer)
+                VStack {
+                    ExpandLatencyProbe(timer: expansionTimer)
+                    Text(ExpansionDiagnostic.report)
+                        .frame(width: 1, height: 1)
+                        .accessibilityIdentifier("blau.timeline.expansionDiagnostic")
+                        .allowsHitTesting(false)
+                }
             }
         }
         // A sync that brings older topics, or a first window that just
@@ -379,6 +385,7 @@ private struct TopicTimelineScrollView: View {
                             topic: topic, placement: placement, editor: editor,
                             onContinue: continueAction(for: topic)
                         ) { [expansionTimer] in
+                            ExpansionDiagnostic.mark("header appeared")
                             expansionTimer.appeared(topic.id)
                         }
                     }
@@ -543,6 +550,7 @@ private struct TopicTimelineScrollView: View {
             toggleExpansion(of: topic.id)
             return
         } else {
+            ExpansionDiagnostic.begin()
             expansionTimer.began(topic.id)
         }
         guard isAtBottom else {
@@ -559,6 +567,8 @@ private struct TopicTimelineScrollView: View {
     }
 
     private func holdBullet(_ anchor: UUID, whileToggling topic: UUID) {
+        ExpansionDiagnostic.mark("hold begins")
+        defer { ExpansionDiagnostic.mark("hold returns") }
         topAnchorHolds += 1
         // A previous Now target must stop following the bottom while this
         // topic changes height; its rendered bullet supplies the anchor.

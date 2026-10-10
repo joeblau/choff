@@ -36,7 +36,9 @@ struct TopicDetailHeader: View {
     @Environment(AppEnvironment.self) private var environment
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        ExpansionDiagnostic.mark("detail body begins")
+        defer { ExpansionDiagnostic.mark("detail body returns") }
+        return VStack(alignment: .leading, spacing: 8) {
             if let summary = topic.summary?.trimmingCharacters(in: .whitespacesAndNewlines), !summary.isEmpty {
                 Text(verbatim: summary)
                     .brandTextStyle(.caption)
@@ -65,7 +67,8 @@ struct TopicDetailHeader: View {
 
     /// Side by side when they fit, stacked at large text sizes (#81).
     private var actions: some View {
-        TopicActionsLayout { actionButtons }
+        ExpansionDiagnostic.mark("actions body")
+        return TopicActionsLayout { actionButtons }
             .controlSize(.small)
             .buttonBorderShape(.capsule)
             .font(.subheadline.weight(.medium))
