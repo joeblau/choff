@@ -193,6 +193,8 @@ final class TopicDetailUITests: XCTestCase {
         let app = launch()
         let previous = bullet(Self.previousTitle, in: app)
         XCTAssertTrue(previous.waitForExistence(timeout: 10))
+        print("BLAU_SAMPLE_READY: before the first expansion")
+        Thread.sleep(forTimeInterval: 5)
         var samples: [Double] = []
         var last: String?
         for _ in 0..<5 {
