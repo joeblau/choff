@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        variant: [share, more, layout]
+        variant: [now]
     steps:
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -40,7 +40,12 @@ jobs:
           p = Path("Blau/Timeline/TopicDetail.swift")
           s = p.read_text()
           variant = os.environ["DIAGNOSTIC_VARIANT"]
-          if variant == "share":
+          if variant == "now":
+              p = Path("Blau/Timeline/TopicTimelineView.swift")
+              s = p.read_text()
+              old = ".glassEffect(.regular.interactive(), in: .capsule)"
+              new = ".background(Color(uiColor: .secondarySystemFill), in: Capsule())"
+          elif variant == "share":
               old = "TopicShareAction(topic: topic, container: container)"
               new = 'Text("Share").frame(minHeight: 44)'
           elif variant == "more":
