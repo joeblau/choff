@@ -278,7 +278,12 @@ final class TopicDetailUITests: XCTestCase {
         let lines = app.descendants(matching: .any).matching(identifier: Identifier.agent)
         let line = lines.element(boundBy: 0)
         XCTAssertTrue(line.waitForExistence(timeout: 5), "No line to split at")
-        line.press(forDuration: 1.2)
+        // Words have their own selection menu. Press the blank end of the
+        // agent's 85%-wide column to request the row's Copy/Share/Split menu.
+        let timeline = element(Identifier.timeline, in: app).frame
+        app.coordinate(withNormalizedOffset: .zero)
+            .withOffset(CGVector(dx: timeline.minX + timeline.width * 0.75, dy: line.frame.midY))
+            .press(forDuration: 1.2)
         let split = app.buttons[Identifier.split].firstMatch
         XCTAssertTrue(split.waitForExistence(timeout: 5), "No Split Topic Here")
         split.tap()
