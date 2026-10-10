@@ -1,5 +1,4 @@
 import BlauTopics
-import SwiftData
 import SwiftUI
 
 /// The accessibility identifiers of an expanded topic's detail (#58).
@@ -34,6 +33,9 @@ struct TopicDetailHeader: View {
     /// Called once the header is laid out.
     let onAppear: () -> Void
 
+    @Environment(AppEnvironment.self) private var environment
+    @State private var showsActions = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let summary = topic.summary?.trimmingCharacters(in: .whitespacesAndNewlines), !summary.isEmpty {
@@ -50,8 +52,7 @@ struct TopicDetailHeader: View {
                 .foregroundStyle(Color.brand(.secondaryText))
                 .accessibilityLabel(Text(verbatim: TopicDetailDescription.span(of: topic, spelledOut: true)))
                 .accessibilityIdentifier(TopicDetailAccessibility.span)
-            TopicDetailActions(
-                topic: topic, placement: placement, editor: editor, onContinue: onContinue)
+            actions
         }
         .padding(.leading, TopicTimelineLayout.textInset)
         .padding(.trailing)
@@ -63,85 +64,59 @@ struct TopicDetailHeader: View {
         .onAppear(perform: onAppear)
     }
 
-}
+    /// Side by side when they fit, stacked at large text sizes (#81).
+    private var actions: some View {
+        TopicActionsLayout { actionButtons }
+            .font(.subheadline.weight(.medium))
+    }
 
-/// Keep the action graph behind a view boundary: the detail's text and rail
-/// do not carry the controls' nested generic view types through their layout.
-private struct TopicDetailActions: View {
-    let topic: TimelineTopic
-    let placement: TopicTimeline.Placement
-    let editor: TopicEditor
-    let onContinue: (() -> Void)?
-    @Environment(AppEnvironment.self) private var environment
-
-    var body: some View {
-        TopicActionsLayout {
-            if let onContinue { TopicContinueAction(action: onContinue) }
+    @ViewBuilder
+    private var actionButtons: some View {
+        Group {
+            if let onContinue {
+                Button(action: onContinue) {
+                    Label("Continue", systemImage: "arrow.uturn.forward")
+                }
+                .buttonStyle(TopicActionButtonStyle(prominent: true))
+                .accessibilityHint("Starts a conversation that picks up this topic")
+                .accessibilityIdentifier(TopicDetailAccessibility.continueTopic)
+            }
             if let container = environment.modelContainer {
-                TopicShareAction(topic: topic, container: container)
+                ShareLink(
+                    item: TopicMarkdownDocument(topic: topic, container: container),
+                    preview: SharePreview(Text(verbatim: topic.title))
+                ) {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(TopicActionButtonStyle())
+                .accessibilityHint("Shares the topic as Markdown")
+                .accessibilityIdentifier(TopicDetailAccessibility.share)
             }
             if !topic.isSynthetic {
-                TopicMoreAction(
-                    topicID: topic.id, title: topic.title, canMerge: placement.canMerge, editor: editor)
+                Button {
+                    showsActions = true
+                } label: {
+                    Label("More", systemImage: "ellipsis")
+                        .labelStyle(.iconOnly)
+                        .frame(minWidth: 20, minHeight: 20)
+                }
+                .buttonStyle(TopicActionButtonStyle())
+                .accessibilityLabel("More Actions")
+                .accessibilityIdentifier(TopicDetailAccessibility.more)
+                // Build the edit presentation when requested rather than
+                // inserting a menu control into the expansion's layout.
+                .confirmationDialog("Topic Actions", isPresented: $showsActions, titleVisibility: .hidden) {
+                    TopicEditMenuItems(
+                        topicID: topic.id, title: topic.title, canMerge: placement.canMerge, editor: editor)
+                }
             }
         }
-        .font(.subheadline.weight(.medium))
-    }
-}
-
-private struct TopicContinueAction: View {
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Label("Continue", systemImage: "arrow.uturn.forward")
-        }
-        .buttonStyle(TopicActionButtonStyle(prominent: true))
-        .accessibilityHint("Starts a conversation that picks up this topic")
-        .accessibilityIdentifier(TopicDetailAccessibility.continueTopic)
-    }
-}
-
-private struct TopicShareAction: View {
-    let topic: TimelineTopic
-    let container: ModelContainer
-
-    var body: some View {
-        ShareLink(
-            item: TopicMarkdownDocument(topic: topic, container: container),
-            preview: SharePreview(Text(verbatim: topic.title))
-        ) {
-            Label("Share", systemImage: "square.and.arrow.up")
-        }
-        .buttonStyle(TopicActionButtonStyle())
-        .accessibilityHint("Shares the topic as Markdown")
-        .accessibilityIdentifier(TopicDetailAccessibility.share)
-    }
-}
-
-private struct TopicMoreAction: View {
-    let topicID: UUID
-    let title: String
-    let canMerge: Bool
-    let editor: TopicEditor
-
-    var body: some View {
-        Menu {
-            TopicEditMenuItems(topicID: topicID, title: title, canMerge: canMerge, editor: editor)
-        } label: {
-            Label("More", systemImage: "ellipsis")
-                .labelStyle(.iconOnly)
-                .frame(minWidth: 20, minHeight: 20)
-        }
-        .buttonStyle(TopicActionButtonStyle())
-        .accessibilityLabel("More Actions")
-        .accessibilityIdentifier(TopicDetailAccessibility.more)
     }
 }
 
 /// These controls are inserted during a tap's layout transaction. Keep
 /// their first sizing pass simple while preserving the native button,
-/// sharing and menu behavior.
+/// sharing and edit actions.
 private struct TopicActionButtonStyle: ButtonStyle {
     var prominent = false
     @Environment(\.isEnabled) private var isEnabled
