@@ -1,0 +1,109 @@
+# Diagnostic branch only. Original CI checks, tests and timing limits remain
+# in ci.yml. Instrumented results cannot satisfy performance acceptance.
+name: Expansion profile
+
+on:
+  push:
+    branches: [diagnostics/expansion-profile]
+
+permissions:
+  contents: read
+
+env:
+  XCODE_VERSION: ${{ vars.BLAU_CI_XCODE_VERSION }}
+  SIMULATOR_NAME: ${{ vars.BLAU_CI_SIMULATOR || 'iPhone 17' }}
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+  HOMEBREW_NO_INSTALL_CLEANUP: "1"
+  HOMEBREW_NO_ENV_HINTS: "1"
+  NSUnbufferedIO: "YES"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  profile:
+    runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
+    timeout-minutes: 35
+    env:
+      UI_TEST_SUITE: performance
+      UI_SHARD: 1/1
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode
+        id: xcode
+        run: scripts/ci/select-xcode.sh
+
+      - name: Install XcodeGen
+        run: command -v xcodegen >/dev/null || brew install xcodegen
+
+      - name: Generate project
+        run: make generate
+
+      - name: Verify profiler failures preserve original test results
+        run: python3 scripts/tests/test-profile-expansion.py
+
+      - name: Cache Swift packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/DerivedData/SourcePackages
+          key: spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-${{ hashFiles('Packages/BlauKit/Package.swift', 'Packages/BlauKit/Package.resolved') }}
+          restore-keys: |
+            spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-
+
+      - name: Pick simulator
+        id: simulator
+        run: scripts/ci/simulator-destination.sh
+
+      - name: Build development test products
+        env:
+          DESTINATION: ${{ steps.simulator.outputs.destination }}
+          XCODEBUILD_FLAGS: "SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
+        run: make build-tests
+
+      - name: Preserve application debug symbols and runner details
+        run: |
+          mkdir -p .build/results/profile-symbols
+          app=.build/DerivedData/Build/Products/Debug-iphonesimulator/Choff.app
+          dsymutil "$app/Choff.debug.dylib" -o .build/results/profile-symbols/Choff.debug.dylib.dSYM
+          shasum -a 256 "$app/Choff.debug.dylib" > .build/results/profile-symbols/binary.sha256
+          xcodebuild -version > .build/results/profile-symbols/xcode.txt
+          sysctl hw.ncpu hw.memsize > .build/results/profile-symbols/host.txt
+
+      - name: Warm up simulator
+        timeout-minutes: 15
+        continue-on-error: true
+        env:
+          UDID: ${{ steps.simulator.outputs.udid }}
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Choff.app
+
+      - name: Profile the original five expansion samples
+        id: test
+        env:
+          UDID: ${{ steps.simulator.outputs.udid }}
+          DESTINATION: ${{ steps.simulator.outputs.destination }}
+          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-performance.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
+        run: python3 scripts/ci/profile-expansion.py --udid "$UDID" --output .build/results/expansion-profile
+
+      - name: Check the original performance test ran
+        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
+        run: scripts/ci/ui-test-shard.sh --check "$UI_SHARD" .build/results/app-ui-performance.xcresult
+
+      - name: Shut down this simulator
+        if: ${{ always() && steps.simulator.outputs.udid != '' }}
+        env:
+          UDID: ${{ steps.simulator.outputs.udid }}
+        run: xcrun simctl shutdown "$UDID" || true
+
+      - name: Upload trace, symbols, producer records and original test result
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: expansion-profile-${{ github.run_attempt }}
+          path: .build/results/
+          if-no-files-found: error
+          retention-days: 14
