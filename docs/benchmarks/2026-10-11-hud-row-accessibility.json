@@ -40,13 +40,13 @@
     "producer": "/tmp/voice-choff-hud-row-values-v2-ios27-candidate-producer.json"
   },
   "lint": "PASS:1099Swiftfiles",
-  "qualification": "AffectedfourHUDtestsPASSbothOSat2e, strongeractualvaluepredicate,original10seconds. Originalfull27longpagingFAIL retained; isolatedcasePASSsame source/OS/model,differentownedinstance. Causeunproven. Preparedbranchrebasedona1key-focusparent, fullnew-headCIpending.",
+  "qualification": "All four original HUD interactions passed on both supported OS versions at2e5830a with a stronger actual-value predicate and the original ten-second deadline. The original iOS27 long-paging failure is retained; an isolated same-source run passed on the same OS/model but a different owned instance. Cause remains unproven. This correction is incorporated into8220638, whose HUD cases passed on CI38140894068; that whole workflow failed a separate collapsed-topic accessibility audit. Current36943d3 CI remains running.",
   "committed_head": "2e5830a",
   "prepared_pr_body": "/tmp/voice-pr-hud-row-accessibility-next.md",
   "long_paging_followup": {
     "source": "2e5830a",
     "controller_session": 65535,
-    "status": "both_supported_os_live",
+    "status": "completed",
     "scope": "Two original opt-in2,000-topic paging methods on eachOS, unchanged source/assertions/60MBbudget; current Root boundary and HUD memory snapshot compatibility.",
     "ios27_observed_failure": {
       "test": "testScrollingThroughTwoThousandTopicsWithoutJumps",
@@ -54,7 +54,7 @@
       "shift_points": 1,
       "finger_travel_points": 349,
       "source": "2e5830a",
-      "qualification": "Original assertion failed during concurrent supportedOSruns,newcompilerwork andpublic-modelconversion;causeunproven. Entire controller still waitsforios26. No thresholds changed."
+      "qualification": "Original assertion failed during concurrent supported-OS runs, compiler work and public-model conversion. Producer is terminal; later isolated same-source pass on a different owned simulator instance is recorded underlong_paging. Cause remains unproven. No thresholds changed."
     }
   },
   "long_paging": {
@@ -71,7 +71,7 @@
       "failure": "Original scrollingtestdrag140 Seed Round Planning637 moved1pt for349ptfingertravel",
       "attachments": "/tmp/voice-choff-hud-row-values-long-paging-ios27-attachments"
     },
-    "qualification": "Both original tests executed with unchanged budgets. iOS27failure retained; recording showsonebarelymovingdrag. Causeunproven. Same failedcaseat2e nowrunningalone afterallowned otherUIproducerscompleted.",
+    "qualification": "Both original tests completed with unchanged budgets. The iOS27 scrolling failure is retained; its recording shows one barely moving drag. The later isolated same-source original method passed on the same OS/model but a different owned simulator instance after other owned UI producers ended. Cause remains unproven.",
     "isolated_probe_session": 81223,
     "isolated_probe_qualification": "Same2e source,OS27and iPhone17model, differentowned instance1530from original259. Onlyfailedoriginalmethod afterother ownedUI producers ended. Priorfailure/causeunproven retained.",
     "isolated_probe": {
