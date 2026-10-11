@@ -446,6 +446,40 @@ expect "ui-test-shard: a performance selector that ran zero tests fails" \
     env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=performance XCRESULT_SUMMARY_JSON="$work/summary-0.json" \
     "$shard" --check 1/1 unused.xcresult
 
+# A long case gets its own shard; unknown cases still appear exactly once.
+cat >"$work/timings.json" <<'EOF'
+{ "durationSeconds": { "OtherUITests/testOther": 90, "TopicDetailUITests/testShowsDetail": 1 } }
+EOF
+expect "ui-test-shard: balances a long functional case into its own shard" \
+    0 "OtherUITests/testOther" \
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/timings.json" \
+    "$shard" --list 1/2
+expect "ui-test-shard: retains the remaining functional case" \
+    0 "TopicDetailUITests/testShowsDetail" \
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/timings.json" \
+    "$shard" --list 2/2
+cat >>"$partitioned/TopicDetailUITests.swift" <<'EOF'
+final class NewUITests: XCTestCase {
+    func testWithoutRecordedTiming() {}
+}
+EOF
+: >"$work/balanced-union"
+for k in 1 2 3; do
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/timings.json" \
+        "$shard" --list "$k/3" >>"$work/balanced-union"
+done
+env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional "$shard" --list 1/1 >"$work/balanced-all"
+if [ "$(LC_ALL=C sort "$work/balanced-union")" = "$(cat "$work/balanced-all")" ]; then
+    pass "ui-test-shard: balanced shards retain every case, including a new unrecorded case, exactly once"
+else
+    fail "ui-test-shard: balanced shards retain every case exactly once"
+fi
+printf '{ "durationSeconds": { "OtherUITests/testOther": -1 } }\n' >"$work/invalid-timings.json"
+expect "ui-test-shard: rejects invalid scheduling durations instead of dropping tests" \
+    2 "" \
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/invalid-timings.json" \
+    "$shard" --list 1/2
+
 # The real UI tests: every test-like method is placed (the script fails
 # otherwise), and the shards of ci.yml's app-ui-tests matrix (shard: [1, ..., N],
 # run as K/N) cover them all exactly once.

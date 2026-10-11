@@ -1,0 +1,265 @@
+{
+  "actual_main": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+  "decision": "Discard local ideal-width cache candidate: no observed improvement or reproduced CI failure.",
+  "recorded_at": "2026-10-11T16:25:40.430470+00:00",
+  "original_limit_ms": 100,
+  "baseline": {
+    "producer": {
+      "status": "completed",
+      "phase": "baseline",
+      "source": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+      "source_hashes": {
+        "Blau/Timeline/TopicActionsLayout.swift": "770a8844bca2415c0f0b8c4c09e484c2b06034e1796c01befc3f84eb909a2baf",
+        "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+        "Blau/Timeline/TopicTimelineView.swift": "0e171a1dea5839702012b3873395180831aeb9ae4dc52a0c38d5d178d7ffcaea",
+        "BlauUITests/TopicDetailUITests.swift": "b732821ce3de1aa8b6494fde674817b36240c1195dee222025a491dac598c1e1"
+      },
+      "started_at": "2026-10-11T16:09:06.539071+00:00",
+      "developer_dir": "/Applications/Xcode-27.1.0-Beta.app/Contents/Developer",
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/codex-topic-cache-optimized-baseline.xcresult",
+      "qualification": "Optimized Swift wholemodule, coverage disabled, original expansion benchmark three executions. Local simulator evidence does not establish a CI-runner fix or the full workflow runtime.",
+      "build_command": [
+        "make",
+        "build-tests",
+        "DERIVED_DATA=/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/DerivedDataTopicLayoutOptimized271",
+        "DESTINATION=id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "XCODEBUILD_FLAGS=SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
+      ],
+      "build_exit_code": 0,
+      "test_command": [
+        "xcrun",
+        "xcodebuild",
+        "test-without-building",
+        "-xctestrun",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/DerivedDataTopicLayoutOptimized271/Build/Products/Blau_Blau_iphonesimulator27.1-arm64.xctestrun",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/codex-topic-cache-optimized-baseline.xcresult",
+        "-only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds",
+        "-test-iterations",
+        "3",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "SWIFT_OPTIMIZATION_LEVEL=-O",
+        "SWIFT_COMPILATION_MODE=wholemodule",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-10-11T16:14:00.178540+00:00",
+      "source_hash_matches": true
+    },
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+            "deviceName": "Choff Balanced UI Shard 2",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "24A434",
+            "osVersion": "27.0",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "passedTests": 3,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.2",
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "finishTime": 1791735239.744,
+      "passedTests": 1,
+      "result": "Passed",
+      "runtimeWarnings": [],
+      "skippedTests": 0,
+      "startTime": 1791735104.122,
+      "statistics": [
+        {
+          "subtitle": "3 test runs",
+          "title": "1 configuration ran with test repetitions"
+        }
+      ],
+      "testFailures": [],
+      "title": "Test - Blau",
+      "topInsights": [],
+      "totalTestCount": 1
+    },
+    "attachments": [
+      {
+        "path": "/tmp/voice-choff-topic-cache-optimized-baseline-attachments/9B39BF8D-82F2-417C-98D8-B0D6AF1044D9.txt",
+        "latency_ms": [
+          23.3,
+          20.3,
+          20.1,
+          19.8,
+          20.0
+        ]
+      },
+      {
+        "path": "/tmp/voice-choff-topic-cache-optimized-baseline-attachments/13DD645B-2135-4447-A854-78150CD33592.txt",
+        "latency_ms": [
+          23.0,
+          20.0,
+          25.7,
+          21.9,
+          20.2
+        ]
+      },
+      {
+        "path": "/tmp/voice-choff-topic-cache-optimized-baseline-attachments/361FC8BA-A53B-48F0-8543-A805E7F01BF6.txt",
+        "latency_ms": [
+          24.3,
+          21.6,
+          21.1,
+          22.6,
+          20.5
+        ]
+      }
+    ],
+    "sample_count": 15,
+    "median_ms": 21.1,
+    "mean_ms": 21.62666666666667,
+    "max_ms": 25.7
+  },
+  "candidate": {
+    "producer": {
+      "status": "completed",
+      "phase": "candidate",
+      "source": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+      "source_hashes": {
+        "Blau/Timeline/TopicActionsLayout.swift": "5f863aa5c2388d1d967f68fb2ad02c2d03509e86a3237c4e7ec4501f0c755408",
+        "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+        "Blau/Timeline/TopicTimelineView.swift": "0e171a1dea5839702012b3873395180831aeb9ae4dc52a0c38d5d178d7ffcaea",
+        "BlauUITests/TopicDetailUITests.swift": "b732821ce3de1aa8b6494fde674817b36240c1195dee222025a491dac598c1e1"
+      },
+      "started_at": "2026-10-11T16:15:27.399970+00:00",
+      "developer_dir": "/Applications/Xcode-27.1.0-Beta.app/Contents/Developer",
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/codex-topic-cache-optimized-candidate.xcresult",
+      "qualification": "Optimized Swift wholemodule, coverage disabled, original expansion benchmark three executions. Local simulator evidence does not establish a CI-runner fix or the full workflow runtime.",
+      "build_command": [
+        "make",
+        "build-tests",
+        "DERIVED_DATA=/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/DerivedDataTopicLayoutOptimized271",
+        "DESTINATION=id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "XCODEBUILD_FLAGS=SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
+      ],
+      "build_exit_code": 0,
+      "test_command": [
+        "xcrun",
+        "xcodebuild",
+        "test-without-building",
+        "-xctestrun",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/DerivedDataTopicLayoutOptimized271/Build/Products/Blau_Blau_iphonesimulator27.1-arm64.xctestrun",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/codex-topic-cache-optimized-candidate.xcresult",
+        "-only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds",
+        "-test-iterations",
+        "3",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "SWIFT_OPTIMIZATION_LEVEL=-O",
+        "SWIFT_COMPILATION_MODE=wholemodule",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-10-11T16:18:36.073455+00:00",
+      "source_hash_matches": true
+    },
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+            "deviceName": "Choff Balanced UI Shard 2",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "24A434",
+            "osVersion": "27.0",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "passedTests": 3,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.2",
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "finishTime": 1791735515.622,
+      "passedTests": 1,
+      "result": "Passed",
+      "runtimeWarnings": [],
+      "skippedTests": 0,
+      "startTime": 1791735377.047,
+      "statistics": [
+        {
+          "subtitle": "3 test runs",
+          "title": "1 configuration ran with test repetitions"
+        }
+      ],
+      "testFailures": [],
+      "title": "Test - Blau",
+      "topInsights": [],
+      "totalTestCount": 1
+    },
+    "attachments": [
+      {
+        "path": "/tmp/voice-choff-topic-cache-optimized-candidate-attachments/14BEC5F3-B8B3-4BD6-834A-F8920B2D5BE8.txt",
+        "latency_ms": [
+          28.1,
+          26.6,
+          27.2,
+          21.4,
+          20.8
+        ]
+      },
+      {
+        "path": "/tmp/voice-choff-topic-cache-optimized-candidate-attachments/04AEDB31-3751-4F98-A2B9-27852789CAA4.txt",
+        "latency_ms": [
+          28.0,
+          27.1,
+          26.4,
+          22.7,
+          27.5
+        ]
+      },
+      {
+        "path": "/tmp/voice-choff-topic-cache-optimized-candidate-attachments/A99552A2-8CCD-4F88-B3FF-5BC8A353145A.txt",
+        "latency_ms": [
+          24.6,
+          23.8,
+          25.2,
+          21.8,
+          24.0
+        ]
+      }
+    ],
+    "sample_count": 15,
+    "median_ms": 25.2,
+    "mean_ms": 25.013333333333332,
+    "max_ms": 28.1
+  },
+  "scope": "Each phase runs the original five-tap test three times with Xcode27.1, optimized Swift wholemodule and no coverage. Original assertions and timer are unchanged. Consecutive local samples are not a randomized causal test. The baseline already passes and the candidate shows no improvement; neither establishes a fix for CI102.5/108.8ms failures. The unused proposed native layout fixture was built but never executed and is discarded with the candidate."
+}

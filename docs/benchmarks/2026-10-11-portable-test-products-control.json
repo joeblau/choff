@@ -1,0 +1,102 @@
+{
+  "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+  "actual_squash_main": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+  "whole_trees_identical": true,
+  "recorded_at": "2026-10-11T16:13:33.595701+00:00",
+  "build": {
+    "producer_session": 66262,
+    "exit_code": 0,
+    "log": "/tmp/voice-choff-portable-products-build.log",
+    "qualification": "Completed build-for-testing command; Debug without coverage, not the optimized CI performance variant."
+  },
+  "native": {
+    "status": "completed",
+    "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+    "source_qualification": "Products built from unchanged source9fdd whose full tree equals actual main e6a7fa8. Copied to a different worktree/product location; no path rewriting. Debug without coverage is a portability control, not the optimized CI performance build or current full CI runtime proof.",
+    "product_hashes": {
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Blau_Blau_iphonesimulator27.2-arm64.xctestrun": "8c6e8fece131929cc2089e60043e4e576fc75a8ced3b7870f86f1b8dce9facb7",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Debug-iphonesimulator/Choff.app/Choff.debug.dylib": "e095463e01b85d40678089b65e50e9a1aa69b620c4c25cf9f713a48d4f70e8a3",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Debug-iphonesimulator/Choff.app/PlugIns/BlauTests.xctest/BlauTests": "f727a6b2c83c1682b2d08d15c9ad9bf6a1b7d34c6aa13b97624997a52fc16755",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Debug-iphonesimulator/BlauUITests-Runner.app/PlugIns/BlauUITests.xctest/BlauUITests": "f39f2e137907f6daf7c2918e3f4b481ba2150ec933e3f47707917af1eef84b80"
+    },
+    "command": [
+      "xcrun",
+      "xcodebuild",
+      "test-without-building",
+      "-xctestrun",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Blau_Blau_iphonesimulator27.2-arm64.xctestrun",
+      "-destination",
+      "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+      "-resultBundlePath",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-portable-products-native.xcresult",
+      "-only-testing:BlauTests",
+      "-parallel-testing-enabled",
+      "NO",
+      "-collect-test-diagnostics",
+      "never",
+      "CODE_SIGNING_ALLOWED=NO"
+    ],
+    "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-portable-products-native.xcresult",
+    "started_at": "2026-10-11T15:49:18.209906+00:00",
+    "exit_code": 0,
+    "finished_at": "2026-10-11T15:50:17.869956+00:00",
+    "product_hash_matches": true,
+    "summary": {
+      "totalTestCount": 310,
+      "passedTests": 302,
+      "failedTests": 0,
+      "skippedTests": 8
+    },
+    "expected_selection_matches": true
+  },
+  "expansion": {
+    "status": "completed",
+    "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+    "source_qualification": "Products built from unchanged source9fdd whose full tree equals actual main e6a7fa8. Copied to a different worktree/product location; no path rewriting. Debug without coverage is a portability control, not the optimized CI performance build or current full CI runtime proof.",
+    "product_hashes": {
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Blau_Blau_iphonesimulator27.2-arm64.xctestrun": "8c6e8fece131929cc2089e60043e4e576fc75a8ced3b7870f86f1b8dce9facb7",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Debug-iphonesimulator/Choff.app/Choff.debug.dylib": "e095463e01b85d40678089b65e50e9a1aa69b620c4c25cf9f713a48d4f70e8a3",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Debug-iphonesimulator/Choff.app/PlugIns/BlauTests.xctest/BlauTests": "f727a6b2c83c1682b2d08d15c9ad9bf6a1b7d34c6aa13b97624997a52fc16755",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Debug-iphonesimulator/BlauUITests-Runner.app/PlugIns/BlauUITests.xctest/BlauUITests": "f39f2e137907f6daf7c2918e3f4b481ba2150ec933e3f47707917af1eef84b80"
+    },
+    "command": [
+      "xcrun",
+      "xcodebuild",
+      "test-without-building",
+      "-xctestrun",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/PortableTestProducts/Blau_Blau_iphonesimulator27.2-arm64.xctestrun",
+      "-destination",
+      "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+      "-resultBundlePath",
+      "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-portable-products-expansion.xcresult",
+      "-only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds",
+      "-parallel-testing-enabled",
+      "NO",
+      "-collect-test-diagnostics",
+      "never",
+      "CODE_SIGNING_ALLOWED=NO"
+    ],
+    "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-portable-products-expansion.xcresult",
+    "started_at": "2026-10-11T15:50:18.037345+00:00",
+    "exit_code": 0,
+    "finished_at": "2026-10-11T15:51:30.355417+00:00",
+    "product_hash_matches": true,
+    "summary": {
+      "totalTestCount": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "expected_selection_matches": true,
+    "original_latency_attachment": "/tmp/voice-choff-portable-products-expansion-attachments/A3F43FDC-7A2E-4F89-9360-0C66A57DC315.txt",
+    "original_latency_ms": [
+      27.4,
+      29.9,
+      30.7,
+      31.1,
+      32.4
+    ],
+    "original_limit_ms": 100
+  },
+  "scope": "Complete Build/Products copied into a different worktree and product location. Both test-without-building commands use the unchanged relative-path xctestrun. All310 original native selections and one original expansion test executed; recorded binary hashes are unchanged. This proves portability for this Debug/no-coverage product set only. It does not establish coverage-enabled or optimized product portability, cache correctness across commits, CI runner causality, or the original complete-run900-second target."
+}
