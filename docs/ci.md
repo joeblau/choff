@@ -231,6 +231,21 @@ including median weights for the two opt-in cases skipped in the control.
 These are scheduling estimates, not measured whole-workflow improvements;
 fresh CI must establish actual runtime, including runner queue delays.
 
+The eight-group run at `6e1b16d`
+([38131796908](https://github.com/joeblau/voice/actions/runs/38131796908))
+finished in **2,950 seconds (49 minutes 10 seconds)**, exceeding the original
+900-second target. All 93 selected functional cases ran: 89 passed, two
+retained their existing opt-in skips, and two failed. The original
+30-question collection creation check measured 115.7596 seconds against
+its unchanged 60-second limit, and the original HUD live-values check
+exceeded its ten-second expectation. The separate expansion benchmark
+passed at 47.7/79.3/71.2/62.0/33.4 ms against the unchanged 100 ms limit.
+Every component checked out the original event merge of `6e1b16d` into
+`f24c6bc`, including jobs that started after the integration branch moved.
+This run establishes neither a passing eight-group configuration nor a
+runtime improvement. Other workflows were running concurrently; queue
+delays are included in the reported end-to-end duration.
+
 A preceding two-worker experiment at `d47201b` ran all 91 functional cases
 successfully, with two existing opt-in skips, but took 2,543 seconds overall
 and failed the separate unchanged 100 ms expansion benchmark. Its second
