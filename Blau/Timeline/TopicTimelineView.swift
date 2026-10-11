@@ -210,6 +210,7 @@ private struct TopicTimelineScrollView: View {
 
     @Environment(AppEnvironment.self) private var environment
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.continueTopic) private var continueTopic
     @State private var expansion = TopicExpansion()
     /// Rename, merge and split from any bullet, detail or line (#54, #58).
@@ -252,7 +253,9 @@ private struct TopicTimelineScrollView: View {
 
     private var history: some View {
         ScrollView {
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+            // The current title already stays fixed. Large history headings
+            // scroll so they cannot cover the detail actions beneath them.
+            LazyVStack(spacing: 0, pinnedViews: dynamicTypeSize.isAccessibilitySize ? [] : [.sectionHeaders]) {
                 if timeline.hasOlderHistory {
                     EarlierHistoryRow()
                         .id(TopicTimeline.ItemID.earlier)
