@@ -1,0 +1,33 @@
+{
+  "source": {
+    "status": "completed",
+    "source_head": "a76ec4636d45e8cb4696b86d340ce8dbb645a2d7",
+    "source_hashes": {
+      "Tests/BlauKitIntegrationTests/SharedEmbedderTopicSegmentationTests.swift": "00160813e705365ce19300a2b49f615f8dc3877fc1a3ca88503f6942af739aaf",
+      "Sources/BlauTopics/TopicConfig.swift": "c8bd62c2d729bafd81535daa9bf4bfbd82cd0c09dfc660fe338a0429b4625eef"
+    },
+    "command": [
+      "swift",
+      "test",
+      "--filter",
+      "RealModelTopicSegmentationTests",
+      "--xunit-output",
+      "/tmp/voice-choff-qwen-swift-topic-original.xml"
+    ],
+    "started_at": "2026-10-11T12:13:21.811083+00:00",
+    "qualification": "Original real-model Swift topic-segmentation suite with actual cached pinned Qwen candidate. OriginaldefaultTopicConfig.sharedEmbedding andmeanPk<=.25/digression/resegmentation assertions unchanged. No depthoverride,noA17or modelselectionclaim.",
+    "exit_code": 0,
+    "finished_at": "2026-10-11T12:13:39.920235+00:00",
+    "source_hash_matches": true
+  },
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "scriptedTranscriptCount": 5,
+  "minimumDepth": 0.5,
+  "originalMaximumMeanPk": 0.25,
+  "meanPk": 0.0,
+  "resegmentedMeanPk": 0.0,
+  "completeOriginalTestOutput": "## Topics on qwen3-embedding-0.6b-256d-int8-r1+fp16.wint8.ti8.L128@97b0c614be4d, minimumDepth 0.5\n\n| Transcript | Reference | Found | Pk / WindowDiff | Deepest gaps | Re-segmented (#55) |\n| --- | --- | --- | --- | --- | --- |\n| `threeTopics` | [6, 12] | [6, 12] | 0.00 / 0.00 | 0.975, 0.922, 0.290 | [6, 12] (Pk 0.00) |\n| `briefDigression` | [12] | [12] | 0.00 / 0.00 | 1.246, 1.039, 0.437 | [12] (Pk 0.00) |\n| `explicitCues` | [5, 10] | [5, 10] | 0.00 / 0.00 | 1.064, 0.933, 0.258 | [5, 10] (Pk 0.00) |\n| `singleTopic` | [] | [] | 0.00 / 0.00 | 0.211, 0.137, 0.106 | [] (Pk 0.00) |\n| `fourTopics` | [7, 12, 18] | [7, 12, 18] | 0.00 / 0.00 | 1.446, 1.185, 0.930 | [7, 12, 18] (Pk 0.00) |\n\nMean Pk 0.000, re-segmented 0.000\n\udbc4\udc5b  Test segmentsTheScriptedTranscripts(directory:) with 1 test case passed after 7.609 seconds.\n\udbc4\udc5b  Suite \"Topic segmentation on a real embedding model (BLAU_TEXT_EMBEDDING_BUNDLE)\" passed after 7.610 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 7.610 seconds.\n",
+  "qualification": "Mac real cached pinned Qwen shared embedder only. Allfive original transcript/digression/resegmentation checks, default depth, meanPk gate unchanged. Actualembedding; scriptedtranscripts, notliveconversation/A17/selectedproductionmodel."
+}

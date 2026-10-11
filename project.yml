@@ -234,9 +234,26 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_TARGET_NAME: Blau
 
-  # On-device model benchmarks (#22, docs/benchmarks.md). Not hosted in the
-  # app: it links BlauKit itself, so the app's dead-code stripping can't drop
-  # the benchmark cases. Every test skips unless BLAU_DEVICE_TESTS=1.
+  # Physical-device XCTest requires an app host. Keep this tiny host separate
+  # from the production app so its startup work does not affect model timings.
+  BlauBenchmarkHost:
+    type: application
+    platform: iOS
+    sources:
+      - path: BlauBenchmarkHost
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.joeblau.choff.benchmark-host
+        PRODUCT_NAME: ChoffBenchmarkHost
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Choff Benchmarks
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+
+  # On-device model benchmarks (#22, docs/benchmarks.md). The test bundle
+  # links BlauKit itself, so host dead-code stripping cannot drop its cases.
+  # Every test skips unless BLAU_DEVICE_TESTS=1.
   BlauBenchmarks:
     type: bundle.unit-test
     platform: iOS
@@ -249,6 +266,7 @@ targets:
         type: folder
         buildPhase: resources
     dependencies:
+      - target: BlauBenchmarkHost
       - package: BlauKit
         products:
           - BlauCore
@@ -262,6 +280,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.joeblau.choff.benchmarks
         GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/ChoffBenchmarkHost.app/ChoffBenchmarkHost
 
 schemes:
   Blau:

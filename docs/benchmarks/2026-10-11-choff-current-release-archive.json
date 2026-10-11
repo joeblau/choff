@@ -1,0 +1,71 @@
+{
+  "producer": {
+    "status": "completed",
+    "source_head": "fe686b7a84e3df35f728cd3b2c44e395ec86fa49",
+    "source_hashes": {
+      "project.yml": "cf1dd4f708954f983e7115e1db863ec15871f45a5ceedcd3521c07cc4d75a00b",
+      "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80"
+    },
+    "command": [
+      "xcrun",
+      "xcodebuild",
+      "archive",
+      "-scheme",
+      "Blau",
+      "-configuration",
+      "Release",
+      "-destination",
+      "generic/platform=iOS",
+      "-derivedDataPath",
+      "/Users/joeblau/Developer/joeblau/src/voice/.build/DerivedData",
+      "-archivePath",
+      "/Users/joeblau/Developer/joeblau/src/voice/.build/results/final-integration/Choff-fe686b7.xcarchive"
+    ],
+    "archive": "/Users/joeblau/Developer/joeblau/src/voice/.build/results/final-integration/Choff-fe686b7.xcarchive",
+    "started_at": "2026-10-11T13:47:11.974237+00:00",
+    "scope": "Current production Choff app and widget signed Release archive. Includes integration36943d3 and byte-identical voicefollowup. No upload, publishing or Organizer validation.",
+    "exit_code": 0,
+    "finished_at": "2026-10-11T13:48:59.585133+00:00",
+    "source_hash_matches": true,
+    "head_unchanged": true
+  },
+  "archive_metadata": {
+    "ApplicationProperties": {
+      "ApplicationPath": "Applications/Choff.app",
+      "Architectures": [
+        "arm64"
+      ],
+      "CFBundleIdentifier": "com.joeblau.choff",
+      "CFBundleShortVersionString": "0.1.0",
+      "CFBundleVersion": "1",
+      "SigningIdentity": "Apple Development: Joe Blau (84M7UGLL47)",
+      "Team": "K78G42H4U2"
+    },
+    "ArchiveVersion": 2,
+    "CreationDate": "2026-10-11 13:48:59",
+    "Name": "Blau",
+    "SchemeName": "Blau"
+  },
+  "products": [
+    {
+      "path": "/Users/joeblau/Developer/joeblau/src/voice/.build/results/final-integration/Choff-fe686b7.xcarchive/Products/Applications/Choff.app",
+      "bundle_id": "com.joeblau.choff",
+      "display_name": "Choff",
+      "executable": "Choff",
+      "team": "K78G42H4U2",
+      "certificate": "Apple Development: Joe Blau (84M7UGLL47)",
+      "strict_deep_signature_verified": true
+    },
+    {
+      "path": "/Users/joeblau/Developer/joeblau/src/voice/.build/results/final-integration/Choff-fe686b7.xcarchive/Products/Applications/Choff.app/PlugIns/ChoffWidgets.appex",
+      "bundle_id": "com.joeblau.choff.widgets",
+      "display_name": "Choff",
+      "executable": "ChoffWidgets",
+      "team": "K78G42H4U2",
+      "certificate": "Apple Development: Joe Blau (84M7UGLL47)",
+      "strict_deep_signature_verified": true
+    }
+  ],
+  "qualification": "Signed current Release app and widget only. Organizer validation, distribution signing, upload and TestFlight remain pending.",
+  "status": "completed_verified"
+}

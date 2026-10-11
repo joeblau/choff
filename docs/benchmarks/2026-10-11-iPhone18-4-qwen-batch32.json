@@ -1,0 +1,105 @@
+{
+  "buildConfiguration": "Release",
+  "device": {
+    "activeProcessorCount": 6,
+    "chip": "A19 Pro",
+    "isSimulator": false,
+    "marketingName": "iPhone Air",
+    "modelIdentifier": "iPhone18,4",
+    "operatingSystem": "iOS 27.2 (Build 24B5099f)",
+    "physicalMemoryBytes": 12304695296
+  },
+  "results": [
+    {
+      "id": "memory.embed.batch32",
+      "latencies": {
+        "embed.batch32": {
+          "count": 10,
+          "maximum": 1193.096167,
+          "mean": 1031.877675,
+          "minimum": 972.779625,
+          "p50": 1008.03525,
+          "p90": 1109.1710166999999,
+          "p95": 1151.13359185,
+          "p99": 1184.70365197,
+          "standardDeviation": 62.044675419090396
+        },
+        "embed.batch32.chunk": {
+          "count": 10,
+          "maximum": 37.28425521875,
+          "mean": 32.24617734375,
+          "minimum": 30.39936328125,
+          "p50": 31.5011015625,
+          "p90": 34.661594271874996,
+          "p95": 35.9729247453125,
+          "p99": 37.0219891240625,
+          "standardDeviation": 1.9388961068465749
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 17205.503959
+        },
+        {
+          "key": "tokens.mean",
+          "unit": "",
+          "value": 124.125
+        },
+        {
+          "key": "budget.batch32",
+          "unit": "ms",
+          "value": 1600
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 451.0642547607422
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 458.76578521728516
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 424.46875
+        }
+      ],
+      "notes": [
+        "qwen3-embedding-0.6b-256d-int8-r1+fp16.wint8.ti8.L128@97b0c614be4d; 32 chunks of 117\u2013128 tokens (sequence length 128)",
+        "Within budget: p95 1151 ms \u2264 1600 ms per batch"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T12:01:49Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Shared text embedding, batch of 32",
+      "wallTimeSeconds": 30.80855375
+    }
+  ],
+  "schemaVersion": 1,
+  "startedAt": "2026-10-11T12:01:49Z",
+  "acceptanceProvenance": {
+    "signedBuildSource": "65e1326f5e1f13e4b590c25900975891f756b462",
+    "converterSource": "c540c5ab905abbe3a9f0cb69876d39ad7c503029",
+    "sourceModel": {
+      "repo": "Qwen/Qwen3-Embedding-0.6B",
+      "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
+    },
+    "producer": "/tmp/voice-choff-air-qwen-shared-batch32-producer.json",
+    "xcresult": ".build/results/codex-choff-air-qwen-shared-batch32.xcresult",
+    "selected": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "hostingFolderBytes": 609331156,
+    "latencyBudgetMs": 1600,
+    "latencyBudgetPassed": true,
+    "qualification": "Physical A19 Pro only. Actual shared service with public Qwen candidate,124.125mean tokens,original10measurediterations. NoA17,selectedproductionmodel,EmbeddingGemma,400MBdownloadbudget,hostingpublication,backgroundor two-device acceptance."
+  }
+}

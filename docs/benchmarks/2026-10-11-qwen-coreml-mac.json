@@ -1,0 +1,105 @@
+{
+  "reference": "PyTorch fp32 on CPU",
+  "computeUnits": {
+    "CPU_ONLY": {
+      "loadSeconds": 1.63,
+      "nonFiniteOutputs": 0,
+      "cosineToReference": {
+        "full": {
+          "min": 0.99612,
+          "mean": 0.99818
+        },
+        "256d": {
+          "min": 0.99628,
+          "mean": 0.99803
+        }
+      },
+      "retrieval256Int8": {
+        "count": 200,
+        "recall@5": 0.7992,
+        "hit@1": 0.61,
+        "hit@5": 0.835,
+        "recall@10": 0.8542,
+        "mrr@10": 0.7107,
+        "ndcg@10": 0.7353
+      },
+      "predictMs": {
+        "128tok": {
+          "p50": 46.56,
+          "p95": 50.37
+        }
+      }
+    },
+    "CPU_AND_NE": {
+      "loadSeconds": 7.0,
+      "nonFiniteOutputs": 0,
+      "cosineToReference": {
+        "full": {
+          "min": 0.99631,
+          "mean": 0.99824
+        },
+        "256d": {
+          "min": 0.99654,
+          "mean": 0.99813
+        }
+      },
+      "retrieval256Int8": {
+        "count": 200,
+        "recall@5": 0.7967,
+        "hit@1": 0.61,
+        "hit@5": 0.83,
+        "recall@10": 0.8492,
+        "mrr@10": 0.7114,
+        "ndcg@10": 0.734
+      },
+      "predictMs": {
+        "128tok": {
+          "p50": 12.62,
+          "p95": 13.13
+        }
+      }
+    }
+  },
+  "referenceRetrieval256Int8": {
+    "count": 200,
+    "recall@5": 0.8092,
+    "hit@1": 0.61,
+    "hit@5": 0.845,
+    "recall@10": 0.8467,
+    "mrr@10": 0.7136,
+    "ndcg@10": 0.7349
+  },
+  "model": "qwen3-embedding-0.6b",
+  "source": {
+    "repo": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
+  },
+  "computePrecision": "fp16",
+  "weights": "int8",
+  "splitTokenEmbeddings": true,
+  "tokenTable": "int8",
+  "sequenceLengths": [
+    128
+  ],
+  "packageBytes": 441958776,
+  "tokenTableBytes": 155915732,
+  "convertSeconds": 41.3,
+  "maxTokensInEvalSet": 72,
+  "computePlan": {
+    "operations": {
+      "neuralEngine": 1923
+    },
+    "neuralEngineShareOfOps": 1.0,
+    "estimatedCostShare": {
+      "neuralEngine": 0.7013
+    }
+  },
+  "acceptanceProvenance": {
+    "converter_source": "c540c5a",
+    "producer": "/tmp/voice-choff-qwen-real-coreml-float32-candidate-producer.json",
+    "original_bfloat16_failure": "/tmp/voice-choff-qwen-real-coreml-conversion-producer.json",
+    "offline_regression_red": "/tmp/voice-choff-dependency117-bfloat16-red-producer.json",
+    "offline12test_green": "/tmp/voice-choff-dependency117-bfloat16-green-producer.json",
+    "scope": "ActualpublicQwenweights/MacCoreMLcandidateverification.200queries/216documents.Quantizationaccuracydifferences retained. NoGemma access,400MBbudget compliance, modelselection,modelhosting orphysicalacceptanceclaimed."
+  }
+}
