@@ -144,6 +144,7 @@ struct MainScreenScaffold: View {
                     SpeechModelSetupInset()
                 }
         }
+        .preferredColorScheme(.dark)
         // The timeline's Continue This Topic (#58) starts or seeds the
         // conversation through the record button's model, so the button,
         // its haptics and its failure alert behave as for a tap.
@@ -310,8 +311,8 @@ private struct SpeechModelSetupInset: View {
 /// conversation, the brand lockup and, while no usable xAI key is stored,
 /// the onboarding button.
 ///
-/// Either way it is a scroll view that runs under the bottom bar's glass,
-/// anchored to the bottom like a conversation. The empty state is at least as
+/// The current topic title stays above the scrolling conversation, whose
+/// latest messages sit above the bottom bar. The empty state is at least as
 /// tall as the area between the bars so it stays centered, and scrolls instead
 /// of clipping when Dynamic Type makes it taller than the screen.
 struct MainScreen: View {
@@ -331,6 +332,8 @@ struct MainScreen: View {
                 focusConversationID: conversationID, isRecording: isRecording, onConnectAccount: onConnectAccount)
         } else {
             emptyState
+                .navigationTitle("Choff")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
 

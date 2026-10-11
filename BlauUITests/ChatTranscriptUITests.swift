@@ -88,6 +88,30 @@ final class ChatTranscriptUITests: XCTestCase {
 
     /// The conversation opens at its latest line, above the bottom bar, not
     /// at the top of the history.
+    func testShortConversationStaysAboveTheBottomBar() {
+        let app = launch(rows: 2)
+        let setup = app.descendants(matching: .any)["blau.models.setup"]
+        _ = setup.waitForExistence(timeout: 5)
+        XCTAssertTrue(setup.waitForNonExistence(timeout: 120), "The speech models never became ready")
+        let settings = app.buttons[Identifier.settings]
+        XCTAssertTrue(settings.waitForExistence(timeout: 10))
+        let reply = app.descendants(matching: .any).matching(identifier: Identifier.agent).firstMatch
+        XCTAssertTrue(reply.waitForExistence(timeout: 10))
+        let connectAccount = app.buttons["xai.onboarding.open"]
+        let settled = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                guard let frame = self.visibleFrames(Identifier.agent, in: app).last else { return false }
+                let bottom = connectAccount.exists ? connectAccount.frame.minY : settings.frame.minY
+                let gap = bottom - frame.maxY
+                return gap >= -1 && gap <= 64
+            }, object: nil)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [settled], timeout: 5), .completed, "The short conversation isn't at the bottom")
+        XCTAssertLessThanOrEqual(reply.frame.maxY, settings.frame.minY + 1, "The conversation overlaps the controls")
+        attachScreenshot(app, "Short conversation pinned to bottom")
+    }
+
+    /// A long conversation opens at its latest message too.
     func testTheTranscriptOpensAtTheLatestLine() {
         let app = launch(rows: 200)
         let settings = app.buttons[Identifier.settings]

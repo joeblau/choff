@@ -93,7 +93,7 @@ struct TopicBullet: View {
         }
         .buttonStyle(.plain)
         // A pinned header: opaque, so the transcript scrolls under it.
-        .background(Color(.systemBackground))
+        .background(Color(.systemBackground), ignoresSafeAreaEdges: [])
         .accessibilityLabel(Text(verbatim: topic.title))
         .accessibilityValue(
             TopicBulletDescription.value(

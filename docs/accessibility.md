@@ -108,6 +108,9 @@ There is no setting that hides Grok's text.
 
 ## Contrast
 
+- Topic detail's secondary action labels use primary text on their system
+  fill. The account-connect button uses the brand fill intended for white
+  labels. These preserve contrast on the main screen's dark background.
 - Secondary text Blau draws on the background (times, durations,
   conversation headings, an expanded topic's summary and span, speech in
   progress, delivery notes, app notes, tool chips, the caption's speaker),

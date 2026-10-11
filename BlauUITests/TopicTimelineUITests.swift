@@ -80,11 +80,15 @@ final class TopicTimelineUITests: XCTestCase {
             .firstMatch
     }
 
-    /// The compressed and expanded older bullets laid out on screen.
+    /// Fully visible older bullets in the scrolling viewport. Lazy rows
+    /// retain accessibility frames even when clipped behind the fixed title.
     private func olderBullets(_ app: XCUIApplication) -> [XCUIElement] {
         let window = app.windows.firstMatch.frame
+        let top = currentBullet(app).frame.maxY
+        let bottom = app.buttons[Identifier.settings].frame.minY
+        let viewport = CGRect(x: window.minX, y: top, width: window.width, height: max(0, bottom - top))
         return app.buttons.matching(identifier: Identifier.topic).allElementsBoundByIndex
-            .filter { $0.exists && !$0.frame.isEmpty && window.intersects($0.frame) }
+            .filter { $0.exists && !$0.frame.isEmpty && viewport.contains($0.frame) }
     }
 
     /// The transcript rows in the accessibility tree: only those of
@@ -105,16 +109,31 @@ final class TopicTimelineUITests: XCTestCase {
 
     // MARK: Tests
 
-    /// It opens on the current topic: its bullet on screen with its
-    /// transcript below it, older topics' bullets above it in the same
-    /// screen, each compressed to one row of the same height, and only the
-    /// current topic's lines built.
+    func testCurrentTitleStaysAtTheTopWhileReadingHistory() {
+        let app = launch()
+        let current = currentBullet(app)
+        let initial = current.frame
+        let window = app.windows.firstMatch.frame
+        XCTAssertLessThan(initial.minY, window.minY + window.height * 0.25, "The title isn't at the top")
+
+        let oldest = bullet(Self.oldestTitle, in: app)
+        swipeIntoHistory(app, until: oldest)
+        XCTAssertTrue(oldest.isHittable)
+        XCTAssertTrue(current.isHittable, "The current title scrolled away")
+        XCTAssertEqual(current.frame.minY, initial.minY, accuracy: 1, "The title moved while scrolling")
+        attachScreenshot(app, "Title pinned while reading history")
+    }
+
+    /// It opens with the current title fixed above the scrolling history
+    /// and latest messages. Older topics stay compressed above those
+    /// messages, and only the current topic's lines are built.
     func testOpensOnTheCurrentTopicWithBulletsAboveTheFold() {
         let app = launch()
         let window = app.windows.firstMatch.frame
         let current = currentBullet(app)
         XCTAssertTrue(current.isHittable, "The current topic isn't on screen: \(current.frame)")
         XCTAssertTrue(window.contains(current.frame))
+        XCTAssertLessThan(current.frame.minY, window.minY + window.height * 0.25, "The title isn't at the top")
 
         // The current topic's lines, below its bullet, ending above the bar.
         let settings = app.buttons[Identifier.settings]
@@ -131,12 +150,16 @@ final class TopicTimelineUITests: XCTestCase {
         XCTAssertEqual(transcriptRowCount(app), Self.linesPerTopic, "Older topics' lines were built")
         XCTAssertFalse(app.descendants(matching: .any)[Identifier.summary].exists, "An older topic is expanded")
 
-        // Older bullets above the fold, compressed to rows of one height.
+        // Older bullets below the fixed title and above the latest messages,
+        // compressed to rows of one height.
         let older = olderBullets(app)
         XCTAssertGreaterThanOrEqual(older.count, 3, "Too few older bullets on screen")
         let heights = older.map(\.frame.height)
+        let firstLineY = rows.map(\.minY).min() ?? settings.frame.minY
         for bullet in older {
-            XCTAssertLessThan(bullet.frame.maxY, current.frame.minY + 1, "\(bullet.label) is below the current topic")
+            XCTAssertGreaterThanOrEqual(
+                bullet.frame.minY, current.frame.maxY - 1, "\(bullet.label) overlaps the fixed title")
+            XCTAssertLessThan(bullet.frame.maxY, firstLineY + 1, "\(bullet.label) is below the latest messages")
             XCTAssertEqual(bullet.frame.height, heights[0], accuracy: 1, "\(bullet.label) isn't one row")
             XCTAssertTrue((bullet.value as? String ?? "").hasSuffix("collapsed"), "\(bullet.label) is expanded")
         }

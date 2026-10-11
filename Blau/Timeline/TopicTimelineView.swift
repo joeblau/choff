@@ -30,9 +30,9 @@ enum TopicTimelineAccessibility {
 /// the current topic at the bottom with its live transcript, and the
 /// history above it.
 ///
-/// - It opens on the current topic, anchored at the latest line. Its bullet
-///   is a pinned section header, so it stays in view above its transcript
-///   however long that gets.
+/// - The current topic's title stays at the top, outside the scrolling
+///   history. The transcript opens at its latest line at the bottom, even
+///   when there are only a few messages.
 /// - Older topics are compressed to one fixed-height row (dot, title, time,
 ///   duration) until tapped; tapping expands one inline and tapping again
 ///   compresses it (`TopicExpansion`, view state only). An expanded topic
@@ -236,6 +236,18 @@ private struct TopicTimelineScrollView: View {
     @Namespace private var rotor
 
     var body: some View {
+        VStack(spacing: 0) {
+            currentTitle
+            history
+        }
+        .accessibilityRotor("Topics") {
+            ForEach(timeline.topics) { topic in
+                AccessibilityRotorEntry(Text(verbatim: topic.title), id: topic.id, in: rotor)
+            }
+        }
+    }
+
+    private var history: some View {
         ScrollView {
             LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                 if timeline.hasOlderHistory {
@@ -247,7 +259,7 @@ private struct TopicTimelineScrollView: View {
                 }
                 if let onConnectAccount, environment.xai.account.needsKeyEntry {
                     Button("Connect Your xAI Account", action: onConnectAccount)
-                        .buttonStyle(.borderedProminent)
+                        .brandProminentButtonStyle()
                         .accessibilityIdentifier(XAIKeyIdentifiers.openOnboarding)
                         .padding(.top)
                 }
@@ -324,11 +336,6 @@ private struct TopicTimelineScrollView: View {
         }
         // VoiceOver hears when a new topic opens or its title is refined.
         .announcesTopicChanges(current: timeline.current, renamedByUser: editor.renamedTopicIDs)
-        .accessibilityRotor("Topics") {
-            ForEach(timeline.topics) { topic in
-                AccessibilityRotorEntry(Text(verbatim: topic.title), id: topic.id, in: rotor)
-            }
-        }
         .onChange(of: timeline.currentTopicID) { previous, current in
             expansion.currentChanged(from: previous, to: current, keepPreviousOpen: !isAtBottom)
         }
@@ -349,6 +356,24 @@ private struct TopicTimelineScrollView: View {
         // A page settled: the top may still be near.
         .onChange(of: isPrepending) { _, prepending in
             if !prepending { loadOlderIfNeeded() }
+        }
+    }
+
+    /// Keep the current title outside the lazy stack so short conversations
+    /// cannot move it down toward the messages.
+    @ViewBuilder
+    private var currentTitle: some View {
+        if let current = timeline.current,
+            let item = timeline.items.last(where: { $0.id == .topic(current.id) }),
+            case .topic(let topic, let placement) = item
+        {
+            TopicBullet(
+                topic: topic, placement: placement, isExpanded: true,
+                isRecording: isRecording, editor: editor, onContinue: continueAction(for: topic)
+            ) {
+                returnToNow()
+            }
+            .accessibilityRotorEntry(id: topic.id, in: rotor)
         }
     }
 
@@ -398,21 +423,23 @@ private struct TopicTimelineScrollView: View {
                         editor: editor)
                 }
             } header: {
-                TopicBullet(
-                    topic: topic, placement: placement, isExpanded: isExpanded,
-                    isRecording: isRecording && placement.isCurrent, editor: editor,
-                    onContinue: continueAction(for: topic)
-                ) {
-                    tap(topic, placement: placement)
+                if !placement.isCurrent {
+                    TopicBullet(
+                        topic: topic, placement: placement, isExpanded: isExpanded,
+                        isRecording: false, editor: editor,
+                        onContinue: continueAction(for: topic)
+                    ) {
+                        tap(topic, placement: placement)
+                    }
+                    .accessibilityRotorEntry(id: topic.id, in: rotor)
+                    .prependAnchor(item.id == anchorID, moved: anchorMoved)
+                    .onGeometryChange(for: CGFloat.self) {
+                        $0.frame(in: .global).minY
+                    } action: { [tracker] y in
+                        tracker.bulletMoved(topic.id, to: y)
+                    }
+                    .onDisappear { [tracker] in tracker.bulletPositions[topic.id] = nil }
                 }
-                .accessibilityRotorEntry(id: topic.id, in: rotor)
-                .prependAnchor(item.id == anchorID, moved: anchorMoved)
-                .onGeometryChange(for: CGFloat.self) {
-                    $0.frame(in: .global).minY
-                } action: { [tracker] y in
-                    tracker.bulletMoved(topic.id, to: y)
-                }
-                .onDisappear { [tracker] in tracker.bulletPositions[topic.id] = nil }
             }
         }
     }
@@ -543,11 +570,8 @@ private struct TopicTimelineScrollView: View {
         // layout (#58).
         if expansion.isExpanded(topic.id, current: timeline.currentTopicID) {
             expansionTimer.cancelled(topic.id)
-            // Collapsing at the latest line should keep following that line.
-            if isAtBottom, let current = timeline.currentTopicID {
-                holdBullet(current, whileToggling: topic.id)
-                return
-            }
+            // The fixed title cannot move. At the latest line the bottom
+            // size-change anchor keeps the messages in place on collapse.
             toggleExpansion(of: topic.id)
             return
         } else {
