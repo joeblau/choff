@@ -50,7 +50,7 @@ public struct SwiftDataMemorySources: MemorySourceProvider, MemorySourceReader {
         let context = ModelContext(container)
         let records = try context.fetch(
             FetchDescriptor<MemoryDocument>(sortBy: [SortDescriptor(\.createdAt), SortDescriptor(\.id)]))
-        return Self.documentSnapshots(records)
+        return try Self.documentSnapshots(records, in: context)
     }
 
     public func facts() async throws -> [FactSnapshot] {
@@ -144,7 +144,7 @@ public struct SwiftDataMemorySources: MemorySourceProvider, MemorySourceReader {
                 records += try context.fetch(
                     FetchDescriptor<MemoryDocument>(predicate: #Predicate { ids.contains($0.id) }))
             }
-            batch.documents = Self.documentSnapshots(records)
+            batch.documents = try Self.documentSnapshots(records, in: context)
         }
 
         if !factIDs.isEmpty {
@@ -185,24 +185,35 @@ public struct SwiftDataMemorySources: MemorySourceProvider, MemorySourceReader {
 
     /// One snapshot per document id, in the order the ids first appear:
     /// the most recently edited copy wins, items of every copy combined.
-    static func documentSnapshots(_ records: [MemoryDocument]) -> [DocumentSnapshot] {
+    static func documentSnapshots(_ records: [MemoryDocument], in context: ModelContext) throws -> [DocumentSnapshot] {
         var order: [UUID] = []
         var byID: [UUID: [MemoryDocument]] = [:]
         for record in records {
             if byID[record.id] == nil { order.append(record.id) }
             byID[record.id, default: []].append(record)
         }
+
+        // A parent's cached relationship can still name an item deleted
+        // by another context after the parent was fetched. Read live items
+        // directly instead of faulting those stale relationship members.
+        var liveItems: [CollectionItem] = []
+        for ids in batches(order) {
+            var descriptor = FetchDescriptor<CollectionItem>(
+                predicate: #Predicate { item in item.document.flatMap { ids.contains($0.id) } ?? false })
+            descriptor.relationshipKeyPathsForPrefetching = [\.document]
+            liveItems += try context.fetch(descriptor)
+        }
+        let itemsByDocument = Dictionary(grouping: liveItems, by: { $0.document?.id })
+
         return order.compactMap { id in
             guard let copies = byID[id],
                 let latest = copies.max(by: { ($0.updatedAt, $0.contentHash) < ($1.updatedAt, $1.contentHash) })
             else { return nil }
             var items: [UUID: DocumentSnapshot.ItemSnapshot] = [:]
-            for copy in copies {
-                for item in copy.collectionItems ?? [] where items[item.id] == nil {
-                    items[item.id] = DocumentSnapshot.ItemSnapshot(
-                        id: item.id, ordinal: item.ordinal, prompt: item.prompt,
-                        referenceAnswer: item.referenceAnswer, createdAt: item.createdAt)
-                }
+            for item in itemsByDocument[id] ?? [] where items[item.id] == nil {
+                items[item.id] = DocumentSnapshot.ItemSnapshot(
+                    id: item.id, ordinal: item.ordinal, prompt: item.prompt,
+                    referenceAnswer: item.referenceAnswer, createdAt: item.createdAt)
             }
             return DocumentSnapshot(
                 id: id, kind: latest.kind, title: latest.title, body: latest.body, updatedAt: latest.updatedAt,

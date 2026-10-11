@@ -145,7 +145,7 @@ struct KnowledgeBaseIndexingTests {
         #expect(records.first?.collectionItems?.count == 30)
         try await fixture.store.deleteItems([added[1]])
 
-        let snapshots = SwiftDataMemorySources.documentSnapshots(records)
+        let snapshots = try SwiftDataMemorySources.documentSnapshots(records, in: context)
         let snapshot = try #require(snapshots.first)
         #expect(snapshot.items.count == 29)
         #expect(!snapshot.items.contains { $0.id == added[1] })
