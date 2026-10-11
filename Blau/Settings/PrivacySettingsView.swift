@@ -110,6 +110,9 @@ struct PrivacySettingsView: View {
             presenting: pending
         ) { scope in
             Button(Self.buttonTitle(scope).replacingOccurrences(of: "…", with: ""), role: .destructive) {
+                // Clear presentation before publishing progress: rebuilding
+                // the form must not re-present the confirmed dialog.
+                pending = nil
                 // Set now, not in the task, so Export and the other deletes
                 // are off from the confirming tap on.
                 erasing = scope
