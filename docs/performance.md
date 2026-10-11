@@ -738,8 +738,54 @@ terminate the app, not because the metric identifier changed. Its HUD CPU
 (+57.3%) and replay CPU (+64.7%) failed the existing limits. Local paired
 runs show an actual HUD improvement and no comparable replay-work
 increase; they do not prove a CI host is fast enough to meet its CPU gate.
-The baseline and tolerances remain unchanged. A new workflow dispatch in
-check mode is required to verify CI performance after startup warm-up.
+The two CPU references are refreshed using the later same-host comparison
+below. All tolerances and other metric references remain unchanged. A new
+full-suite workflow dispatch in check mode is required for acceptance.
+
+#### Same-host baseline-source control
+
+[Run 38096034044](https://github.com/joeblau/voice/actions/runs/38096034044)
+builds and tests baseline-recording source `c7f2472`, candidate `26b7658`,
+then the identical baseline source again. Every tracked source matches its
+selected commit except the diagnostic workflow. All phases use the same
+VirtualMac2,1 VM (three CPUs, 7 GiB RAM), iPhone 17 simulator, Xcode 27.1,
+Release settings, and five iterations of the three CPU test cases. The
+runner reports iOS 27.0 (24A434). These nine executed cases are diagnostic
+measurements, not a substitute for the six-case full-suite gate.
+
+| Metric, iteration median | Baseline first | Candidate | Identical baseline last |
+| --- | ---: | ---: | ---: |
+| HUD shown, CPU seconds / 10 s | 0.161050 | 0.085601 | 0.059714 |
+| HUD hidden, CPU seconds / 10 s | 0.002082 | 0.000000 | 0.000000 |
+| Replay CPU seconds | 4.907512 | 4.715067 | 2.950347 |
+| Replay wall seconds | 32.125256 | 32.017289 | 31.980889 |
+| Replay absolute memory, kB | 38,198 | 39,509 | 37,838 |
+
+Identical baseline code varies by 2.70× for shown-HUD CPU and 1.66× for
+replay CPU. The one-minute guest load average before each phase is
+435.85, 64.23, then 45.40; those observations establish environmental
+variability, without identifying its underlying cause. The candidate is
+between the reference measurements. The local retired-instruction
+comparison above separately supports the actual HUD optimization.
+
+Only the shown-HUD and replay CPU entries in `ci-simulator.json` are
+re-recorded. Each new reference is the median of **all ten baseline-source
+samples** from the first and last phases; candidate samples are excluded.
+The resulting references are 0.1093656345 and 3.8085688635 seconds. The
+existing 50% tolerances are retained without recalibration. The original
+references, samples, and provenance are preserved in each entry's
+`previousRecording`; launch, scrolling, hidden HUD, memory, wall time,
+and signpost references are unchanged.
+
+The shown-HUD samples are
+`1.527858/0.161050/0.152072/0.163364/0.138412` and
+`0.059714/0.059794/0.055467/0.057808/0.080319` seconds. Replay samples are
+`4.862799/5.239156/4.907512/5.079527/4.563563` and
+`3.053574/2.950347/2.936726/3.049572/2.855722` seconds. No samples are
+discarded. Full precision, each phase's result bundle, source hashes,
+build/test logs and host metadata are retained in the
+`paired-performance-control` artifact. The VM's instruction/cycle metrics
+are all zero and are not evidence of measured instruction counts.
 
 **On device: pending.** The session on an iPhone with Parakeet needs a
 physical device with the models downloaded and a development-signed build

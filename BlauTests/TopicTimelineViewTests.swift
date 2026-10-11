@@ -90,6 +90,34 @@ struct TopicTimelineViewTests {
 
     // MARK: Fixture
 
+    @Test(arguments: [false, true], [0.0, 300.0, 660.0, 2400.0])
+    func theRecentFixtureStaysTodayNearMidnight(longHistory: Bool, secondsAfterMidnight: Double) async throws {
+        let calendar = Calendar.current
+        let now = calendar.startOfDay(for: Self.now).addingTimeInterval(secondsAfterMidnight)
+        let persistence = PersistenceController.inMemory()
+        if longHistory {
+            await TopicTimelineFixture.seedLongHistory(topicCount: 23, into: persistence, now: now)
+        } else {
+            await TopicTimelineFixture.seed(topicCount: 12, into: persistence, now: now)
+        }
+        let context = ModelContext(try #require(persistence.stack?.container))
+        let latest = try #require(try context.fetch(ChatTranscript.latestConversation).first)
+        #expect(calendar.isDate(latest.startedAt, inSameDayAs: now))
+        #expect(latest.startedAt <= now)
+        let topics = try #require(latest.topics)
+        #expect(topics.count == (longHistory ? 3 : 4))
+        for topic in topics {
+            #expect(topic.startedAt >= latest.startedAt)
+            #expect(topic.startedAt <= now)
+            #expect(topic.endedAt.map { $0 <= now } ?? true)
+            for line in topic.orderedUtterances {
+                #expect(line.startedAt >= topic.startedAt)
+                #expect(line.startedAt <= now)
+                #expect(line.endedAt.map { $0 <= now } ?? true)
+            }
+        }
+    }
+
     @Test func theFixtureSeedsTopicsOverThreeConversations() async throws {
         let persistence = PersistenceController.inMemory()
         await TopicTimelineFixture.seed(topicCount: 12, into: persistence, now: Self.now)

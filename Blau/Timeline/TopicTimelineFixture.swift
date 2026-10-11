@@ -96,28 +96,30 @@ enum TopicTimelineFixture {
         context.autosaveEnabled = false
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: now)
-        // Today's conversation started long enough ago to hold its topics.
+        // Fit the recent conversation and its topics inside today's date.
         let todayTopics = max(1, topicCount - 2 * (topicCount / 3))
+        let recent = recentTiming(topicCount: todayTopics, now: now, calendar: calendar)
         let starts = [
             calendar.date(byAdding: .day, value: -2, to: today)!.addingTimeInterval(9 * 3600),
             calendar.date(byAdding: .day, value: -1, to: today)!.addingTimeInterval(18 * 3600),
-            now.addingTimeInterval(-Double(todayTopics) * topicLength - 60),
+            recent.start,
         ]
         let perConversation = [topicCount / 3, topicCount / 3, todayTopics]
         var index = 0
         for (conversationIndex, start) in starts.enumerated() where perConversation[conversationIndex] > 0 {
             let isToday = conversationIndex == starts.count - 1
             let count = perConversation[conversationIndex]
-            let end = start.addingTimeInterval(Double(count) * topicLength)
+            let length = isToday ? recent.length : topicLength
+            let end = start.addingTimeInterval(Double(count) * length)
             let conversation = Conversation(startedAt: start, endedAt: isToday ? nil : end)
             context.insert(conversation)
             for ordinal in 0..<count {
-                let topicStart = start.addingTimeInterval(Double(ordinal) * topicLength)
+                let topicStart = start.addingTimeInterval(Double(ordinal) * length)
                 let isOpen = isToday && ordinal == count - 1
                 let isProvisional = isOpen || index % provisionalEvery == provisionalEvery - 1
                 let topic = Topic(
                     startedAt: topicStart,
-                    endedAt: isOpen ? nil : topicStart.addingTimeInterval(topicLength),
+                    endedAt: isOpen ? nil : topicStart.addingTimeInterval(length),
                     title: isProvisional ? provisionalTitle(for: index) : title(for: index),
                     titleIsProvisional: isProvisional,
                     summary: isOpen
@@ -125,7 +127,7 @@ enum TopicTimelineFixture {
                     ordinal: ordinal)
                 context.insert(topic)
                 topic.conversation = conversation
-                for line in lines(for: index, startingAt: topicStart) {
+                for line in lines(for: index, startingAt: topicStart, timeScale: length / topicLength) {
                     context.insert(
                         StoredUtterance(
                             id: line.id, conversation: conversation, topic: topic, role: line.role, text: line.text,
@@ -167,6 +169,18 @@ enum TopicTimelineFixture {
     /// How long each topic lasts.
     static let topicLength: TimeInterval = 8 * 60
 
+    /// Keep today's fixture on today's date, including just after midnight.
+    /// Compress its topic and line spacing when less than a full span has
+    /// elapsed; later in the day this preserves the usual eight-minute topics.
+    private static func recentTiming(topicCount: Int, now: Date, calendar: Calendar)
+        -> (start: Date, length: TimeInterval)
+    {
+        let fullSpan = Double(topicCount) * topicLength + 60
+        let elapsed = max(0, now.timeIntervalSince(calendar.startOfDay(for: now)))
+        let span = min(fullSpan, elapsed)
+        return (now.addingTimeInterval(-span), topicLength * span / fullSpan)
+    }
+
     // MARK: Long history (#57)
 
     /// The title of topic `index` (oldest first) in a long history: unique,
@@ -202,21 +216,25 @@ enum TopicTimelineFixture {
                 let back = conversations - 1 - conversationIndex
                 let count = min(perConversation, topicCount - index)
                 let start: Date
+                let length: TimeInterval
                 if back == 0 {
-                    start = now.addingTimeInterval(-Double(count) * topicLength - 60)
+                    let recent = recentTiming(topicCount: count, now: now, calendar: calendar)
+                    start = recent.start
+                    length = recent.length
                 } else {
                     let day = calendar.date(byAdding: .day, value: -((back + 1) / 2), to: today)!
                     start = day.addingTimeInterval(back.isMultiple(of: 2) ? 9 * 3600 : 18 * 3600)
+                    length = topicLength
                 }
                 let conversation = Conversation(
-                    startedAt: start, endedAt: back == 0 ? nil : start.addingTimeInterval(Double(count) * topicLength))
+                    startedAt: start, endedAt: back == 0 ? nil : start.addingTimeInterval(Double(count) * length))
                 context.insert(conversation)
                 for ordinal in 0..<count {
-                    let topicStart = start.addingTimeInterval(Double(ordinal) * topicLength)
+                    let topicStart = start.addingTimeInterval(Double(ordinal) * length)
                     let isOpen = back == 0 && ordinal == count - 1
                     let topic = Topic(
                         startedAt: topicStart,
-                        endedAt: isOpen ? nil : topicStart.addingTimeInterval(topicLength),
+                        endedAt: isOpen ? nil : topicStart.addingTimeInterval(length),
                         title: historyTitle(for: index),
                         titleIsProvisional: false,
                         summary: isOpen ? nil : "Talked through \(title(for: index).lowercased()).",
@@ -225,11 +243,13 @@ enum TopicTimelineFixture {
                     topic.conversation = conversation
                     for offset in 0..<historyLinesPerTopic {
                         let line = script[(index * historyLinesPerTopic + offset) % script.count]
-                        let startedAt = topicStart.addingTimeInterval(Double(offset) * 60 + 5)
+                        let timeScale = length / topicLength
+                        let startedAt = topicStart.addingTimeInterval((Double(offset) * 60 + 5) * timeScale)
                         context.insert(
                             StoredUtterance(
                                 id: UUID(), conversation: conversation, topic: topic, role: line.role,
-                                text: line.text, startedAt: startedAt, endedAt: startedAt.addingTimeInterval(20),
+                                text: line.text, startedAt: startedAt,
+                                endedAt: startedAt.addingTimeInterval(20 * timeScale),
                                 isFinal: true, source: line.role == .agent ? .grok : .parakeet))
                     }
                     index += 1
@@ -244,18 +264,19 @@ enum TopicTimelineFixture {
         }
     }
 
-    /// Topic `index`'s lines, a minute apart from `start`.
-    static func lines(for index: Int, startingAt start: Date) -> [ChatLine] {
+    /// Topic `index`'s lines, normally a minute apart from `start`.
+    static func lines(for index: Int, startingAt start: Date, timeScale: Double = 1) -> [ChatLine] {
         let all = ChatTranscriptFixture.lines(
-            count: linesPerTopic * (index + 1), endingAt: start.addingTimeInterval(Double(linesPerTopic) * 60))
+            count: linesPerTopic * (index + 1),
+            endingAt: start.addingTimeInterval(Double(linesPerTopic) * 60 * timeScale))
         // The fixture's lines alternate from the user; take this topic's and
         // space them a minute apart.
         return all.suffix(linesPerTopic).enumerated().map { offset, line in
-            let startedAt = start.addingTimeInterval(Double(offset) * 60 + 5)
+            let startedAt = start.addingTimeInterval((Double(offset) * 60 + 5) * timeScale)
             let length = (line.endedAt ?? line.startedAt).timeIntervalSince(line.startedAt)
             return ChatLine(
                 id: UUID(), role: line.role, text: line.text, startedAt: startedAt,
-                endedAt: startedAt.addingTimeInterval(min(length, 50)))
+                endedAt: startedAt.addingTimeInterval(min(length, 50) * timeScale))
         }
     }
 }
