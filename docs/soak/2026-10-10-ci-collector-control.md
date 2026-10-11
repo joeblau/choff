@@ -34,3 +34,33 @@ on a different CI host. Its live-heap slope was +1.30 MB/hour. This comparison
 does not establish why that run failed or that external scans caused it.
 The existing collector and all thresholds are retained. These scripted
 simulator results do not establish physical-device or real-model acceptance.
+
+## Subsequent failure and measurement separation
+
+[Run 38098757251](https://github.com/joeblau/voice/actions/runs/38098757251)
+uses source `3608f152a0d9ccdb5fc32cb5550ecf62fb66a83d`, except for the
+diagnostic workflow. Its combined soak fails footprint at +4.94 MB/hour;
+live heap is +1.65 MB/hour. The other seven report checks pass: first audio
+63.0 → 64.8 ms, 45/45 replies, 60,211 frames without drops, and two renewals
+with reseeds. Three leak readings remain 55 / 1,760 bytes. The XCTest
+summary also reports a runner exit with code 75; this is not a passing run.
+
+The report starts at 00:40:53 UTC. The first external scan starts around
+00:42:46 and completes around 00:43:30. Footprint rises from 42.5 MB at
+sample wall time 121.7 seconds to 45.3 MB at 152.3 seconds, then falls to
+43.1 MB at 162.5 seconds. A second scan starts around 00:43:53 and completes
+around 00:44:09; footprint rises again near the end of the report. These
+overlaps support separating concurrent profiling from quantitative
+acceptance, but do not prove it caused every failure. A 76-second sample
+gap occurs before the first scan and cannot be attributed to that scan.
+
+CI now runs the original eight-check quantitative gate without the external
+scanner, followed by a separate session with the existing collector. The
+profiled session still requires a complete XCTest run, all five correctness
+checks and zero leak growth. Its three footprint/latency checks remain
+visible as diagnostics. Missing reports, skips, crashes, correctness
+failures and inconclusive leak readings fail that validator. In particular,
+the runner error in the above artifact is rejected. The 2 MB/hour limit,
+10% warm-up and sample cadence remain unchanged; local `make soak` retains
+its combined verdict. Fresh final-source CI is required to validate this
+separation.

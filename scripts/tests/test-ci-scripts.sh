@@ -597,6 +597,16 @@ fi
 
 functional_job=$(awk '/^  app-ui-tests:/{job=1; next} job && /^  [a-z]/{exit} job' "$workflow")
 performance_job=$(awk '/^  app-ui-performance:/{job=1; next} job && /^  [a-z]/{exit} job' "$workflow")
+soak_job=$(awk '/^  soak:/{job=1; next} job && /^  [a-z]/{exit} job' "$workflow")
+if printf '%s\n' "$soak_job" | grep -q 'name: Quantitative soak' &&
+    printf '%s\n' "$soak_job" | grep -q "SOAK_LEAKS: '0'" &&
+    printf '%s\n' "$soak_job" | grep -q 'name: Leak profiling' &&
+    printf '%s\n' "$soak_job" | grep -q 'scripts/soak/check-profiled-run.py' &&
+    ! printf '%s\n' "$soak_job" | grep -q 'continue-on-error'; then
+    pass "ci.yml requires unprofiled quantitative acceptance and separately validates leak profiling"
+else
+    fail "ci.yml requires unprofiled quantitative acceptance and separately validates leak profiling"
+fi
 if printf '%s\n' "$functional_job" | grep -q 'UI_TEST_SUITE: functional' &&
     ! printf '%s\n' "$functional_job" | grep -q 'enableCodeCoverage NO'; then
     pass "ci.yml's functional UI shards retain coverage and select the functional suite"

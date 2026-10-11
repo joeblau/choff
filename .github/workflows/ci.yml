@@ -199,13 +199,28 @@ jobs:
           UDID: ${{ steps.simulator.outputs.udid }}
         run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
 
-      - name: Soak
+      # Quantitative acceptance is measured without an external heap scanner.
+      # All eight checks and the original limits remain required.
+      - name: Quantitative soak
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
           SOAK_MINUTES: ${{ inputs.soak_minutes || vars.BLAU_CI_SOAK_MINUTES || '20' }}
-          SOAK_LEAKS: ${{ vars.BLAU_CI_SOAK_LEAKS || '1' }}
+          SOAK_LEAKS: '0'
           XCODEBUILD_FLAGS: "-parallel-testing-enabled NO -collect-test-diagnostics never"
         run: make soak SOAK_MINUTES="$SOAK_MINUTES"
+
+      - name: Leak profiling
+        if: ${{ !cancelled() && (vars.BLAU_CI_SOAK_LEAKS || '1') != '0' }}
+        env:
+          DESTINATION: ${{ steps.simulator.outputs.destination }}
+          SOAK_MINUTES: ${{ inputs.soak_minutes || vars.BLAU_CI_SOAK_MINUTES || '20' }}
+          SOAK_LEAKS: '1'
+          XCODEBUILD_FLAGS: "-parallel-testing-enabled NO -collect-test-diagnostics never"
+        run: |
+          status=0
+          make soak SOAK_MINUTES="$SOAK_MINUTES" SOAK_OUTPUT=.build/results/soak-leaks || status=$?
+          xcrun xcresulttool get test-results summary --path .build/results/soak-leaks/soak.xcresult --compact >.build/results/soak-leaks/test-summary.json
+          python3 -I scripts/soak/check-profiled-run.py .build/results/soak-leaks --minutes "$SOAK_MINUTES" --status "$status"
 
       - name: Shut down simulator
         if: ${{ always() && steps.simulator.outputs.udid != '' }}
@@ -217,7 +232,12 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           if [ -f .build/results/soak/summary.md ]; then
+            echo '## Quantitative acceptance (unprofiled; all eight checks required)' >>"$GITHUB_STEP_SUMMARY"
             cat .build/results/soak/summary.md >>"$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f .build/results/soak-leaks/summary.md ]; then
+            echo '## Leak profiling (correctness and zero leak growth required; timing and footprint diagnostic)' >>"$GITHUB_STEP_SUMMARY"
+            cat .build/results/soak-leaks/summary.md >>"$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload results
@@ -225,6 +245,16 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: soak-results-${{ github.run_attempt }}
-          path: .build/results/soak/
+          path: |
+            .build/results/soak/
+            .build/results/soak-leaks/
           if-no-files-found: warn
           retention-days: 90
+
+  # Nightly (and on demand) ASR evaluation (#32): WER, first-partial and
+  # end-of-utterance latency and RTF of every engine on the ASR fixtures with
+  # the real models, failing on the regression gate in
+  # docs/asr-eval/thresholds.json. The report is kept as an artifact (the
+  # history) and shown on the run's summary page. The pinned models (~700 MB,
+  # public on Hugging Face, no token) are cached by manifest. See
+  # docs/asr-eval.md.

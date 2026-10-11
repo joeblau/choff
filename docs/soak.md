@@ -69,7 +69,11 @@ session would.
 
 `SoakAnalysis` judges the samples after a warm-up (the first 10% of the
 audio: caches, the first SQLite pages, the first topic). All eight must
-pass, and on a simulator the leak readings must not grow.
+pass in CI's unprofiled quantitative run. A separate simulator run collects
+leaks and requires all five correctness checks and zero leak growth. Its
+footprint and latency values are retained as diagnostics; quantitative
+acceptance comes from the first run. Both use the same pipeline, session
+length, sampling, warm-up and limits.
 
 | Check | Fails when | Default limit |
 | --- | --- | --- |
@@ -101,6 +105,22 @@ debuggable by `leaks` and the soak doesn't turn on malloc stack logging, so
 the readings count leaks but don't say where they were allocated: to find
 the owner of a new leak, record the soak with Instruments' Leaks template
 (below), which keeps the allocation stacks.
+
+CI invokes `make soak SOAK_LEAKS=0` first, then runs the same session with
+`SOAK_LEAKS=1` into `.build/results/soak-leaks`. The primary command's failure
+always fails the job. `check-profiled-run.py` validates the second run's
+complete report, XCTest summary and leak readings: missing or skipped tests,
+runner errors, incomplete sessions, correctness failures, inconclusive leak
+readings and any leak growth fail the job. Only a single XCTest assertion
+that exactly matches footprint or latency failures in the profiling report
+can be diagnostic. Local `make soak` retains its original combined verdict.
+
+This separation follows a CI run whose footprint rises overlapped external
+leak scans while live heap stayed below the original limit. An earlier
+unprofiled → scanned → unprofiled control passed all eight checks in every
+phase, so those observations do not establish profiling as the sole cause
+of the failure. They support measuring acceptance without a concurrent
+scanner. The 2 MB/hour footprint limit and the 10% warm-up remain unchanged.
 
 **Scripted or recognized.** The report's outcome says where the transcript
 came from (`SoakOutcome.transcript`): `scripted`, the script's own word
@@ -155,8 +175,10 @@ them with a `TEST_RUNNER_` prefix when calling xcodebuild directly):
 
 - **Nightly, simulator, 20 minutes.** The `soak` job in
   [CI](ci.md) runs `make soak SOAK_MINUTES=20` on the runner's iPhone 17
-  simulator: 20 minutes of audio at 10x, renewal at 12 audio minutes, leaks
-  read every 20 s. The summary page shows the report and the leak table;
+  simulator: two sessions of 20 minutes of audio at 10x, renewal at 12 audio
+  minutes. The first gates all eight quantitative checks; the second reads
+  leaks every 20 s and gates correctness and zero leak growth. The summary
+  labels both reports and keeps the profiling measurements visible;
   `soak-results-<attempt>` keeps everything for 90 days. **Actions > CI >
   Run workflow** with **Also run the long-session soak test** runs it on
   demand, at any length (`soak_minutes`); the repository variables

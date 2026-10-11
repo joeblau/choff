@@ -125,6 +125,57 @@ expect "soak.sh fails cleanly on an unknown simulator" 1 \
     env SIMCTL_DEVICES_JSON=/dev/null DESTINATION='platform=iOS Simulator,name=No Such Phone' \
     SOAK_OUTPUT="$work/soak" "$soak"
 
+# The profiling exception must never hide a crash, missing evidence,
+# correctness regression or leak growth. Exercise its acceptance boundary.
+expect "profiled verdict accepts only measurement failures" 0 \
+    python3 -I - "$scripts_dir/soak/check-profiled-run.py" <<'PY'
+import copy
+import importlib.util
+import sys
+
+spec = importlib.util.spec_from_file_location("profiled", sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+names = sorted(module.MEASUREMENTS | module.CORRECTNESS)
+report = {"checks": [{"name": name, "passed": True} for name in names],
+          "setup": {"audioSeconds": 1204.22}, "samples": [{}, {}, {}]}
+leaks = {"passed": True, "toleranceLeaks": 0, "toleranceBytes": 0,
+         "readings": [{"pid": 42, "phase": "during-run", "wall": 20, "leaks": 2, "bytes": 64},
+                      {"pid": 42, "phase": "after-run", "wall": 140, "leaks": 2, "bytes": 64}]}
+summary = {"totalTestCount": 1, "skippedTests": 0, "expectedFailures": 0,
+           "passedTests": 1, "failedTests": 0, "testFailures": []}
+module.validate(report, leaks, summary, 20, 0)
+report["checks"][names.index("memory.slope")]["passed"] = False
+summary.update(passedTests=0, failedTests=1, testFailures=[{
+    "testIdentifierString": "SoakTests/testLongSession()",
+    "failureText": 'XCTAssertEqual failed: ("failed: memory.slope") is not equal to ("passed") - The soak failed; see the attached report',
+}])
+module.validate(report, leaks, summary, 20, 2)
+
+def rejects(change):
+    r, l, s = copy.deepcopy((report, leaks, summary))
+    change(r, l, s)
+    try:
+        module.validate(r, l, s, 20, 2)
+    except (ValueError, KeyError):
+        return
+    raise AssertionError("invalid profiling run accepted")
+
+rejects(lambda r, l, s: r["checks"].pop())
+rejects(lambda r, l, s: r["checks"][names.index("conversation.complete")].update(passed=False))
+rejects(lambda r, l, s: r["setup"].update(audioSeconds=1199))
+rejects(lambda r, l, s: s.update(totalTestCount=2))
+rejects(lambda r, l, s: s.update(skippedTests=1))
+rejects(lambda r, l, s: s["testFailures"][0].update(failureText="The runner crashed"))
+rejects(lambda r, l, s: s["testFailures"][0].update(testIdentifierString="OtherTests/testOther()"))
+rejects(lambda r, l, s: l["readings"].pop())
+rejects(lambda r, l, s: l["readings"][-1].update(pid=43))
+rejects(lambda r, l, s: l["readings"][-1].update(bytes=96))
+rejects(lambda r, l, s: l.update(toleranceBytes=32))
+rejects(lambda r, l, s: l.update(passed=False))
+print("complete run and diagnostic measurement accepted; 12 invalid runs rejected")
+PY
+
 echo
 echo "$passed passed, $failed failed"
 [ "$failed" -eq 0 ]
