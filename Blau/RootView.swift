@@ -56,7 +56,6 @@ struct RootView: View {
 /// from `RootView` so it can own the `RecordButtonModel` built from the
 /// environment's conversation session.
 struct MainScreenScaffold: View {
-    @Environment(ModelManager.self) private var models
     @Environment(AppEnvironment.self) private var environment
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -144,10 +143,6 @@ struct MainScreenScaffold: View {
                 .safeAreaInset(edge: .bottom) {
                     SpeechModelSetupInset()
                 }
-                // `isReady` changes once, not with every progress report, so
-                // reading it here doesn't evaluate the scaffold again while
-                // the models download (#182).
-                .animation(.default, value: models.isReady)
         }
         // The timeline's Continue This Topic (#58) starts or seeds the
         // conversation through the record button's model, so the button,
@@ -294,13 +289,18 @@ private struct SpeechModelSetupInset: View {
     var body: some View {
         // Hidden while checking, so an offline launch with every model
         // installed doesn't flash the card.
-        if !models.isReady && models.setupStatus.phase != .checking {
-            SpeechModelSetupView()
-                .padding()
-                // Keep the card above Settings and Record throughout its
-                // transition; moving through the bottom edge crosses the bar.
-                .transition(.opacity)
+        Group {
+            if !models.isReady && models.setupStatus.phase != .checking {
+                SpeechModelSetupView()
+                    .padding()
+                    // Keep the card above Settings and Record throughout its
+                    // transition; moving through the bottom edge crosses the bar.
+                    .transition(.opacity)
+            }
         }
+        // Readiness belongs to the card, so finishing setup doesn't
+        // reevaluate the scaffold that owns the active sheets and controls.
+        .animation(.default, value: models.isReady)
     }
 }
 
