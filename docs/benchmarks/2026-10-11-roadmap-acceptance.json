@@ -137,7 +137,8 @@
           "requirement": "Runtime < 15 min with warm cache",
           "completion": "failed current original acceptance",
           "evidence": [
-            "CI 38114217207 restores Swift package cache, but UI shard 1 runs 1432 seconds against original 900-second target"
+            "CI 38114217207 restores Swift package cache, but UI shard 1 runs 1432 seconds against original 900-second target",
+            "CI38123804979 at2acfe8c completed allrequiredPASS but2277seconds end-to-end, exceeding original900seconds warm-cache target. LongestUIjob1501seconds. Original runtime requirement remains failed."
           ]
         }
       ],
@@ -1567,7 +1568,7 @@
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
             "Source2acfe8c full original iOS27 suite:12PASS0FAIL0SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
           ],
-          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at corrective source2acfe8c. Physical-device120Hz flings and Instruments memory verification remain pending. Separate iOS26 AX5 topic expansion failure blocks integration."
+          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         },
         {
           "requirement": "Memory stays bounded",
@@ -1578,7 +1579,7 @@
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
             "Source2acfe8c full original iOS27 suite:12PASS0FAIL0SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
           ],
-          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at corrective source2acfe8c. Physical-device120Hz flings and Instruments memory verification remain pending. Separate iOS26 AX5 topic expansion failure blocks integration."
+          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         }
       ],
       "prior_unverified_followups": [
@@ -2497,7 +2498,8 @@
           "completion": "verified",
           "evidence": [
             "RealCI38116933575 separate nativeunit/fourfunctionalUIshards/optimizedlatency; UIjobdurations1350/1568/1519/1771sec versus2700limit, native675secversus1800. Completebounded originalcoverage. Absolute warm-CI<900secoriginal#15 stillunmet; distincttasknotwaived.",
-            "/tmp/voice-ci-242-jobs.json"
+            "/tmp/voice-ci-242-jobs.json",
+            "CI38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
           ]
         },
         {
@@ -2509,14 +2511,16 @@
             "/tmp/voice-ci-242-ui1-tests.json",
             "/tmp/voice-ci-242-ui2-tests.json",
             "/tmp/voice-ci-242-ui3-tests.json",
-            "/tmp/voice-ci-242-ui4-tests.json"
+            "/tmp/voice-ci-242-ui4-tests.json",
+            "CI38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
           ]
         },
         {
           "requirement": "Confirm on a real CI run that app tests complete",
           "completion": "verified",
           "evidence": [
-            "Real required CI 38119809945 at26cd0ba completed successfully: app unit tests, all four UI shards, original expansion performance and aggregate app-tests all pass. The separate long-paging failure is retained under#57 and blocks merge."
+            "Real required CI 38119809945 at26cd0ba completed successfully: app unit tests, all four UI shards, original expansion performance and aggregate app-tests all pass. The separate long-paging failure is retained under#57 and blocks merge.",
+            "CI38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
           ]
         }
       ],
@@ -2642,14 +2646,14 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T08:42:29.209223+00:00",
+  "last_evidence_update": "2026-10-11T09:03:43.636646+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
     "Verified criteria cite actual source, tests, reports or historical measured controls. Historical-author evidence is explicitly labelled; it is not represented as a fresh execution.",
     "Not-yet-proven criteria are unverified, not automatically failing. Partial results do not establish real hardware, model access, multi-device or release acceptance.",
     "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
-    "PR187 local sourcea122d7e passes original both-OS topic/AX5/latency checks; its fresh required CI is pending the preceding2acfe8c run. PR188 retains the separately tested093c20f score-reuse proof and is locally rebased ontoa122d7e. Neither PR nor the whole goal is claimed merged or complete."
+    "PR187 ata122d7e passes original both-OS topic/AX5/latency checks and has fresh requiredCI38126102076 running. Preceding2acfe8c requiredCI38123804979 passed all checks. PR188 retains the separately tested093c20f score-reuse proof. These PRs and the whole goal are not claimed merged or complete."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
