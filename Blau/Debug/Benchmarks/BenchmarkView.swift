@@ -78,7 +78,7 @@
                 Text("Models")
             } footer: {
                 Text(
-                    "Models download on first run. Keep Blau open and the device cool; the screen stays on while "
+                    "Models download on first run. Keep Choff open and the device cool; the screen stays on while "
                         + "the suite runs. Cancel the run to close this screen.")
             }
         }
@@ -138,7 +138,7 @@
             } footer: {
                 Text(
                     "Runs Parakeet EOU 320 ms on a live cadence with the microphone on. After the status says "
-                        + "Running, use Blau for a minute, then press the side button to lock the device for most "
+                        + "Running, use Choff for a minute, then press the side button to lock the device for most "
                         + "of the run (the device needs a passcode). Unlock and come back to see the verdict.")
             }
         }

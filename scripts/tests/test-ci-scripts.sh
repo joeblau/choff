@@ -485,7 +485,7 @@ fi
 # --- warm-simulator.sh ----------------------------------------------------------
 
 warm="$scripts_dir/ci/warm-simulator.sh"
-fake_app="$work/Blau.app"
+fake_app="$work/Choff.app"
 mkdir -p "$fake_app"
 cat >"$fake_app/Info.plist" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>

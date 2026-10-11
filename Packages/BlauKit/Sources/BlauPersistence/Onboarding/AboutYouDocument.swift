@@ -3,7 +3,7 @@ import Foundation
 import SwiftData
 
 /// The user's own description of themselves, written in onboarding's
-/// "Tell Blau about you" step (#44) and kept as the knowledge base's
+/// "Tell Choff about you" step (#44) and kept as the knowledge base's
 /// `.profile` document (`DocumentKind.profile`).
 ///
 /// It is an ordinary `Document`, so it syncs through iCloud. From the first

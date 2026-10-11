@@ -47,7 +47,7 @@ struct AppleSpeechLiveTests {
         let transcriber = AppleTranscriber(
             engine: SystemSpeechAnalyzerEngine(locale: locale), audio: source,
             voiceActivity: withVAD ? vad : nil,
-            vocabulary: StaticRecognitionVocabulary(["Blau", "Grok"]),
+            vocabulary: StaticRecognitionVocabulary(["Choff", "Grok"]),
             signposter: .disabled(.asr))
 
         // Note where the audio was when each final came out.

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Builds a fake, ad hoc signed Blau.app for scripts/tests/test-release-scripts.sh.
+"""Builds a fake, ad hoc signed Choff.app for scripts/tests/test-release-scripts.sh.
 
     make-release-app.py OUTPUT_DIR [key=value ...]
 
-Writes OUTPUT_DIR/Blau.app shaped like an App Store export: Info.plist,
+Writes OUTPUT_DIR/Choff.app shaped like an App Store export: Info.plist,
 an executable (a copy of /usr/bin/true), the repository's privacy manifests,
 an embedded provisioning profile (a plain plist; the real one is CMS-signed)
-and PlugIns/BlauWidgets.appex, each signed ad hoc with entitlements so
+and PlugIns/ChoffWidgets.appex, each signed ad hoc with entitlements so
 `codesign -d --entitlements` reads them like a distribution build's.
 
 Overrides (key=value) bend one property to produce a broken build:
@@ -44,23 +44,23 @@ def main(argv):
     options = dict(argument.split("=", 1) for argument in argv[1:])
     version = options.get("version", "0.1.0")
     build = options.get("build", "42")
-    bundle_id = options.get("bundle_id", "com.joeblau.blau")
-    container = "iCloud.com.joeblau.blau"
+    bundle_id = options.get("bundle_id", "com.joeblau.choff")
+    container = "iCloud.com.joeblau.choff"
     get_task_allow = options.get("get_task_allow", "false") == "true"
 
-    app = output / "Blau.app"
+    app = output / "Choff.app"
     shutil.rmtree(app, ignore_errors=True)
     app.mkdir(parents=True)
     scratch = output / ".signing"
     scratch.mkdir(exist_ok=True)
 
-    profile = {"Name": "iOS Team Store Provisioning Profile: com.joeblau.blau", "TeamIdentifier": ["ABCDE12345"]}
+    profile = {"Name": "iOS Team Store Provisioning Profile: com.joeblau.choff", "TeamIdentifier": ["ABCDE12345"]}
     if options.get("provisioned_devices") == "true":
         profile["ProvisionedDevices"] = ["00008110-000000000000001E"]
 
     info = {
         "CFBundleIdentifier": bundle_id,
-        "CFBundleExecutable": "Blau",
+        "CFBundleExecutable": "Choff",
         "CFBundlePackageType": "APPL",
         "CFBundleShortVersionString": version,
         "CFBundleVersion": build,
@@ -71,19 +71,19 @@ def main(argv):
     }
 
     if options.get("no_widget") != "true":
-        widget = app / "PlugIns" / "BlauWidgets.appex"
+        widget = app / "PlugIns" / "ChoffWidgets.appex"
         widget.mkdir(parents=True)
         write_plist(
             widget / "Info.plist",
             {
                 "CFBundleIdentifier": f"{bundle_id}.widgets",
-                "CFBundleExecutable": "BlauWidgets",
+                "CFBundleExecutable": "ChoffWidgets",
                 "CFBundlePackageType": "XPC!",
                 "CFBundleShortVersionString": version,
                 "CFBundleVersion": options.get("widget_build", build),
             },
         )
-        shutil.copy("/usr/bin/true", widget / "BlauWidgets")
+        shutil.copy("/usr/bin/true", widget / "ChoffWidgets")
         shutil.copy(REPOSITORY / "BlauWidgets" / "PrivacyInfo.xcprivacy", widget / "PrivacyInfo.xcprivacy")
         write_plist(widget / "embedded.mobileprovision", profile)
         sign(
@@ -93,7 +93,7 @@ def main(argv):
         )
 
     write_plist(app / "Info.plist", info)
-    shutil.copy("/usr/bin/true", app / "Blau")
+    shutil.copy("/usr/bin/true", app / "Choff")
     shutil.copy(REPOSITORY / "Blau" / "Resources" / "PrivacyInfo.xcprivacy", app / "PrivacyInfo.xcprivacy")
     write_plist(app / "embedded.mobileprovision", profile)
     entitlements = {

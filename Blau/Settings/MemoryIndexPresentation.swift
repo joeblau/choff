@@ -31,12 +31,12 @@ struct MemoryIndexPresentation: Equatable {
     init(_ status: MemoryIndexingStatus?) {
         let about = String(
             localized:
-                "Blau indexes your conversations and notes on this iPhone so it can search them. The index updates as text arrives from your other devices, catches up in the background, and never leaves this device."
+                "Choff indexes your conversations and notes on this iPhone so it can search them. The index updates as text arrives from your other devices, catches up in the background, and never leaves this device."
         )
         guard let status else {
             self.init(
                 title: String(localized: "Not available"),
-                detail: String(localized: "Search needs Blau's saved data. This session uses temporary storage."),
+                detail: String(localized: "Search needs Choff's saved data. This session uses temporary storage."),
                 systemImage: "magnifyingglass", job: nil, indexed: nil, lastRebuild: nil, canRebuild: false,
                 isWarning: false)
             return
@@ -92,7 +92,7 @@ struct MemoryIndexPresentation: Equatable {
                 + String(localized: "Until the language model is installed, search matches words rather than meaning.")
         }
         if status.lastError != nil, status.activity == .idle {
-            detail += " " + String(localized: "The last update failed; Blau will try again.")
+            detail += " " + String(localized: "The last update failed; Choff will try again.")
         }
 
         self.init(

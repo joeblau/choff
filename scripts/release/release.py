@@ -35,8 +35,8 @@ import zipfile
 from pathlib import Path
 
 REPOSITORY = Path(__file__).resolve().parent.parent.parent
-BUNDLE_ID = "com.joeblau.blau"
-CONTAINER = "iCloud.com.joeblau.blau"
+BUNDLE_ID = "com.joeblau.choff"
+CONTAINER = "iCloud.com.joeblau.choff"
 TAG_PATTERN = re.compile(r"^v(?P<version>\d+(?:\.\d+){0,2})(?:-(?P<suffix>[0-9A-Za-z][0-9A-Za-z.-]*))?$")
 MARKETING_VERSION_PATTERN = re.compile(r"^\d+(?:\.\d+){0,2}$")
 # TestFlight's "What to Test" field holds at most 4,000 characters.
@@ -237,7 +237,7 @@ def merged_changes(from_ref, to_ref):
 
 
 def heading(arguments):
-    title = "Blau"
+    title = "Choff"
     if arguments.version:
         title += f" {arguments.version}"
         if arguments.build:
@@ -491,7 +491,7 @@ def check_app(app, arguments, checks):
     )
 
     extensions = sorted((app / "PlugIns").glob("*.appex")) + sorted((app / "Extensions").glob("*.appex"))
-    checks.check(bool(extensions), "embeds the app extensions (BlauWidgets)")
+    checks.check(bool(extensions), "embeds the app extensions (ChoffWidgets)")
     for extension in extensions:
         extension_info = read_plist(extension / "Info.plist")
         name = extension.name

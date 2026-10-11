@@ -12,7 +12,7 @@ import Testing
 
 /// The app-side wiring of fact extraction (#66): topics the lifecycle
 /// closes reach the extraction pipeline, the Settings toggle stops it, and
-/// "What Blau Learned" deletes through it. The pipeline itself is covered
+/// "What Choff Learned" deletes through it. The pipeline itself is covered
 /// by `swift test` in BlauKit.
 @Suite("Memory learning wiring")
 @MainActor

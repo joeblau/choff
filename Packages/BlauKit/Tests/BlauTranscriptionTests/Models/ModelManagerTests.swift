@@ -450,7 +450,7 @@ struct ModelManagerTests {
         #expect(manager.diskUsage[.parakeetTDTv3] == 0)
         #expect(manager.directory(for: .parakeetTDTv3) == nil)
         #expect(harness.store.installation(of: try #require(harness.manifest[.parakeetTDTv3])) == nil)
-        #expect(manager.isReady, "Deleting an optional model keeps Blau usable")
+        #expect(manager.isReady, "Deleting an optional model keeps Choff usable")
 
         await manager.download(.parakeetTDTv3)
         await manager.waitUntilIdle()
@@ -541,7 +541,7 @@ struct ModelManagerTests {
             Issue.record("Expected a load failure, got \(manager.state(of: .parakeetTDTv3))")
             return
         }
-        #expect(manager.isReady, "Optional model failures don't block Blau")
+        #expect(manager.isReady, "Optional model failures don't block Choff")
     }
 
     @Test func notEnoughSpaceFailsWithTheAmountNeeded() async throws {

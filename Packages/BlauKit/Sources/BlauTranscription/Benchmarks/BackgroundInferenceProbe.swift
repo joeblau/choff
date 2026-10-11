@@ -106,7 +106,7 @@ public struct BackgroundInferenceProbe: Sendable {
         onStatus("Loading the Neural Engine model")
         try await processor.prepare { _ in }
         try await processor.load()
-        onStatus("Running: move Blau to the background and lock the device")
+        onStatus("Running: move Choff to the background and lock the device")
         let (samples, endedAt) = try await liveRun(fixture: fixture, hop: hop, context: context, onSample: onSample)
         await processor.unload()
 

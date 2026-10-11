@@ -161,7 +161,7 @@ struct LatencyBudgetView: View {
             if let report, report.turnCount > 0 {
                 ShareLink(
                     item: LatencyReportFile(report: report),
-                    preview: SharePreview("Blau latency report", image: Image(systemName: "stopwatch"))
+                    preview: SharePreview("Choff latency report", image: Image(systemName: "stopwatch"))
                 ) {
                     Label("Export Report", systemImage: "square.and.arrow.up")
                 }

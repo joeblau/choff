@@ -25,7 +25,7 @@ struct XAIKeyOnboardingStep: View {
                     .font(.title.bold())
 
                 Text(
-                    "Blau talks with Grok using your own xAI API key. "
+                    "Choff talks with Grok using your own xAI API key. "
                         + "It's stored in your iCloud Keychain, so you only enter it once for all your devices, "
                         + "and it's only ever sent to xAI."
                 )

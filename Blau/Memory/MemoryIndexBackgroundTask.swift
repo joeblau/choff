@@ -19,7 +19,7 @@ import os
 /// `BGTaskSchedulerPermittedIdentifiers` and the `processing` background
 /// mode is declared in `project.yml`. See docs/memory-indexer.md.
 enum MemoryIndexBackgroundTask {
-    static let identifier = "com.joeblau.blau.memory-index"
+    static let identifier = "com.joeblau.choff.memory-index"
 
     #if canImport(BackgroundTasks) && os(iOS)
         /// Registers the launch handler. Call once, before the app finishes

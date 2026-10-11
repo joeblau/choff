@@ -120,7 +120,7 @@ public struct XAIAccountProblem: Sendable, Equatable, Identifiable {
         case .keychain(let status):
             self.init(
                 kind: .keychainFailure, title: "Keychain error",
-                message: "Blau couldn't use the Keychain (error \(status)). Try again.")
+                message: "Choff couldn't use the Keychain (error \(status)). Try again.")
         }
     }
 }

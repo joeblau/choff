@@ -226,7 +226,7 @@ struct FileDiagnosticsStoreTests {
         let exportDirectory = directory.appending(path: "export", directoryHint: .isDirectory)
         let url = try store.export(context: context, to: exportDirectory)
 
-        #expect(url.lastPathComponent == "Blau-Diagnostics-20270115-080200.json")
+        #expect(url.lastPathComponent == "Choff-Diagnostics-20270115-080200.json")
         #expect(url.deletingLastPathComponent().standardizedFileURL == exportDirectory.standardizedFileURL)
 
         let document = try #require(try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
@@ -261,7 +261,7 @@ struct FileDiagnosticsStoreTests {
     @Test func exportFileNameIsUTCTimestamped() {
         #expect(
             DiagnosticsExport.fileName(exportedAt: Date(timeIntervalSince1970: 0))
-                == "Blau-Diagnostics-19700101-000000.json")
+                == "Choff-Diagnostics-19700101-000000.json")
     }
 
     @Test func defaultDirectoryIsInApplicationSupport() throws {

@@ -5,7 +5,7 @@ import Testing
 @testable import Blau
 
 /// How the built app wires the memory indexer (#63). The bundle is hosted
-/// in the app, so `Bundle.main` is the built Blau.app.
+/// in the app, so `Bundle.main` is the built Choff.app.
 @Suite("Memory indexing wiring")
 struct MemoryIndexingWiringTests {
     private let info = Bundle.main.infoDictionary ?? [:]

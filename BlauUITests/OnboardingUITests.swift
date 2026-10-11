@@ -99,7 +99,7 @@ final class OnboardingUITests: XCTestCase {
         let about = aboutYou.descendants(matching: .any)["blau.onboarding.aboutYou.field"]
         XCTAssertTrue(about.waitForExistence(timeout: 5))
         about.tap()
-        about.typeText("I'm testing Blau.")
+        about.typeText("I'm testing Choff.")
         tapPrimary(on: "aboutYou", in: app)
 
         let done = page("ready", in: app)

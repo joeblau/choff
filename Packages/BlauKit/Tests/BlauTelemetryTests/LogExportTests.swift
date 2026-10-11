@@ -24,10 +24,11 @@ struct LogExportTests {
                 date: now.addingTimeInterval(-60), category: "realtime", level: "notice", message: "Connected"),
             LogExportEntry(date: now.addingTimeInterval(-30), category: "audio", level: "error", message: "Two\nlines"),
         ]
-        let text = LogExporter.format(entries, header: "Blau 1.0 (42)", since: now.addingTimeInterval(-3_600), now: now)
+        let text = LogExporter.format(
+            entries, header: "Choff 1.0 (42)", since: now.addingTimeInterval(-3_600), now: now)
         let lines = text.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
-        #expect(lines[0] == "Blau logs, 2026-10-07T08:00:00.000Z to 2026-10-07T09:00:00.000Z")
-        #expect(lines[1] == "Blau 1.0 (42)")
+        #expect(lines[0] == "Choff logs, 2026-10-07T08:00:00.000Z to 2026-10-07T09:00:00.000Z")
+        #expect(lines[1] == "Choff 1.0 (42)")
         #expect(lines[2] == "2 messages. Values marked private are redacted.")
         #expect(lines.contains("2026-10-07T08:59:00.000Z [realtime] notice: Connected"))
         #expect(lines.contains("2026-10-07T08:59:30.000Z [audio] error: Two"))
@@ -46,7 +47,7 @@ struct LogExportTests {
         let url = try LogExporter(source: source).export(window: .seconds(3_600), now: now, to: directory)
 
         #expect(url.pathExtension == "txt")
-        #expect(url.lastPathComponent.hasPrefix("Blau Logs "))
+        #expect(url.lastPathComponent.hasPrefix("Choff Logs "))
         let text = try String(contentsOf: url, encoding: .utf8)
         #expect(text.contains("Recent"))
         #expect(!text.contains("Too old"))

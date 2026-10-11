@@ -79,7 +79,7 @@ struct KeychainAPIKeyStoreTests {
         #expect(add.accessible == kSecAttrAccessibleAfterFirstUnlock as String)
         #expect(add.usesDataProtectionKeychain == true)
         #expect(add.value == Data(TestKeys.primaryRaw.utf8))
-        #expect(add.label == "Blau xAI API key")
+        #expect(add.label == "Choff xAI API key")
         #expect(keychain.data(service: "test.service", account: "test.account", synchronizable: true) != nil)
     }
 

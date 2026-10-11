@@ -60,13 +60,13 @@ public struct FactExtractionPrompt: Hashable, Sendable {
 
     /// The system prompt.
     public static let instructions = """
-        You maintain the long-term memory that Blau, a voice assistant, keeps about its user. Read the transcript \
+        You maintain the long-term memory that Choff, a voice assistant, keeps about its user. Read the transcript \
         and extract the durable facts worth remembering in future conversations: about the user (background, \
         work, company, projects, goals, preferences, relationships, plans, important dates) and about the people, \
         organizations, places, products, projects and events they talk about.
 
         Rules:
-        - Only facts the user stated or clearly confirmed. Never treat Blau's questions, suggestions or guesses \
+        - Only facts the user stated or clearly confirmed. Never treat Choff's questions, suggestions or guesses \
         as facts.
         - Skip small talk, passing moods and anything only true for this conversation.
         - A fact is subject, predicate, object. The subject is "user" for the user, otherwise the exact name of an \
@@ -153,7 +153,7 @@ public struct FactExtractionPrompt: Hashable, Sendable {
         lines.append("")
         lines.append("Transcript:")
         for line in utterances {
-            let speaker = line.utterance.speaker == .user ? "User" : "Blau"
+            let speaker = line.utterance.speaker == .user ? "User" : "Choff"
             lines.append("[\(line.number)] \(speaker): \(FactExtraction.clean(line.utterance.text))")
         }
         return lines.joined(separator: "\n")

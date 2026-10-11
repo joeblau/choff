@@ -216,7 +216,7 @@ final class SettingsUITests: XCTestCase {
         let learn = app.switches["settings.memory.learn"]
         scrollTo(learn, in: app.collectionViews.firstMatch)
         XCTAssertTrue(learn.waitForExistence(timeout: 10), "No Learn From Conversations in Settings → Knowledge")
-        XCTAssertTrue(app.buttons["settings.memory.learned"].exists, "No What Blau Learned in Settings → Knowledge")
+        XCTAssertTrue(app.buttons["settings.memory.learned"].exists, "No What Choff Learned in Settings → Knowledge")
 
         let status = app.descendants(matching: .any)["settings.memory.status"]
         scrollTo(status, in: app.collectionViews.firstMatch)
@@ -272,7 +272,7 @@ final class SettingsUITests: XCTestCase {
         let confirm = app.buttons.matching(identifier: "Delete Learned Facts").firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5), "No confirmation before deleting")
         XCTAssertTrue(
-            app.staticTexts["Delete what Blau learned?"].exists, "The confirmation doesn't say what it deletes")
+            app.staticTexts["Delete what Choff learned?"].exists, "The confirmation doesn't say what it deletes")
         confirm.tap()
         let result = app.staticTexts["settings.privacy.result"]
         XCTAssertTrue(result.waitForExistence(timeout: 10), "No result after deleting")

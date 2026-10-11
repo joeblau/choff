@@ -87,7 +87,7 @@ struct AppEnvironmentFactoryTests {
 
     @Test func previewTranscriberReplaysTheScript() async throws {
         let clock = ManualClock()
-        let script = TranscriptScript.speaking(["hello Blau"], wordDuration: .seconds(1))
+        let script = TranscriptScript.speaking(["hello Choff"], wordDuration: .seconds(1))
         let environment = AppEnvironment.fake(kind: .unitTest, script: script, clock: clock)
         try await environment.transcriber.start()
         var events = environment.transcriber.events.makeAsyncIterator()

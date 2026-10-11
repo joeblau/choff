@@ -120,7 +120,7 @@ private struct VoiceEnrollmentFlow: View {
                 .font(.largeTitle)
                 .foregroundStyle(.tint)
                 .accessibilityHidden(true)
-            Text(enrollment.plan.purpose == .topUp ? "Teach this iPhone your voice" : "Teach Blau your voice")
+            Text(enrollment.plan.purpose == .topUp ? "Teach this iPhone your voice" : "Teach Choff your voice")
                 .font(.title.bold())
             Text(introductionText)
                 .foregroundStyle(.secondary)
@@ -139,14 +139,14 @@ private struct VoiceEnrollmentFlow: View {
         case .enrollment:
             String(
                 localized: """
-                    You'll say \(enrollment.plan.prompts.count) short things, so Blau answers only you. \
+                    You'll say \(enrollment.plan.prompts.count) short things, so Choff answers only you. \
                     Your voiceprint syncs through iCloud, so your other devices know your voice too.
                     """)
         case .topUp:
             String(
                 localized: """
                     Your voiceprint already syncs here. Saying \(enrollment.plan.prompts.count) short things \
-                    on this iPhone helps Blau recognize you through its microphones.
+                    on this iPhone helps Choff recognize you through its microphones.
                     """)
         }
     }
@@ -219,7 +219,7 @@ private struct VoiceEnrollmentFlow: View {
                 .font(.title.bold())
                 .accessibilityIdentifier(VoiceEnrollmentIdentifiers.finished)
             Text(
-                "Blau now answers only your voice. Your voiceprint syncs through iCloud to your other devices, "
+                "Choff now answers only your voice. Your voiceprint syncs through iCloud to your other devices, "
                     + "end-to-end encrypted."
             )
             .foregroundStyle(.secondary)

@@ -285,7 +285,7 @@ jobs:
         continue-on-error: true
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Choff.app
 
       - name: Test
         id: test
@@ -373,7 +373,7 @@ jobs:
         continue-on-error: true
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Choff.app
 
       - name: Test
         id: test
@@ -544,7 +544,7 @@ jobs:
       - name: Warm up performance simulator
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Choff.app
 
       # One retry: the runner's simulator sometimes crashes the test runner
       # before any test starts ("never finished bootstrapping"), which would
@@ -651,7 +651,7 @@ jobs:
       - name: Warm up soak simulator
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Choff.app
 
       # Quantitative acceptance is measured without an external heap scanner.
       # All eight checks and the original limits remain required.

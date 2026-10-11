@@ -32,7 +32,7 @@ struct PersistenceBootstrapTests {
         let stack = PersistenceBootstrap.hermetic(recorder: recorder)
             .makeStack(mode: cloudKit, options: options(temporary.location))
         #expect(stack.mode == cloudKit)
-        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.blau"])
+        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.choff"])
         #expect(stack.syncedStoreURL == temporary.location.syncedStoreURL)
         #expect(FileManager.default.fileExists(atPath: temporary.location.syncedStoreURL.path(percentEncoded: false)))
         #expect(FileManager.default.fileExists(atPath: temporary.location.derivedStoreURL.path(percentEncoded: false)))
@@ -68,7 +68,7 @@ struct PersistenceBootstrapTests {
             Issue.record("Expected a local-only fallback, got \(stack.mode)")
             return
         }
-        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.blau", nil])
+        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.choff", nil])
         #expect(try conversationIDs(in: stack.container) == [id])
     }
 
@@ -123,7 +123,7 @@ struct CloudKitSchemaInitializationTests {
 
         _ = bootstrap.makeStack(mode: cloudKit, options: options)
         _ = bootstrap.makeStack(mode: cloudKit, options: options)
-        #expect(initializer.containerIdentifiers == ["iCloud.com.joeblau.blau"])
+        #expect(initializer.containerIdentifiers == ["iCloud.com.joeblau.choff"])
         UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite)
     }
 

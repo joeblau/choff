@@ -47,7 +47,7 @@ struct PrivacySettingsView: View {
                 Label(
                     "Speech is transcribed and matched to your voice on this iPhone. Your recordings never leave it.",
                     systemImage: "waveform.badge.mic")
-                Label("Your xAI key stays in your iCloud Keychain. There is no Blau server.", systemImage: "key")
+                Label("Your xAI key stays in your iCloud Keychain. There is no Choff server.", systemImage: "key")
             } header: {
                 Text("Where Your Data Lives")
             }
@@ -94,7 +94,7 @@ struct PrivacySettingsView: View {
                 Text(
                     "Deleting removes the data from this iPhone, from iCloud and from your other devices. "
                         + "It can't be undone. Files you exported or shared, including the Markdown copies in "
-                        + "iCloud Drive → Blau, aren't affected."
+                        + "iCloud Drive → Choff, aren't affected."
                 )
             }
         }
@@ -159,7 +159,7 @@ struct PrivacySettingsView: View {
     static func confirmationTitle(_ scope: DataEraseScope) -> String {
         switch scope {
         case .conversations: String(localized: "Delete all conversations?")
-        case .learnedFacts: String(localized: "Delete what Blau learned?")
+        case .learnedFacts: String(localized: "Delete what Choff learned?")
         case .knowledge: String(localized: "Delete the knowledge base?")
         case .voiceprint: String(localized: "Delete your voiceprint?")
         case .everything: String(localized: "Delete all your data?")
@@ -194,7 +194,7 @@ struct PrivacySettingsView: View {
             message +=
                 " "
                 + String(
-                    localized: "The Markdown copies in iCloud Drive → Blau aren't deleted; remove them in Files.")
+                    localized: "The Markdown copies in iCloud Drive → Choff aren't deleted; remove them in Files.")
         }
         return message
     }
@@ -209,7 +209,7 @@ struct PrivacySettingsView: View {
     /// first lets a memory update already talking to xAI finish.
     static func progressMessage(_ scope: DataEraseScope) -> String {
         scope.erasesLearnedFacts
-            ? String(localized: "Finishing Blau's memory update, then deleting…")
+            ? String(localized: "Finishing Choff's memory update, then deleting…")
             : String(localized: "Deleting…")
     }
 
@@ -372,7 +372,7 @@ struct SentToXAISection: View {
                 ),
                 systemImage: "brain"),
             Item(
-                title: String(localized: "What Blau learns from"),
+                title: String(localized: "What Choff learns from"),
                 detail: String(
                     localized:
                         "With Learn From Conversations on, each finished topic's transcript, to pick out facts and update your profile summary."
@@ -406,7 +406,7 @@ struct SentToXAISection: View {
             Text("What's Sent to xAI")
         } footer: {
             Text(
-                "These go straight from this iPhone to xAI under your own xAI account; no one else, Blau included, "
+                "These go straight from this iPhone to xAI under your own xAI account; no one else, Choff included, "
                     + "sees them on the way. Your voiceprint and recordings never leave your devices and iCloud."
             )
         }
@@ -588,7 +588,7 @@ struct DataExportSection: View {
             Text("Export")
         } footer: {
             Text(
-                "A zip of everything Blau keeps: every record as JSON, and your conversations and knowledge base as "
+                "A zip of everything Choff keeps: every record as JSON, and your conversations and knowledge base as "
                     + "Markdown. Your voiceprint is described, without the voice data itself."
             )
         }

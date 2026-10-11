@@ -15,7 +15,7 @@ public enum OnboardingStep: String, CaseIterable, Codable, Sendable, Hashable, C
     case iCloud
     /// Recording the voiceprint so Blau answers only the user (#46).
     case voiceEnrollment
-    /// "Tell Blau about you": seeds the knowledge base with a profile
+    /// "Tell Choff about you": seeds the knowledge base with a profile
     /// document (M3).
     case aboutYou
     /// Setup is done: how to start talking, and what is still missing.

@@ -272,11 +272,11 @@ enum SettingsSummary {
         return "\(name) · \(locale.localizedString(forLanguageCode: code) ?? identifier)"
     }
 
-    /// "Blau 1.0 (42)" from the bundle.
+    /// "Choff 1.0 (42)" from the bundle.
     static func version(bundle: Bundle = .main) -> String {
         let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "–"
         let build = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "–"
-        return "Blau \(version) (\(build))"
+        return "Choff \(version) (\(build))"
     }
 }
 

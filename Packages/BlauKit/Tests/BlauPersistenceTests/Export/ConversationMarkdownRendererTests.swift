@@ -48,7 +48,7 @@ struct ConversationMarkdownRendererTests {
                 time-zone: America/Los_Angeles
                 topics: 2
                 utterances: 5
-                generator: Blau Markdown export 1
+                generator: Choff Markdown export 1
                 ---
 
                 # Hiring Plan
@@ -77,7 +77,7 @@ struct ConversationMarkdownRendererTests {
 
                 ## No topic
 
-                **14:40:00 · Blau:** Reconnected.
+                **14:40:00 · Choff:** Reconnected.
 
                 """)
     }
@@ -166,7 +166,7 @@ struct ConversationMarkdownRendererTests {
     @Test func labelsEverySpeaker() {
         #expect(ConversationMarkdownRenderer.speaker(for: .user) == "You")
         #expect(ConversationMarkdownRenderer.speaker(for: .agent) == "Grok")
-        #expect(ConversationMarkdownRenderer.speaker(for: .system) == "Blau")
+        #expect(ConversationMarkdownRenderer.speaker(for: .system) == "Choff")
         #expect(ConversationMarkdownRenderer.speaker(for: nil) == "Unknown")
     }
 
@@ -230,7 +230,7 @@ struct MarkdownExportFileNameTests {
         #expect(MarkdownExportMetadata.parse(Data("---\nconversation: \(id)\n---\n".utf8)) == nil)
         #expect(
             MarkdownExportMetadata.parse(
-                Data("---\nconversation: \(id)\ngenerator: Blau Markdown export 1\n---\n".utf8))
+                Data("---\nconversation: \(id)\ngenerator: Choff Markdown export 1\n---\n".utf8))
                 == MarkdownExportMetadata(conversationID: id))
     }
 }

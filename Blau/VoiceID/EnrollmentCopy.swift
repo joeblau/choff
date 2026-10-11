@@ -15,7 +15,7 @@ struct EnrollmentPromptCopy: Equatable {
         case .readSentence:
             title = String(localized: "Read this aloud")
             text = String(
-                localized: "I'm teaching Blau what my voice sounds like, so it only answers me when I talk to it.")
+                localized: "I'm teaching Choff what my voice sounds like, so it only answers me when I talk to it.")
             hint = nil
         case .answerQuestion:
             title = String(localized: "Answer in your own words")
@@ -23,7 +23,7 @@ struct EnrollmentPromptCopy: Equatable {
             hint = String(localized: "Keep talking until the bar fills.")
         case .speakQuietly:
             title = String(localized: "Now say this quietly")
-            text = String(localized: "Blau should still know it's me when I'm speaking softly late at night.")
+            text = String(localized: "Choff should still know it's me when I'm speaking softly late at night.")
             hint = String(localized: "Keep the phone close, as if someone is asleep nearby.")
         case .armsLength:
             title = String(localized: "Hold the phone at arm's length")
@@ -66,7 +66,8 @@ enum EnrollmentMessages {
             String(localized: "The Voice ID model isn't ready yet. Check Settings → Speech Models, then try again.")
         case .microphoneUnavailable:
             String(
-                localized: "Blau can't use the microphone. Allow microphone access in the Settings app, then try again."
+                localized:
+                    "Choff can't use the microphone. Allow microphone access in the Settings app, then try again."
             )
         case .microphoneBusy:
             String(localized: "Stop the conversation first, then enroll.")

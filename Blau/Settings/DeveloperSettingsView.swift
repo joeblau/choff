@@ -98,8 +98,8 @@ struct DeveloperSettingsView: View {
                 Text("Diagnostics")
             } footer: {
                 Text(
-                    "Exports Blau's log messages from the last hour of this run as a text file to share with a "
-                        + "developer. Blau logs what you say as private, so it is redacted."
+                    "Exports Choff's log messages from the last hour of this run as a text file to share with a "
+                        + "developer. Choff logs what you say as private, so it is redacted."
                 )
             }
         }

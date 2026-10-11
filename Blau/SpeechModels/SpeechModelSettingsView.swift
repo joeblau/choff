@@ -152,7 +152,7 @@ struct SpeechModelSettingsView: View {
                     .foregroundStyle(.red)
             } else {
                 Text(
-                    "Models stay on this iPhone and aren't included in iCloud or device backups. Blau downloads them again when needed."
+                    "Models stay on this iPhone and aren't included in iCloud or device backups. Choff downloads them again when needed."
                 )
             }
         }

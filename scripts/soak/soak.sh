@@ -48,7 +48,7 @@ output="${SOAK_OUTPUT:-.build/results/soak}"
 interval="${SOAK_LEAKS_INTERVAL:-}"
 derived="${DERIVED_DATA:-.build/DerivedData}"
 destination="${DESTINATION:-platform=iOS Simulator,name=iPhone 17,OS=latest}"
-bundle_id="com.joeblau.blau"
+bundle_id="com.joeblau.choff"
 
 log() { echo "soak: $*" >&2; }
 
@@ -123,7 +123,7 @@ elapsed() { echo $(($(date +%s) - started)); }
 # The app's process on the soak's simulator.
 app_pid() {
     ps -axo pid=,command= | awk -v device="CoreSimulator/Devices/$udid/" \
-        'index($0, device) && $0 ~ /\/Blau\.app\/Blau( |$)/ { print $1; exit }'
+        'index($0, device) && $0 ~ /\/Choff\.app\/Choff( |$)/ { print $1; exit }'
 }
 
 # The directory holding this run's report, once the app has written it (a

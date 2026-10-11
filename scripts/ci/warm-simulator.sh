@@ -4,7 +4,7 @@
 # so the first UI test does not pay for a cold simulator. Used by the
 # app-ui-tests jobs in .github/workflows/ci.yml; see docs/ci.md.
 #
-# Usage: scripts/ci/warm-simulator.sh <udid> <path to Blau.app>
+# Usage: scripts/ci/warm-simulator.sh <udid> <path to Choff.app>
 #
 # On a freshly booted runner simulator the app's first launch can take
 # minutes, longer than XCUITest waits for a launch: the first UI test of a
@@ -30,7 +30,7 @@ if [[ "${1:-}" == -h || "${1:-}" == --help ]]; then
     exit 0
 fi
 if [[ $# -ne 2 ]]; then
-    echo "usage: scripts/ci/warm-simulator.sh <udid> <path to Blau.app>" >&2
+    echo "usage: scripts/ci/warm-simulator.sh <udid> <path to Choff.app>" >&2
     exit 2
 fi
 

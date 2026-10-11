@@ -141,7 +141,7 @@ struct OnboardingAppTests {
         let harness = await makeHarness()
         let context = try #require(harness.persistence.stack?.container.mainContext)
         context.insert(Self.usableVoiceprint())
-        try AboutYouDocument.save("I'm building Blau.", in: context)
+        try AboutYouDocument.save("I'm building Choff.", in: context)
         try context.save()
         #expect(harness.controller.prerequisites.voiceEnrollment == .satisfied)
         #expect(harness.controller.prerequisites.aboutYou == .satisfied)
@@ -288,7 +288,7 @@ struct OnboardingAppTests {
         #expect(harness.controller.prerequisites.aboutYou == .missing)
 
         // The About You page saves, then moves on: the next step sees it.
-        try AboutYouDocument.save("I'm building Blau.", in: context)
+        try AboutYouDocument.save("I'm building Choff.", in: context)
         try context.save()
         harness.controller.advance()
         #expect(harness.controller.prerequisites.aboutYou == .satisfied)

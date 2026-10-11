@@ -8,7 +8,7 @@ import UIKit
 /// Guards the branding (#82): the design tokens in the asset catalog, the
 /// launch screen and the app icon the build compiles from `AppIcon.icon`.
 /// The unit-test bundle is hosted in the app, so `Bundle.main` is the built
-/// Blau.app and these read its compiled `Assets.car` and `Info.plist`.
+/// Choff.app and these read its compiled `Assets.car` and `Info.plist`.
 @MainActor
 @Suite("Branding")
 struct BrandingTests {

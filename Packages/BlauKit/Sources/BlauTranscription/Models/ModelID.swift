@@ -48,13 +48,13 @@ public enum ModelID: String, CaseIterable, Codable, Hashable, Sendable {
     public var summary: String {
         switch self {
         case .sileroVAD: "Detects when you start and stop speaking (Silero VAD)."
-        case .speakerEmbedding: "Recognizes your voice so Blau only answers you (WeSpeaker)."
+        case .speakerEmbedding: "Recognizes your voice so Choff only answers you (WeSpeaker)."
         case .parakeetRealtimeEOU: "Turns speech into text as you talk (Parakeet realtime)."
         case .parakeetTDTv3: "Adds punctuation and fixes words after each sentence (Parakeet TDT v3)."
         case .textEmbedding: "Finds what you talked about before and notices topic changes (EmbeddingGemma)."
         case .parakeetRealtimeEOU1280:
             "Keeps transcribing with less work when your iPhone is hot or low on battery (Parakeet realtime)."
-        case .languageID: "Recognizes the language spoken so Blau ignores languages you don't use (VoxLingua107)."
+        case .languageID: "Recognizes the language spoken so Choff ignores languages you don't use (VoxLingua107)."
         }
     }
 
@@ -79,15 +79,15 @@ public enum ModelID: String, CaseIterable, Codable, Hashable, Sendable {
     public var deletionNote: String {
         switch self {
         case .sileroVAD, .speakerEmbedding, .parakeetRealtimeEOU:
-            "Blau can't listen without this model. It downloads again before your next conversation."
+            "Choff can't listen without this model. It downloads again before your next conversation."
         case .parakeetTDTv3:
             "Transcripts won't get the high-accuracy second pass until you download it again."
         case .textEmbedding:
-            "Blau can't search past conversations until it downloads again."
+            "Choff can't search past conversations until it downloads again."
         case .parakeetRealtimeEOU1280:
-            "Blau keeps transcribing at full rate when your iPhone is hot or low on battery until you download it again."
+            "Choff keeps transcribing at full rate when your iPhone is hot or low on battery until you download it again."
         case .languageID:
-            "Blau answers speech in any language, a foreign-language TV included, until it downloads again."
+            "Choff answers speech in any language, a foreign-language TV included, until it downloads again."
         }
     }
 }

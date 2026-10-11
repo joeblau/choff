@@ -170,7 +170,7 @@ there, and the block syncs.
 block's `updatedAt`, so a profile another device just rewrote (it syncs
 through iCloud) isn't rewritten here too.
 
-- **Background task.** `com.joeblau.blau.memory-profile`, a
+- **Background task.** `com.joeblau.choff.memory-profile`, a
   `BGProcessingTaskRequest` with `requiresNetworkConnectivity` and
   `requiresExternalPower`, submitted every time the app leaves the
   foreground with `earliestBeginDate` = the next check
@@ -240,5 +240,5 @@ foreground catch-up; fake environments never call a text model.
 Not covered here: consolidation quality with the real model and the
 background task actually being launched by iOS. Both need a device and an
 xAI key. On a device, force the task from the debugger with
-`e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.joeblau.blau.memory-profile"]`
+`e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.joeblau.choff.memory-profile"]`
 after backgrounding the app.

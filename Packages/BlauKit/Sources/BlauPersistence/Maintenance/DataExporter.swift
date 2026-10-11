@@ -92,7 +92,7 @@ public struct DataExporter: Sendable {
     /// The knowledge base and memory: the user's own pages first, then what
     /// Blau maintains and learned.
     public func knowledgeMarkdown(_ export: DataExport) -> String {
-        var output = "# Blau knowledge and memory\n\nExported \(format(export.exportedAt, time: true))\n"
+        var output = "# Choff knowledge and memory\n\nExported \(format(export.exportedAt, time: true))\n"
 
         func pages(_ kind: DocumentKind) -> [DataExport.DocumentRecord] {
             export.documents.filter { $0.kind == kind.rawValue }
@@ -115,7 +115,7 @@ public struct DataExporter: Sendable {
         let profiles = export.profileBlocks.filter { !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         if !profiles.isEmpty {
             output += "\n## Profile summary\n\n"
-            output += "What Blau tells Grok about you at the start of each conversation, kept up to date from what "
+            output += "What Choff tells Grok about you at the start of each conversation, kept up to date from what "
             output += "it learned.\n"
             for block in profiles {
                 if profiles.count > 1 || block.key != ProfileBlock.userKey {
@@ -127,7 +127,7 @@ public struct DataExporter: Sendable {
         }
 
         if !export.facts.isEmpty || !export.entities.isEmpty {
-            output += "\n## What Blau learned\n"
+            output += "\n## What Choff learned\n"
             let current = export.facts.filter(\.isCurrent)
             let past = export.facts.filter { !$0.isCurrent }
             if !current.isEmpty {
@@ -168,12 +168,12 @@ public struct DataExporter: Sendable {
     /// What the export holds and what each file is.
     public func readme(_ export: DataExport) -> String {
         let counts = export.counts
-        var output = "# Blau data export\n\n"
+        var output = "# Choff data export\n\n"
         output += "Exported \(format(export.exportedAt, time: true))"
         if let app = export.app { output += " from \(app)" }
         output += ".\n\n"
         output += "| File | What it holds |\n| ---- | ------------- |\n"
-        output += "| `\(Self.jsonFileName)` | Every record Blau keeps, as JSON (format `\(export.format)`, "
+        output += "| `\(Self.jsonFileName)` | Every record Choff keeps, as JSON (format `\(export.format)`, "
         output += "version \(export.formatVersion), schema \(export.schemaVersion)) |\n"
         output += "| `\(Self.conversationsFileName)` | \(Self.plural(counts.conversations, "conversation")) as "
         output += "readable text |\n"
@@ -184,8 +184,8 @@ public struct DataExporter: Sendable {
             "(including unfinished ones), \(Self.plural(counts.entities, "person or thing", "people and things")) "
         output += "and \(Self.plural(counts.voiceprints, "voiceprint")). "
         output += "A voiceprint is described (model, enrollment dates, devices) without its vectors: they are a "
-        output += "biometric template only Blau's speaker model can use.\n"
-        output += "\nThis is a copy. Deleting it doesn't change what Blau keeps, and deleting data in Blau doesn't "
+        output += "biometric template only Choff's speaker model can use.\n"
+        output += "\nThis is a copy. Deleting it doesn't change what Choff keeps, and deleting data in Choff doesn't "
         output += "change this copy.\n"
         return output
     }
@@ -198,7 +198,7 @@ public struct DataExporter: Sendable {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
         let parts = calendar.dateComponents([.year, .month, .day], from: date)
-        return String(format: "Blau Export %04d-%02d-%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
+        return String(format: "Choff Export %04d-%02d-%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
     }
 
     /// Writes the export's files into a new folder in `parent` (replacing

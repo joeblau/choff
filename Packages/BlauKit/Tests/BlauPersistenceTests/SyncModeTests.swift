@@ -59,7 +59,7 @@ struct PersistenceOptionsTests {
 
     private func resolve(
         info: [String: Any] = [PersistenceOptions.cloudKitEnabledInfoKey: "YES"],
-        arguments: [String] = ["Blau"],
+        arguments: [String] = ["Choff"],
         environment: [String: String] = [:],
         debug: Bool = false
     ) -> PersistenceOptions {
@@ -73,7 +73,7 @@ struct PersistenceOptionsTests {
         #expect(options.cloudKitEntitled)
         #expect(options.storeOverride == nil)
         #expect(options.needsAccountStatus)
-        #expect(options.containerIdentifier == "iCloud.com.joeblau.blau")
+        #expect(options.containerIdentifier == "iCloud.com.joeblau.choff")
         #expect(options.schemaInitialization == .never)
     }
 
@@ -98,7 +98,7 @@ struct PersistenceOptionsTests {
 
     @Test(arguments: [("local", StoreOverride.local), ("memory", .memory), ("MEMORY", .memory)])
     func readsTheStoreOverrideArgument(value: String, expected: StoreOverride) {
-        let options = resolve(arguments: ["Blau", "-BlauStore", value])
+        let options = resolve(arguments: ["Choff", "-BlauStore", value])
         #expect(options.storeOverride == expected)
         #expect(!options.needsAccountStatus)
     }
@@ -108,13 +108,13 @@ struct PersistenceOptionsTests {
     }
 
     @Test func theArgumentWinsOverTheEnvironment() {
-        let options = resolve(arguments: ["Blau", "-BlauStore", "memory"], environment: ["BLAU_STORE": "local"])
+        let options = resolve(arguments: ["Choff", "-BlauStore", "memory"], environment: ["BLAU_STORE": "local"])
         #expect(options.storeOverride == .memory)
     }
 
     @Test func ignoresAnUnknownOverride() {
-        #expect(resolve(arguments: ["Blau", "-BlauStore", "cloud"]).storeOverride == nil)
-        #expect(resolve(arguments: ["Blau", "-BlauStore"]).storeOverride == nil)
+        #expect(resolve(arguments: ["Choff", "-BlauStore", "cloud"]).storeOverride == nil)
+        #expect(resolve(arguments: ["Choff", "-BlauStore"]).storeOverride == nil)
     }
 
     @Test func aHostedXCTestRunUsesMemory() {
@@ -125,14 +125,14 @@ struct PersistenceOptionsTests {
     @Test func schemaInitializationIsDebugOnly() {
         #expect(resolve(debug: true).schemaInitialization == .whenSchemaChanges)
         #expect(
-            resolve(arguments: ["Blau", "-BlauInitializeCloudKitSchema"], debug: true).schemaInitialization == .always)
+            resolve(arguments: ["Choff", "-BlauInitializeCloudKitSchema"], debug: true).schemaInitialization == .always)
         #expect(
-            resolve(arguments: ["Blau", "-BlauInitializeCloudKitSchema"], debug: false).schemaInitialization == .never)
+            resolve(arguments: ["Choff", "-BlauInitializeCloudKitSchema"], debug: false).schemaInitialization == .never)
     }
 
     @Test func syncModeFollowsTheAccount() {
         let options = resolve()
-        #expect(options.syncMode(for: .available) == .cloudKit(containerIdentifier: "iCloud.com.joeblau.blau"))
+        #expect(options.syncMode(for: .available) == .cloudKit(containerIdentifier: "iCloud.com.joeblau.choff"))
         for status in CloudAccountStatus.allCases where status != .available {
             #expect(options.syncMode(for: status) == .localOnly(.account(status)))
         }
@@ -140,18 +140,18 @@ struct PersistenceOptionsTests {
     }
 
     @Test func overridesWinOverTheAccount() {
-        #expect(resolve(arguments: ["Blau", "-BlauStore", "local"]).syncMode(for: .available) == .localOnly(.forced))
+        #expect(resolve(arguments: ["Choff", "-BlauStore", "local"]).syncMode(for: .available) == .localOnly(.forced))
         #expect(
-            resolve(arguments: ["Blau", "-BlauStore", "memory"]).syncMode(for: .available) == .inMemory(.requested))
+            resolve(arguments: ["Choff", "-BlauStore", "memory"]).syncMode(for: .available) == .inMemory(.requested))
     }
 }
 
 @Suite("Store location and configurations")
 struct StoreConfigurationTests {
     @Test func storesLiveInOneDirectory() {
-        let location = StoreLocation(directory: URL(filePath: "/data/Blau", directoryHint: .isDirectory))
-        #expect(location.syncedStoreURL.path(percentEncoded: false) == "/data/Blau/Blau.store")
-        #expect(location.derivedStoreURL.path(percentEncoded: false) == "/data/Blau/Derived/BlauDerived.store")
+        let location = StoreLocation(directory: URL(filePath: "/data/Choff", directoryHint: .isDirectory))
+        #expect(location.syncedStoreURL.path(percentEncoded: false) == "/data/Choff/Blau.store")
+        #expect(location.derivedStoreURL.path(percentEncoded: false) == "/data/Choff/Derived/BlauDerived.store")
     }
 
     @Test func theProductionLocationIsInApplicationSupport() {
@@ -163,7 +163,7 @@ struct StoreConfigurationTests {
 
     @Test func prepareExcludesDerivedDataFromBackups() throws {
         let temporary = try TemporaryDirectory()
-        let location = StoreLocation(directory: temporary.url.appending(path: "Nested/Blau"))
+        let location = StoreLocation(directory: temporary.url.appending(path: "Nested/Choff"))
         try location.prepare()
         let values = try location.derivedDirectory.resourceValues(forKeys: [.isExcludedFromBackupKey])
         #expect(values.isExcludedFromBackup == true)
@@ -172,17 +172,17 @@ struct StoreConfigurationTests {
     }
 
     @Test func cloudKitModeMirrorsToThePrivateDatabaseOfBlausContainer() {
-        let location = StoreLocation(directory: URL(filePath: "/data/Blau", directoryHint: .isDirectory))
+        let location = StoreLocation(directory: URL(filePath: "/data/Choff", directoryHint: .isDirectory))
         let configuration = BlauModelContainer.syncedConfiguration(
             for: .cloudKit(containerIdentifier: BlauCloud.containerIdentifier), location: location)
         #expect(configuration.name == "Blau")
-        #expect(configuration.cloudKitContainerIdentifier == "iCloud.com.joeblau.blau")
+        #expect(configuration.cloudKitContainerIdentifier == "iCloud.com.joeblau.choff")
         #expect(configuration.url == location.syncedStoreURL)
         #expect(!configuration.isStoredInMemoryOnly)
     }
 
     @Test func localOnlyModeUsesTheSameFileWithoutCloudKit() {
-        let location = StoreLocation(directory: URL(filePath: "/data/Blau", directoryHint: .isDirectory))
+        let location = StoreLocation(directory: URL(filePath: "/data/Choff", directoryHint: .isDirectory))
         let cloud = BlauModelContainer.syncedConfiguration(
             for: .cloudKit(containerIdentifier: BlauCloud.containerIdentifier), location: location)
         let local = BlauModelContainer.syncedConfiguration(for: .localOnly(.account(.noAccount)), location: location)
@@ -192,7 +192,7 @@ struct StoreConfigurationTests {
     }
 
     @Test func inMemoryModeIsNotPersistent() {
-        let location = StoreLocation(directory: URL(filePath: "/data/Blau", directoryHint: .isDirectory))
+        let location = StoreLocation(directory: URL(filePath: "/data/Choff", directoryHint: .isDirectory))
         let configuration = BlauModelContainer.syncedConfiguration(for: .inMemory(.requested), location: location)
         #expect(configuration.isStoredInMemoryOnly)
         #expect(configuration.cloudKitContainerIdentifier == nil)

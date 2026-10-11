@@ -51,7 +51,7 @@ struct TopicMarkdownRendererTests {
                 ended: 2026-10-08T14:20:00-07:00
                 time-zone: America/Los_Angeles
                 utterances: 3
-                generator: Blau topic 1
+                generator: Choff topic 1
                 ---
 
                 # Hiring Plan

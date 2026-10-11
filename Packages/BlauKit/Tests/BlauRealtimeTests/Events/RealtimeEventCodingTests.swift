@@ -65,7 +65,7 @@ struct RealtimeClientEventTests {
             audio: .init(
                 input: .init(
                     format: .init(type: .pcm, rate: 16_000), transport: .binary,
-                    transcription: .init(languageHint: "en", keyterms: ["Blau"])),
+                    transcription: .init(languageHint: "en", keyterms: ["Choff"])),
                 output: .init(format: .pcm24kHz, transport: .binary, speed: 1.2)),
             tools: [
                 .function(
@@ -73,7 +73,7 @@ struct RealtimeClientEventTests {
                     parameters: ["type": "object", "properties": ["query": ["type": "string"]]]),
                 .other(["type": "web_search"]),
             ],
-            replace: ["Blau": "Blow"])
+            replace: ["Choff": "Blow"])
         #expect(
             try encoded(.sessionUpdate(session))
                 == json(
@@ -84,13 +84,13 @@ struct RealtimeClientEventTests {
                       "resumption":{"enabled":true},
                       "audio":{
                         "input":{"format":{"type":"audio/pcm","rate":16000},"transport":"binary",
-                                 "transcription":{"language_hint":"en","keyterms":["Blau"]}},
+                                 "transcription":{"language_hint":"en","keyterms":["Choff"]}},
                         "output":{"format":{"type":"audio/pcm","rate":24000},"transport":"binary","speed":1.2}},
                       "tools":[
                         {"type":"function","name":"search_memory","description":"Search",
                          "parameters":{"type":"object","properties":{"query":{"type":"string"}}}},
                         {"type":"web_search"}],
-                      "replace":{"Blau":"Blow"}}}
+                      "replace":{"Choff":"Blow"}}}
                     """))
     }
 

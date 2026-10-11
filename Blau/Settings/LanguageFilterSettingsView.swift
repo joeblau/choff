@@ -43,7 +43,7 @@ struct LanguageFilterSection: View {
             Text("Languages")
         } footer: {
             Text(
-                "Blau doesn't answer speech in other languages, such as a TV show in another language, even when "
+                "Choff doesn't answer speech in other languages, such as a TV show in another language, even when "
                     + "it sounds like you. Turning this on applies from your next conversation; the languages apply "
                     + "from the next thing you say."
             )
@@ -105,7 +105,7 @@ struct AllowedLanguagesView: View {
                 .accessibilityIdentifier(LanguageFilterSettingsIdentifiers.useDefault)
                 .accessibilityAddTraits(settings.usesDefaultLanguages ? .isSelected : [])
             } footer: {
-                Text("Blau answers speech in these languages and ignores the rest. At least one stays selected.")
+                Text("Choff answers speech in these languages and ignores the rest. At least one stays selected.")
             }
 
             Section {

@@ -134,7 +134,7 @@ struct ChatRowView: View {
         switch row.role {
         case .user: Text("You")
         case .agent: Text("Grok")
-        case .system: Text("Blau")
+        case .system: Text("Choff")
         }
     }
 
@@ -227,7 +227,7 @@ struct ChatToolChip: View {
     var body: some View {
         chip
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("Blau"))
+            .accessibilityLabel(Text("Choff"))
             .accessibilityValue(Text(verbatim: call.title))
             .accessibilityIdentifier(ChatTranscriptAccessibility.toolRow)
             .frame(maxWidth: .infinity, alignment: .center)

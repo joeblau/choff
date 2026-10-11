@@ -148,13 +148,13 @@ struct RecordButtonTests {
         #expect(
             ConversationStartFailure(VoiceLoop.StartError.audio("x"), audio: .failed(.microphonePermissionDenied))
                 .localizedDescription
-                == "Blau can't use the microphone. Turn on microphone access for Blau in Settings.")
+                == "Choff can't use the microphone. Turn on microphone access for Choff in Settings.")
         #expect(
             ConversationStartFailure(VoiceLoop.StartError.audio("x"), audio: .failed(.noSuitableRoute))
                 .localizedDescription == "The microphone couldn't start. Try again in a moment.")
         #expect(
             ConversationStartFailure(VoiceLoop.StartError.unavailable, audio: .inactive).localizedDescription
-                == "Conversations aren't available in this build of Blau.")
+                == "Conversations aren't available in this build of Choff.")
     }
 
     @Test func mutedHintRenders() throws {

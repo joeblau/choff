@@ -195,13 +195,13 @@ struct ConversationStartFailure: LocalizedError, CustomStringConvertible {
 
     var errorDescription: String? {
         if case .failed(.microphonePermissionDenied) = audio {
-            return String(localized: "Blau can't use the microphone. Turn on microphone access for Blau in Settings.")
+            return String(localized: "Choff can't use the microphone. Turn on microphone access for Choff in Settings.")
         }
         switch underlying {
         case VoiceLoop.StartError.modelsNotInstalled:
             return String(localized: "The speech models are still downloading. Try again when they're ready.")
         case VoiceLoop.StartError.unavailable:
-            return String(localized: "Conversations aren't available in this build of Blau.")
+            return String(localized: "Conversations aren't available in this build of Choff.")
         case VoiceLoop.StartError.audio:
             return String(localized: "The microphone couldn't start. Try again in a moment.")
         case is CancellationError:

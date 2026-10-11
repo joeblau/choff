@@ -12,7 +12,7 @@ enum SessionFixtures {
     static let memory = RealtimeMemoryContext(
         profile: """
             Name: Joe
-            Lives in San Francisco. Building Blau, a voice app.
+            Lives in San Francisco. Building Choff, a voice app.
             Prefers direct answers and dislikes small talk.
             """,
         facts: [
@@ -50,7 +50,7 @@ struct RealtimeInstructionsTests {
 
     @Test func coversPersonaStyleSpeakingAndInput() {
         let text = render()
-        #expect(text.hasPrefix("You are Blau, a voice companion for long, unhurried conversations."))
+        #expect(text.hasPrefix("You are Choff, a voice companion for long, unhurried conversations."))
         for heading in ["# Personality", "# Long-form conversation", "# Speaking", "# What you hear", "# Context"] {
             #expect(text.contains("\n\(heading)\n"), "missing \(heading)")
         }

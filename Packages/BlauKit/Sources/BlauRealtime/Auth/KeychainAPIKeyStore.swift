@@ -28,7 +28,7 @@ public struct KeychainAPIKeyStore: APIKeyStore {
     public static let defaultAccount = "api-key"
 
     /// Shown in Keychain Access / Passwords for the item.
-    static let label = "Blau xAI API key"
+    static let label = "Choff xAI API key"
 
     private let service: String
     private let account: String

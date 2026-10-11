@@ -1,7 +1,7 @@
 # Branding
 
-Blau's visual identity (issue #82): the app icon, the launch screen, the
-color tokens and the type scale. *Blau* is German for blue, so the brand is
+Choff's visual identity (issue #82): the app icon, the launch screen, the
+color tokens and the type scale. *Choff* is German for blue, so the brand is
 one blue and a waveform.
 
 | Piece | Where | Edited with |
@@ -58,7 +58,7 @@ The launch screen is the `UILaunchScreen` dictionary, not a storyboard:
 | `UIImageName` | `BrandMark` | The waveform in the accent blue, 96 × 96 pt, centered |
 
 The main screen's empty state (`BrandLockup`) shows the same mark, at the
-same size, above the "Blau" wordmark. It doesn't sit in exactly the same
+same size, above the "Choff" wordmark. It doesn't sit in exactly the same
 place: the launch image is centered on the whole screen, while the lockup is
 centered in the area between the bars and sits above the onboarding button
 until a key is stored, so at handoff the mark moves up by a few dozen points
@@ -150,7 +150,7 @@ Rounded for the brand's voice; text read at length stays in SF Pro.
 
 | Style | Text style | Design | Weight | Use |
 | ----- | ---------- | ------ | ------ | --- |
-| `wordmark` | Large Title | Rounded | Bold | The "Blau" wordmark |
+| `wordmark` | Large Title | Rounded | Bold | The "Choff" wordmark |
 | `topicTitle` | Title 2 | Rounded | Semibold | The current topic's title (#56) |
 | `heading` | Headline | Rounded | Semibold | Sheet and section headings |
 | `transcript` | Body | Default | Regular | What the user and Grok said (#42) |

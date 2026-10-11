@@ -48,8 +48,8 @@ expect_output() {
 leaks_output() {
     cat <<EOF
 Process:         Blau [$1]
-Path:            /Users/me/Library/Developer/CoreSimulator/Devices/ABC/data/Containers/Bundle/Application/DEF/Blau.app/Blau
-Identifier:      com.joeblau.blau
+Path:            /Users/me/Library/Developer/CoreSimulator/Devices/ABC/data/Containers/Bundle/Application/DEF/Choff.app/Blau
+Identifier:      com.joeblau.choff
 Platform:        iOS Simulator
 
 leaks Report Version: 4.0, multi-line stacks

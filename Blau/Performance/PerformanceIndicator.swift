@@ -52,20 +52,20 @@ struct PerformanceIndicatorContent: Equatable {
         case .thermal?:
             title = String(localized: "Cooling down")
             systemImage = "thermometer.medium"
-            accessibilityLabel = String(localized: "Your iPhone is warm, so Blau is saving work. \(effect)")
+            accessibilityLabel = String(localized: "Your iPhone is warm, so Choff is saving work. \(effect)")
         case .lowBattery(let percent)?:
             title = String(localized: "Saving battery")
             systemImage = "battery.25percent"
             accessibilityLabel = String(
-                localized: "Battery at \(percent) percent, so Blau is saving work. \(effect)")
+                localized: "Battery at \(percent) percent, so Choff is saving work. \(effect)")
         case .lowPowerMode?:
             title = String(localized: "Low Power Mode")
             systemImage = "leaf"
-            accessibilityLabel = String(localized: "Low Power Mode is on, so Blau is saving work. \(effect)")
+            accessibilityLabel = String(localized: "Low Power Mode is on, so Choff is saving work. \(effect)")
         case .override?, nil:
             title = String(localized: "Saving power")
             systemImage = "gauge.with.dots.needle.33percent"
-            accessibilityLabel = String(localized: "Blau is saving work. \(effect)")
+            accessibilityLabel = String(localized: "Choff is saving work. \(effect)")
         }
     }
 }

@@ -18,7 +18,7 @@ struct MarkdownExportAppTests {
         let containers = try #require(info["NSUbiquitousContainers"] as? [String: Any])
         let blau = try #require(containers[BlauCloud.containerIdentifier] as? [String: Any])
         #expect(blau["NSUbiquitousContainerIsDocumentScopePublic"] as? Bool == true)
-        #expect(blau["NSUbiquitousContainerName"] as? String == "Blau")
+        #expect(blau["NSUbiquitousContainerName"] as? String == "Choff")
         #expect(blau["NSUbiquitousContainerSupportedFolderLevels"] as? String == "Any")
     }
 

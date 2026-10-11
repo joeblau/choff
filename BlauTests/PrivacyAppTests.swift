@@ -62,7 +62,7 @@ struct PrivacyAppTests {
 
     @Test func theWidgetExtensionBundlesItsPrivacyManifest() throws {
         let plugins = try #require(Bundle.main.builtInPlugInsURL)
-        let manifest = try manifest(in: plugins.appending(path: "BlauWidgets.appex"))
+        let manifest = try manifest(in: plugins.appending(path: "ChoffWidgets.appex"))
         #expect(manifest["NSPrivacyTracking"] as? Bool == false)
         #expect(reasons(manifest).isEmpty)
         #expect((manifest["NSPrivacyCollectedDataTypes"] as? [Any])?.isEmpty == true)
@@ -72,7 +72,7 @@ struct PrivacyAppTests {
 
     @Test func learnedFactsWording() {
         #expect(PrivacySettingsView.buttonTitle(.learnedFacts) == "Delete Learned Facts…")
-        #expect(PrivacySettingsView.confirmationTitle(.learnedFacts) == "Delete what Blau learned?")
+        #expect(PrivacySettingsView.confirmationTitle(.learnedFacts) == "Delete what Choff learned?")
         #expect(
             PrivacySettingsView.confirmationMessage(.learnedFacts, count: 12)
                 == "This deletes 12 learned facts and the profile summary built from them from this iPhone, "
@@ -109,7 +109,7 @@ struct PrivacyAppTests {
         #expect(
             with
                 == "This deletes 3 conversations from this iPhone, iCloud and your other devices. "
-                + "The Markdown copies in iCloud Drive → Blau aren't deleted; remove them in Files.")
+                + "The Markdown copies in iCloud Drive → Choff aren't deleted; remove them in Files.")
         #expect(
             PrivacySettingsView.confirmationMessage(.everything, count: 0, keepsMarkdownCopies: true)
                 .contains("Markdown copies"))
@@ -123,7 +123,7 @@ struct PrivacyAppTests {
         #expect(PrivacySettingsView.progressMessage(.conversations) == "Deleting…")
         #expect(PrivacySettingsView.progressMessage(.voiceprint) == "Deleting…")
         for scope in [DataEraseScope.learnedFacts, .knowledge, .everything] {
-            #expect(PrivacySettingsView.progressMessage(scope) == "Finishing Blau's memory update, then deleting…")
+            #expect(PrivacySettingsView.progressMessage(scope) == "Finishing Choff's memory update, then deleting…")
         }
     }
 
@@ -153,7 +153,7 @@ struct PrivacyAppTests {
         let context = container.mainContext
         context.insert(Fact(predicate: "lives in", objectText: "Lisbon", validFrom: Self.t0, origin: .extracted))
         context.insert(ProfileBlock(text: "Background: The user lives in Lisbon.", updatedAt: Self.t0))
-        context.insert(MemoryDocument(kind: .company, title: "Blau", body: "A voice app.", createdAt: Self.t0))
+        context.insert(MemoryDocument(kind: .company, title: "Choff", body: "A voice app.", createdAt: Self.t0))
         try context.save()
 
         let store = DeferredProfileMemoryStore { @MainActor [weak persistence] in persistence?.stack?.container }
@@ -179,7 +179,7 @@ struct PrivacyAppTests {
         #expect(before.profile?.contains("Lisbon") == true)
         // An export made earlier holds them too.
         try FileManager.default.createDirectory(at: DataExportFiles.directory, withIntermediateDirectories: true)
-        try Data("export".utf8).write(to: DataExportFiles.directory.appending(path: "Blau Export.zip"))
+        try Data("export".utf8).write(to: DataExportFiles.directory.appending(path: "Choff Export.zip"))
 
         let summary = try await PrivacyDataEraser.erase(
             .learnedFacts, in: fixture.context, profileMemory: fixture.profile, exports: DataExportModel(),

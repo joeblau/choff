@@ -64,10 +64,10 @@ private struct AboutMeEditor: View {
                         .textSelection(.enabled)
                         .accessibilityIdentifier(KnowledgeBaseIdentifiers.profileSummary)
                 } header: {
-                    Text("Blau's Summary")
+                    Text("Choff's Summary")
                 } footer: {
                     Text(
-                        "Blau writes this from what you tell it and what it learns, and keeps it in mind in every conversation."
+                        "Choff writes this from what you tell it and what it learns, and keeps it in mind in every conversation."
                     )
                 }
             }

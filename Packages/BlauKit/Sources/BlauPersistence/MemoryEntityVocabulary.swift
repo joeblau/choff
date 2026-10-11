@@ -4,7 +4,7 @@ import SwiftData
 
 /// The names memory knows (people, companies, products, projects, places)
 /// as a speech recognition vocabulary, so Apple's transcriber spells
-/// "Paul Graham" or "Blau" the way the user does (#31).
+/// "Paul Graham" or "Choff" the way the user does (#31).
 ///
 /// Reads `MemoryEntity` names and aliases from the store, the kinds people
 /// say by name first, then the most recently updated. Each call reads the

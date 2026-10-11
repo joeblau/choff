@@ -31,7 +31,7 @@ public struct CloudSyncActivity: Sendable, Equatable {
         }
         inProgress[event.id] = nil
         guard event.succeeded else {
-            lastError = event.error ?? CloudSyncError(domain: "Blau", code: 0, message: "Sync failed")
+            lastError = event.error ?? CloudSyncError(domain: "Choff", code: 0, message: "Sync failed")
             return
         }
         lastError = nil
