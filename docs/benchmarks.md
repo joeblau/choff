@@ -1061,3 +1061,7 @@ The model confirmed all eight true boundaries but vetoed zero of one brief
 digression. The separate streaming hysteresis tests cover that digression.
 [The hour/topic report](benchmarks/2026-10-11-asr-hour-topic-labels-mac.json)
 records all minute samples and these limitations.
+
+## Instruments verification on the M3 Max
+
+At `093c20f`, the real HUD timing tap, CPU clock and memory probe matched Instruments within every original tolerance: all 450 paired intervals (nine kinds × 50), whole-load CPU 50.4% versus 50.3%, and footprint 104.7 MB in both. The committed Instruments template opened with all 14 configured instruments and captured all 25 canonical intervals, nine times each, from the real package signpost emitters. [The full report](benchmarks/2026-10-11-instruments-mac.json) retains the readings and both verification logs. These Mac checks do not establish physical-phone HUD display overhead, audio, or background acceptance.
