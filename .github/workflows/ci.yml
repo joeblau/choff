@@ -220,12 +220,10 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-  # The UI tests, one slice per matrix job: scripts/ci/ui-test-shard.sh deals
-  # the test methods out over strategy.job-total shards, so adding a shard is
-  # adding a number to the list. The 93 UI tests take 45 to 55 minutes in a
-  # row on the runner; with three shards a job took 24 to 36 minutes (up to 8
-  # of them building and 8 warming the simulator on a busy runner), so four
-  # shards keep each job near half its limit.
+  # Balance recorded functional case durations across independent runners.
+  # Eight groups leave more room for build and simulator startup within the
+  # original 15-minute runtime target; CI must establish actual wall time.
+  # Source discovery and the executed-count gate retain every test.
   app-ui-tests:
     name: app-ui-tests (${{ matrix.shard }}/${{ strategy.job-total }})
     runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
@@ -235,7 +233,7 @@ jobs:
       # failing UI test.
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     env:
       UI_TEST_SUITE: functional
       UI_SHARD: ${{ matrix.shard }}/${{ strategy.job-total }}
@@ -291,10 +289,7 @@ jobs:
         id: test
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-          # Two isolated simulator workers execute the same shard. The
-          # executed-count check below still requires every selected test;
-          # the expansion benchmark keeps its single-worker configuration.
-          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-tests.xcresult -parallel-testing-enabled YES -parallel-testing-worker-count 2 -collect-test-diagnostics never"
+          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-tests.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never"
         run: make test-ui UI_SHARD="$UI_SHARD"
 
       # A selection that matched no test would otherwise pass with nothing

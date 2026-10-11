@@ -13,7 +13,7 @@ evaluation.
 | `lint`          | swift-format (`make lint`), then the shell-script tests    | `make lint test-scripts` | nothing |
 | `package-tests` | `swift build --build-tests` and `swift test` in `Packages/BlauKit` on the macOS host | `make test-kit` | Swift Testing xUnit report |
 | `app-unit-tests` | XcodeGen, then the `Blau` test plan's unit tests (`BlauTests`) on an iOS Simulator | `make test-unit` | `app-unit-tests-xcresult` |
-| `app-ui-tests (K/4)` | Four functional UI shards, two simulator workers per shard, Debug coverage, simulator warm-up, and an executed-count check ([UI-test shards](#ui-test-shards)) | `make test-ui UI_TEST_SUITE=functional UI_SHARD=K/4` | `app-ui-tests-K-xcresult` |
+| `app-ui-tests (K/4)` | Four functional UI shards balanced by recorded duration, Debug coverage, simulator warm-up, and an executed-count check ([UI-test shards](#ui-test-shards)) | `make test-ui UI_TEST_SUITE=functional UI_SHARD=K/4` | `app-ui-tests-K-xcresult` |
 | `app-ui-performance` | The existing five-sample expansion benchmark, with optimized Swift and no coverage instrumentation; the 100 ms limit is unchanged | `make test-ui UI_TEST_SUITE=performance` with the flags below | `app-ui-performance-xcresult` |
 | `app-tests`     | Requires the unit job, every functional UI shard, and the UI performance job to pass (ubuntu, seconds) | `make test` runs the same tests in one go | nothing |
 | `perf-kit`      | The BlauKit micro-benchmarks (package-benchmark) on the macOS host; fails when an allocation count (and, on a machine with performance counters, an instruction count) is more than 10% above `Packages/BlauKitBenchmarks/Thresholds` ([performance.md](performance.md#micro-benchmarks)) | `make microbench-check` | `perf-kit-results` (the check's output), 30 days; the output on the summary page |
@@ -44,7 +44,7 @@ machine; device numbers are a separate, manual table.
 
 - `pull_request`, `push` to `main`, `merge_group` (GitHub merge queue) and
   `workflow_dispatch` run `lint`, `package-tests`, `app-unit-tests`, the
-  four `app-ui-tests` shards, `app-ui-performance`, `app-tests` and `perf-kit`.
+  eight `app-ui-tests` shards, `app-ui-performance`, `app-tests` and `perf-kit`.
 - `schedule` (08:23 UTC daily, `main`) runs those plus `perf`, `soak`,
   `asr-eval` and `memory-eval`. **Run workflow** has a checkbox for each of
   the four (and a length for the soak).
@@ -135,27 +135,31 @@ the suite outgrew its 40-minute limit (#179; push run
 [38013389852](https://github.com/joeblau/voice/actions/runs/38013389852) was
 cancelled in `SettingsUITests` after about 30 minutes of UI tests, with 38 of
 the 93 still to run). So `app-unit-tests` runs `BlauTests` alone and the
-`app-ui-tests` matrix splits the functional UI tests over four jobs, and
+`app-ui-tests` matrix splits the functional UI tests over eight jobs, and
 `app-ui-performance` runs the existing expansion benchmark separately.
 
 [`scripts/ci/ui-test-shard.sh`](../scripts/ci/ui-test-shard.sh) lists every
-XCTest method in `BlauUITests` from the sources, sorts them by
-`Class/testMethod` and deals them out like cards: shard K of N gets every
-N-th test starting at the K-th. Dealing single tests rather than whole
-classes spreads the slow audits evenly, and a new test lands in a shard
-without anyone editing a list. `make test-ui UI_SHARD=K/N` turns the shard
+XCTest method in `BlauUITests` from the sources. Functional shards use
+[`ui-test-durations.json`](../scripts/ci/ui-test-durations.json), recorded
+from the successful [2acfe8c CI run](https://github.com/joeblau/voice/actions/runs/38123804979),
+to assign the longest cases first to the shard with the lowest estimated
+cost. Ties break deterministically. The source listing decides which tests
+exist; the duration profile only schedules them. New and unrecorded cases
+use the median recorded duration and remain selected. The default `all`
+suite retains alphabetical round-robin selection. `make test-ui UI_SHARD=K/N` turns the shard
 into `-only-testing:BlauUITests/<Class>/<testMethod>` arguments, so a shard's
 failure reproduces locally with the command in the job's log:
 
 ```sh
 make test-ui UI_TEST_SUITE=functional UI_SHARD=2/4 DESTINATION='id=<simulator udid>' \
-  XCODEBUILD_FLAGS='-parallel-testing-enabled YES -parallel-testing-worker-count 2 -collect-test-diagnostics never'
+  XCODEBUILD_FLAGS='-parallel-testing-enabled NO -collect-test-diagnostics never'
 UI_TEST_SUITE=functional scripts/ci/ui-test-shard.sh --list 2/4
 ```
 
-Each functional shard uses two isolated simulator workers. Xcode distributes
-the selected tests between them; the selection and executed-count check are
-unchanged. The separate expansion timing job still uses one worker.
+Each functional shard and the separate expansion timing job use one
+simulator worker. Every discovered case is assigned exactly once, and the
+existing executed-count check validates the selected shard after testing.
+The duration profile changes grouping, not assertions, timeouts or skips.
 
 Nothing is dropped:
 
@@ -170,7 +174,7 @@ Nothing is dropped:
   (skipped and failed ones count), so a selection that matched nothing
   cannot pass. It runs after failing tests too.
 
-To change the number of shards, edit the matrix (`shard: [1, 2, 3, 4]`); the
+To change the number of shards, edit the matrix (`shard: [1, 2, 3, 4, 5, 6, 7, 8]`); the
 jobs pass `strategy.job-total` as N. `make test` and `make test-ui` without
 `UI_SHARD` still run everything in one go.
 
@@ -218,9 +222,36 @@ Two things the single job got for free need doing in each shard:
 
 The jobs run in parallel, so a run takes as long as its slowest job when
 enough runners are free; when they aren't, jobs queue, which can take longer
-than the jobs. The following reference numbers used one worker per shard;
-the two-worker configuration still needs measured CI timing against the
-original 15-minute warm-cache target. Measured on the pull request for #179 (runs 38018073024 and
+than the jobs. The original 15-minute warm-cache target remains unmet.
+In the successful `2acfe8c` control, summed case durations ranged from
+637 to 782 seconds per shard. Balancing four groups estimates about 694–704
+seconds each, leaving little room for build and simulator startup within
+the original 900-second target. Eight groups estimate 342–352 seconds each,
+including median weights for the two opt-in cases skipped in the control.
+These are scheduling estimates, not measured whole-workflow improvements;
+fresh CI must establish actual runtime, including runner queue delays.
+
+A preceding two-worker experiment at `d47201b` ran all 91 functional cases
+successfully, with two existing opt-in skips, but took 2,543 seconds overall
+and failed the separate unchanged 100 ms expansion benchmark. Its second
+worker started late after a simulator service-hub connection error. The
+one-worker configuration is retained while balancing is validated. Local
+non-coverage probes and CI use different hosts and Xcode versions, so they
+do not establish the original runtime target.
+
+The first local duration-balanced validation ran all four groups concurrently
+on this Mac: 93 selected, 89 passed, two existing opt-in skips and two failed
+accessibility audits. Both failures reported XCTest accessibility-audit
+error -56, "Audit failed to complete in time". This run used already-built
+non-coverage binaries at `f24c6bc`; it does not establish successful CI
+execution or a cause for the audit timeouts. The original checks remain
+unchanged while separate-runner CI validates the regrouping.
+After all four processes completed and the other three owned simulators
+were shut down, both original audits passed on one simulator, zero skips.
+This diagnostic control preserves the first failures and does not prove
+their cause or validate the complete eight-group CI configuration.
+
+Historical measurements on the pull request for #179 (runs 38018073024 and
 38021860678), `xcode-27` image, Xcode 27.1, warm cache:
 
 | Job             | Duration | Where the time goes |
