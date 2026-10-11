@@ -599,15 +599,27 @@ else
     pass "ci.yml maps no repository secrets into jobs"
 fi
 
-# Third-party code runs with the repo token, so every action is pinned to a
-# full commit SHA rather than a movable tag.
-unpinned=$(grep -E '^[[:space:]-]*uses:' "$work/workflow-config" | grep -Ev 'uses: [^@[:space:]]+@[0-9a-f]{40}( |$)' || true)
+# Third-party code runs with the repo token, so every external action is
+# pinned to a full commit SHA, including actions called by local composites.
+cp "$work/workflow-config" "$work/action-config"
+for action in "$repo"/.github/actions/*/action.yml; do
+    [ -f "$action" ] || continue
+    grep -Ev '^[[:space:]]*#' "$action" >>"$work/action-config"
+done
+unpinned=$(grep -E '^[[:space:]-]*uses:' "$work/action-config" | grep -Ev 'uses: ([^@[:space:]]+@[0-9a-f]{40}|\./\.github/actions/[A-Za-z0-9_-]+)( |$)' || true)
 if [ -z "$unpinned" ]; then
-    pass "ci.yml pins every action to a commit SHA"
+    pass "ci.yml and local composites pin every external action to a commit SHA"
 else
-    fail "ci.yml pins every action to a commit SHA"
+    fail "ci.yml and local composites pin every external action to a commit SHA"
     echo "$unpinned" | sed 's/^/       /'
 fi
+for action in $(sed -n 's|.*uses: \(\./\.github/actions/[A-Za-z0-9_-]*\).*|\1|p' "$work/action-config"); do
+    if [ -f "$repo/$action/action.yml" ]; then
+        pass "local action $action exists in the checked-out source"
+    else
+        fail "local action $action exists in the checked-out source"
+    fi
+done
 
 for job in lint package-tests app-unit-tests app-ui-tests app-ui-performance app-tests perf-kit perf soak asr-eval memory-eval; do
     if grep -Eq "^  $job:" "$workflow"; then

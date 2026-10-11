@@ -246,7 +246,7 @@ jobs:
 
       - name: Upload xcresult
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: ./.github/actions/upload-xcresult
         with:
           name: app-unit-tests-xcresult-${{ github.run_attempt }}
           path: .build/results/app-unit-tests.xcresult
@@ -368,7 +368,7 @@ jobs:
 
       - name: Upload xcresult
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: ./.github/actions/upload-xcresult
         with:
           name: app-ui-tests-${{ matrix.shard }}-xcresult-${{ github.run_attempt }}
           path: .build/results/app-ui-tests.xcresult
@@ -483,7 +483,7 @@ jobs:
 
       - name: Upload xcresult
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: ./.github/actions/upload-xcresult
         with:
           name: app-ui-performance-xcresult-${{ github.run_attempt }}
           path: .build/results/app-ui-performance.xcresult
