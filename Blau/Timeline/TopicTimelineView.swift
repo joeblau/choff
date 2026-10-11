@@ -361,6 +361,14 @@ private struct TopicTimelineScrollView: View {
         return isAtBottom && topAnchorHolds == 0 ? .bottom : .top
     }
 
+    /// iOS 26's lazy pinned sections must stay empty while collapsed:
+    /// zero-height detail content disrupts their history-page estimates.
+    /// iOS 27 can retain the controls to prepare their first expansion.
+    private var retainsCollapsedDetails: Bool {
+        if #available(iOS 27, *) { return true }
+        return false
+    }
+
     @ViewBuilder
     private func row(for item: TopicTimeline.Item) -> some View {
         switch item {
@@ -373,7 +381,7 @@ private struct TopicTimelineScrollView: View {
         case .topic(let topic, let placement):
             let isExpanded = expansion.isExpanded(topic.id, current: timeline.currentTopicID)
             Section {
-                if !placement.isCurrent {
+                if !placement.isCurrent, isExpanded || retainsCollapsedDetails {
                     TopicDetailHeader(
                         topic: topic, placement: placement, editor: editor, isExpanded: isExpanded,
                         onContinue: continueAction(for: topic)
