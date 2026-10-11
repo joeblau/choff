@@ -94,7 +94,9 @@ def build_wrapper(candidate: Candidate, path: str) -> Wrapped:
     from sentence_transformers import SentenceTransformer
     from sentence_transformers.models import Dense, Normalize, Pooling, Transformer
 
-    st = SentenceTransformer(path, device="cpu", model_kwargs={"attn_implementation": "eager"})
+    # Reference outputs and tracing use fp32 even when a checkpoint defaults
+    # to bfloat16; Core ML applies the requested precision during conversion.
+    st = SentenceTransformer(path, device="cpu", model_kwargs={"attn_implementation": "eager", "dtype": torch.float32})
     st.eval()
     modules = list(st)
     if not isinstance(modules[0], Transformer) or not isinstance(modules[1], Pooling):
