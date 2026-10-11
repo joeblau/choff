@@ -303,6 +303,23 @@ struct PrivacyAppTests {
 
     // MARK: Exporting
 
+    /// Starting an in-memory environment must not erase an export owned by
+    /// another environment. Fake startup runs alongside this suite in the
+    /// hosted tests, just as a preview may start beside the live app.
+    @Test(arguments: [AppEnvironment.Kind.preview, .unitTest, .uiTest])
+    func fakeEnvironmentStartupPreservesDataExports(kind: AppEnvironment.Kind) async throws {
+        let archive = try DataExportFiles.write(DataExport(exportedAt: Self.t0, schemaVersion: "2.0.0"))
+        defer { DataExportFiles.remove(archive) }
+        let modelRoot = URL.temporaryDirectory.appending(path: "FakeStartup-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: modelRoot) }
+        let environment = AppEnvironment.fake(
+            kind: kind, speechModels: SpeechModels.fixtureManager(root: modelRoot))
+
+        await environment.start()
+
+        #expect(FileManager.default.fileExists(atPath: archive.path(percentEncoded: false)))
+    }
+
     @Test func exportFilesAreReplacedAndRemoved() throws {
         let export = DataExport(exportedAt: Self.t0, schemaVersion: "2.0.0")
         let first = try DataExportFiles.write(export)
