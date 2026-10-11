@@ -19,20 +19,10 @@ CORRECTNESS = {
 
 
 def validate(report, leaks, summary, minutes, status):
-    checks = report["checks"]
-    names = [check["name"] for check in checks]
-    if len(names) != 8 or set(names) != MEASUREMENTS | CORRECTNESS:
-        raise ValueError("the run must report every soak check exactly once")
-    if any(type(check["passed"]) is not bool for check in checks):
-        raise ValueError("invalid check verdict")
-    failed = {check["name"] for check in checks if not check["passed"]}
+    failed = validate_report(report, summary, minutes)
+    failures = summary.get("testFailures", [])
     if failed & CORRECTNESS:
         raise ValueError("correctness checks failed: " + ", ".join(sorted(failed & CORRECTNESS)))
-    if report["setup"]["audioSeconds"] < minutes * 60 or len(report["samples"]) < 3:
-        raise ValueError("the requested session did not finish")
-    if summary["totalTestCount"] != 1 or summary["skippedTests"] != 0 or summary["expectedFailures"] != 0:
-        raise ValueError("expected one completed soak test, without skips or runner errors")
-    failures = summary.get("testFailures", [])
     if failed:
         if status not in (1, 2) or summary["failedTests"] != 1 or summary["passedTests"] != 0 or len(failures) != 1:
             raise ValueError("the test failure does not match the diagnostic measurements")
@@ -45,8 +35,8 @@ def validate(report, leaks, summary, minutes, status):
         reported = text.split('("failed: ', 1)[1].split('")', 1)[0]
         if set(reported.split(", ")) != failed:
             raise ValueError("XCTest failure and report disagree")
-    elif status != 0 or summary["passedTests"] != 1 or summary["failedTests"] != 0 or failures:
-        raise ValueError("the soak command or test failed despite passing report checks")
+    else:
+        validate_success(summary, status)
     readings = sorted(leaks["readings"], key=lambda reading: reading["wall"])
     if (len(readings) < 2 or readings[0]["phase"] != "during-run" or readings[-1]["phase"] != "after-run"
             or readings[0]["wall"] >= readings[-1]["wall"]
@@ -59,15 +49,48 @@ def validate(report, leaks, summary, minutes, status):
     return failed
 
 
+def validate_report(report, summary, minutes):
+    checks = report["checks"]
+    names = [check["name"] for check in checks]
+    if len(names) != 8 or set(names) != MEASUREMENTS | CORRECTNESS:
+        raise ValueError("the run must report every soak check exactly once")
+    if any(type(check["passed"]) is not bool for check in checks):
+        raise ValueError("invalid check verdict")
+    failed = {check["name"] for check in checks if not check["passed"]}
+    if report["setup"]["audioSeconds"] < minutes * 60 or len(report["samples"]) < 3:
+        raise ValueError("the requested session did not finish")
+    if summary["totalTestCount"] != 1 or summary["skippedTests"] != 0 or summary["expectedFailures"] != 0:
+        raise ValueError("expected one completed soak test, without skips or runner errors")
+    return failed
+
+
+def validate_success(summary, status):
+    if status != 0 or summary["passedTests"] != 1 or summary["failedTests"] != 0 or summary.get("testFailures", []):
+        raise ValueError("the soak command or test failed despite passing report checks")
+
+
+def validate_quantitative(report, summary, minutes, status):
+    failed = validate_report(report, summary, minutes)
+    if failed:
+        raise ValueError("quantitative checks failed: " + ", ".join(sorted(failed)))
+    validate_success(summary, status)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
     parser.add_argument("--minutes", type=float, required=True)
     parser.add_argument("--status", type=int, required=True)
+    parser.add_argument("--quantitative", action="store_true")
     args = parser.parse_args()
     try:
-        report, leaks, summary = [json.loads((args.directory / name).read_text())
-                                  for name in ("report.json", "leaks.json", "test-summary.json")]
+        report, summary = [json.loads((args.directory / name).read_text())
+                          for name in ("report.json", "test-summary.json")]
+        if args.quantitative:
+            validate_quantitative(report, summary, args.minutes, args.status)
+            print("quantitative-soak: completed; all eight checks passed")
+            return 0
+        leaks = json.loads((args.directory / "leaks.json").read_text())
         failed = validate(report, leaks, summary, args.minutes, args.status)
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f"profiled-soak: FAILED: {error}", file=sys.stderr)

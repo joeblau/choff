@@ -661,7 +661,10 @@ jobs:
           SOAK_MINUTES: ${{ inputs.soak_minutes || vars.BLAU_CI_SOAK_MINUTES || '20' }}
           SOAK_LEAKS: '0'
           XCODEBUILD_FLAGS: "-parallel-testing-enabled NO -collect-test-diagnostics never"
-        run: make soak SOAK_MINUTES="$SOAK_MINUTES"
+        run: |
+          make soak SOAK_MINUTES="$SOAK_MINUTES"
+          xcrun xcresulttool get test-results summary --path .build/results/soak/soak.xcresult --compact >.build/results/soak/test-summary.json
+          python3 -I scripts/soak/check-profiled-run.py .build/results/soak --quantitative --minutes "$SOAK_MINUTES" --status 0
 
       - name: Leak profiling
         if: ${{ !cancelled() && (vars.BLAU_CI_SOAK_LEAKS || '1') != '0' }}

@@ -145,6 +145,24 @@ leaks = {"passed": True, "toleranceLeaks": 0, "toleranceBytes": 0,
 summary = {"totalTestCount": 1, "skippedTests": 0, "expectedFailures": 0,
            "passedTests": 1, "failedTests": 0, "testFailures": []}
 module.validate(report, leaks, summary, 20, 0)
+module.validate_quantitative(report, summary, 20, 0)
+for name in names:
+    invalid = copy.deepcopy(report)
+    invalid["checks"][names.index(name)]["passed"] = False
+    try:
+        module.validate_quantitative(invalid, summary, 20, 0)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("quantitative gate ignored " + name)
+for field, value in [("skippedTests", 1), ("totalTestCount", 0), ("passedTests", 0)]:
+    invalid = dict(summary, **{field: value})
+    try:
+        module.validate_quantitative(report, invalid, 20, 0)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("quantitative gate accepted invalid " + field)
 report["checks"][names.index("memory.slope")]["passed"] = False
 summary.update(passedTests=0, failedTests=1, testFailures=[{
     "testIdentifierString": "SoakTests/testLongSession()",
@@ -173,7 +191,7 @@ rejects(lambda r, l, s: l["readings"][-1].update(pid=43))
 rejects(lambda r, l, s: l["readings"][-1].update(bytes=96))
 rejects(lambda r, l, s: l.update(toleranceBytes=32))
 rejects(lambda r, l, s: l.update(passed=False))
-print("complete run and diagnostic measurement accepted; 12 invalid runs rejected")
+print("complete runs accepted; every quantitative failure, skips, missing tests and 12 invalid profiling runs rejected")
 PY
 
 echo

@@ -108,7 +108,10 @@ the owner of a new leak, record the soak with Instruments' Leaks template
 
 CI invokes `make soak SOAK_LEAKS=0` first, then runs the same session with
 `SOAK_LEAKS=1` into `.build/results/soak-leaks`. The primary command's failure
-always fails the job. `check-profiled-run.py` validates the second run's
+always fails the job. Its report and XCTest summary must also prove one
+completed test, no skips, the full requested session and all eight passing
+checks, so a skipped test cannot produce a green quantitative gate.
+`check-profiled-run.py` validates the second run's
 complete report, XCTest summary and leak readings: missing or skipped tests,
 runner errors, incomplete sessions, correctness failures, inconclusive leak
 readings and any leak growth fail the job. Only a single XCTest assertion

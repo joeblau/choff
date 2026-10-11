@@ -600,6 +600,7 @@ performance_job=$(awk '/^  app-ui-performance:/{job=1; next} job && /^  [a-z]/{e
 soak_job=$(awk '/^  soak:/{job=1; next} job && /^  [a-z]/{exit} job' "$workflow")
 if printf '%s\n' "$soak_job" | grep -q 'name: Quantitative soak' &&
     printf '%s\n' "$soak_job" | grep -q "SOAK_LEAKS: '0'" &&
+    printf '%s\n' "$soak_job" | grep -q -- '--quantitative --minutes' &&
     printf '%s\n' "$soak_job" | grep -q 'name: Leak profiling' &&
     printf '%s\n' "$soak_job" | grep -q 'scripts/soak/check-profiled-run.py' &&
     ! printf '%s\n' "$soak_job" | grep -q 'continue-on-error'; then
