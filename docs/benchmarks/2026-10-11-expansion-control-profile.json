@@ -1,0 +1,480 @@
+{
+  "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+  "recorded_at": "2026-10-11T14:57:36.600168+00:00",
+  "original_issue": 58,
+  "original_limit_ms": 100,
+  "current_ci_performance_job": {
+    "run": 38146960809,
+    "job": 114492240026,
+    "status": "completed",
+    "conclusion": "failure",
+    "samples_ms": [
+      109.5,
+      60.2,
+      68.9,
+      59.1,
+      54.1
+    ],
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "CD85F334-D4C3-44B6-A7B8-EAABB9C6C1B4",
+            "deviceName": "iPhone 17",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "24A434",
+            "osVersion": "27.0",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 1,
+          "passedTests": 0,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.0.1",
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "finishTime": 1791729694.344,
+      "passedTests": 0,
+      "result": "Failed",
+      "runtimeWarnings": [],
+      "skippedTests": 0,
+      "startTime": 1791729568.538,
+      "statistics": [],
+      "testFailures": [
+        {
+          "failureText": "XCTAssertLessThan failed: (\"109.5\") is not less than (\"100.0\") - Expanding took 109.5 ms (109.5 ms, 60.2 ms, 68.9 ms, 59.1 ms, 54.1 ms)",
+          "targetName": "BlauUITests",
+          "testIdentifier": 1,
+          "testIdentifierString": "TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds()",
+          "testIdentifierURL": "test://com.apple.xcode/Blau/BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds",
+          "testName": "testTappingExpandsWithinAHundredMilliseconds()"
+        }
+      ],
+      "title": "Test - Blau",
+      "topInsights": [],
+      "totalTestCount": 1
+    },
+    "whole_workflow_status": "in_progress"
+  },
+  "unchanged_control": {
+    "producer": {
+      "status": "completed",
+      "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+      "source_hashes": {
+        "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+        "Blau/Timeline/TopicActionsLayout.swift": "770a8844bca2415c0f0b8c4c09e484c2b06034e1796c01befc3f84eb909a2baf",
+        "Blau/Timeline/TopicTimelineView.swift": "0e171a1dea5839702012b3873395180831aeb9ae4dc52a0c38d5d178d7ffcaea",
+        "BlauUITests/TopicDetailUITests.swift": "b732821ce3de1aa8b6494fde674817b36240c1195dee222025a491dac598c1e1"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/DerivedDataTopicLayout27",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/codex-choff-topic-layout-9fdd-control.xcresult",
+        "-only-testing:BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds",
+        "-test-iterations",
+        "3",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/codex-choff-topic-layout-9fdd-control.xcresult",
+      "started_at": "2026-10-11T14:46:11.457811+00:00",
+      "qualification": "Unchanged original expansion benchmark at source9fdd, three executions. Original five taps and 100ms assertions retained; no diagnostic instrumentation. Native control cannot establish CI runner causality.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T14:49:02.722172+00:00",
+      "source_hash_matches": true
+    },
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+            "deviceName": "Choff Balanced UI Shard 2",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "24A434",
+            "osVersion": "27.0",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "passedTests": 3,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.2",
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "finishTime": 1791730139.342,
+      "passedTests": 1,
+      "result": "Passed",
+      "runtimeWarnings": [],
+      "skippedTests": 0,
+      "startTime": 1791729973.592,
+      "statistics": [
+        {
+          "subtitle": "3 test runs",
+          "title": "1 configuration ran with test repetitions"
+        }
+      ],
+      "testFailures": [],
+      "title": "Test - Blau",
+      "topInsights": [],
+      "totalTestCount": 1
+    },
+    "executions": 3,
+    "latency_attachments": [
+      {
+        "path": "/tmp/voice-choff-topic-layout-9fdd-control-attachments/9575E821-F868-443D-A4DA-3278E4DD3747.txt",
+        "contents": "Tap \u2192 expanded: 24.7 ms, 21.8 ms, 28.0 ms, 21.0 ms, 21.8 ms"
+      },
+      {
+        "path": "/tmp/voice-choff-topic-layout-9fdd-control-attachments/E4743377-3BA6-46D3-998C-70336C7E0C21.txt",
+        "contents": "Tap \u2192 expanded: 25.8 ms, 22.5 ms, 25.6 ms, 21.8 ms, 26.6 ms"
+      },
+      {
+        "path": "/tmp/voice-choff-topic-layout-9fdd-control-attachments/A7746858-7863-49AF-BE52-2B25D4F57B53.txt",
+        "contents": "Tap \u2192 expanded: 24.3 ms, 19.9 ms, 20.3 ms, 26.0 ms, 20.2 ms"
+      }
+    ]
+  },
+  "profile": {
+    "producer": {
+      "status": "completed",
+      "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+      "source_hashes": {
+        "Blau/Timeline/TopicActionsLayout.swift": "770a8844bca2415c0f0b8c4c09e484c2b06034e1796c01befc3f84eb909a2baf",
+        "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+        "Blau/Timeline/TopicTimelineView.swift": "0e171a1dea5839702012b3873395180831aeb9ae4dc52a0c38d5d178d7ffcaea",
+        "BlauUITests/TopicDetailUITests.swift": "b732821ce3de1aa8b6494fde674817b36240c1195dee222025a491dac598c1e1"
+      },
+      "started_at": "2026-10-11T14:51:40.162104+00:00",
+      "trace": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/Choff-9fdd-layout-profile-v2.trace",
+      "qualification": "External native profiling only. Instrumented timings are excluded from acceptance and do not reproduce CI causality.",
+      "app_pid": 325,
+      "recorder_command": [
+        "xcrun",
+        "xctrace",
+        "record",
+        "--no-prompt",
+        "--template",
+        "Time Profiler",
+        "--instrument",
+        "os_signpost",
+        "--recording-options",
+        "/tmp/voice-choff-topic-layout-9fdd-profile-v2-options.json",
+        "--device",
+        "1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "--attach",
+        "325",
+        "--time-limit",
+        "60s",
+        "--output",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/Choff-9fdd-layout-profile-v2.trace"
+      ],
+      "test_exit_code": 0,
+      "trace_exit_code": 0,
+      "finished_at": "2026-10-11T14:52:50.531160+00:00",
+      "source_hash_matches": true,
+      "exit_code": 0
+    },
+    "analysis": {
+      "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+      "profile_producer": "/tmp/voice-choff-topic-layout-9fdd-profile-v2-producer.json",
+      "main_thread_sample_count": 48199,
+      "sample_period_ns": 100000,
+      "topic_action_layout_samples": [
+        {
+          "symbol": "protocol witness for Layout.sizeThatFits(proposal:subviews:cache:) in conformance TopicActionsLayout",
+          "inclusive_samples": 208,
+          "self_samples": 0
+        },
+        {
+          "symbol": "TopicActionsLayout.sizeThatFits(proposal:subviews:cache:)",
+          "inclusive_samples": 208,
+          "self_samples": 0
+        },
+        {
+          "symbol": "protocol witness for Layout.explicitAlignment(of:in:proposal:subviews:cache:) in conformance TopicActionsLayout",
+          "inclusive_samples": 17,
+          "self_samples": 0
+        },
+        {
+          "symbol": "protocol witness for Layout.updateCache(_:subviews:) in conformance TopicActionsLayout",
+          "inclusive_samples": 6,
+          "self_samples": 0
+        },
+        {
+          "symbol": "TopicActionsLayout.updateCache(_:subviews:)",
+          "inclusive_samples": 6,
+          "self_samples": 0
+        },
+        {
+          "symbol": "TopicActionsLayout.placeSubviews(in:proposal:subviews:cache:)",
+          "inclusive_samples": 3,
+          "self_samples": 0
+        },
+        {
+          "symbol": "protocol witness for Layout.placeSubviews(in:proposal:subviews:cache:) in conformance TopicActionsLayout",
+          "inclusive_samples": 3,
+          "self_samples": 0
+        },
+        {
+          "symbol": "initializeWithCopy for TopicActionsLayout",
+          "inclusive_samples": 2,
+          "self_samples": 1
+        },
+        {
+          "symbol": "initializeWithCopy for TopicActionsLayout.Cache",
+          "inclusive_samples": 1,
+          "self_samples": 1
+        },
+        {
+          "symbol": "outlined destroy of TopicActionsLayout",
+          "inclusive_samples": 1,
+          "self_samples": 0
+        },
+        {
+          "symbol": "destroy for TopicActionsLayout",
+          "inclusive_samples": 1,
+          "self_samples": 1
+        }
+      ],
+      "most_common_self_symbols": [
+        [
+          "mach_msg2_trap",
+          5406
+        ],
+        [
+          "writev",
+          2485
+        ],
+        [
+          "madvise",
+          1385
+        ],
+        [
+          "_platform_memmove",
+          1172
+        ],
+        [
+          "objc_msgSend",
+          1130
+        ],
+        [
+          "pthread_setspecific",
+          978
+        ],
+        [
+          "<deduplicated_symbol>",
+          706
+        ],
+        [
+          "__CFStringAppendFormatCore",
+          581
+        ],
+        [
+          "DYLD-STUB$$pthread_getspecific",
+          529
+        ],
+        [
+          "AG::Graph::UpdateStack::update()",
+          471
+        ],
+        [
+          "AG::Graph::propagate_dirty(AG::AttributeID)",
+          417
+        ],
+        [
+          "DYLD-STUB$$pthread_setspecific",
+          400
+        ],
+        [
+          "_xzm_malloc_tc",
+          378
+        ],
+        [
+          "__vfprintf",
+          366
+        ],
+        [
+          "_platform_memset",
+          364
+        ]
+      ],
+      "timer_marker_samples": [
+        {
+          "sample_time_ns": 6172204416,
+          "symbol": "TopicExpansionTimer.began(_:)"
+        },
+        {
+          "sample_time_ns": 6199001625,
+          "symbol": "TopicExpansionTimer.appeared(_:)"
+        },
+        {
+          "sample_time_ns": 11749403208,
+          "symbol": "TopicExpansionTimer.appeared(_:)"
+        },
+        {
+          "sample_time_ns": 22672104208,
+          "symbol": "TopicExpansionTimer.began(_:)"
+        }
+      ],
+      "usable_expansion_signpost_intervals": 0,
+      "qualification": "Entire native original five-expansion test sampled; application symbols resolved, but exported signpost tables contain no rows. Inclusive samples are not method self time and whole-test samples cannot isolate first expansion or establish CI causality. No caching change applied without evidence.",
+      "first_sampled_timer_window": {
+        "start_ns": 6172204416,
+        "end_ns": 6199001625,
+        "span_ms": 26.797209,
+        "main_samples": 267,
+        "action_sizing_inclusive_samples": 16,
+        "most_common_self_symbols": [
+          [
+            "<deduplicated_symbol>",
+            20
+          ],
+          [
+            "AG::Subgraph::update(unsigned int)",
+            10
+          ],
+          [
+            "swift::MetadataCacheKey::operator==(swift::MetadataCacheKey const&) const",
+            9
+          ],
+          [
+            "swift_retain",
+            7
+          ],
+          [
+            "swift_release",
+            6
+          ],
+          [
+            "AG::Graph::propagate_dirty(AG::AttributeID)",
+            5
+          ],
+          [
+            "AG::Graph::UpdateStack::update()",
+            5
+          ],
+          [
+            "__openat",
+            4
+          ],
+          [
+            "objc_msgSend",
+            4
+          ],
+          [
+            "_platform_memmove",
+            4
+          ],
+          [
+            "swift::RefCounts<swift::RefCountBitsT<(swift::RefCountInlinedness)1>>::incrementSlow(swift::RefCountBitsT<(swift::RefCountInlinedness)1>, unsigned int)",
+            4
+          ],
+          [
+            "bool swift::RefCounts<swift::RefCountBitsT<(swift::RefCountInlinedness)1>>::doDecrementSlow<(swift::PerformDeinit)1>(swift::RefCountBitsT<(swift::RefCountInlinedness)1>, unsigned int)",
+            4
+          ]
+        ],
+        "most_common_inclusive_symbols": [
+          [
+            "start",
+            266
+          ],
+          [
+            "schedulerStepScheduledMainSectionContinue",
+            266
+          ],
+          [
+            "UC::DriverCore::continueProcessing()",
+            266
+          ],
+          [
+            "__CFRunLoopRun",
+            266
+          ],
+          [
+            "start_sim",
+            266
+          ],
+          [
+            "static App.main()",
+            266
+          ],
+          [
+            "_UIUpdateSequenceRunNext",
+            266
+          ],
+          [
+            "static BlauApp.$main()",
+            266
+          ],
+          [
+            "__CFMachPortPerform",
+            266
+          ],
+          [
+            "_CFRunLoopRunSpecificWithOptions",
+            266
+          ],
+          [
+            "GSEventRunModal",
+            266
+          ],
+          [
+            "closure #1 in KitRendererCommon(_:)",
+            266
+          ]
+        ],
+        "qualification": "Approximate window between samples of timer.began and timer.appeared; it is not a signpost interval and does not measure exact method duration."
+      }
+    },
+    "initial_excluded_attempt": {
+      "status": "completed",
+      "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+      "source_hashes": {
+        "Blau/Timeline/TopicActionsLayout.swift": "770a8844bca2415c0f0b8c4c09e484c2b06034e1796c01befc3f84eb909a2baf",
+        "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+        "Blau/Timeline/TopicTimelineView.swift": "0e171a1dea5839702012b3873395180831aeb9ae4dc52a0c38d5d178d7ffcaea",
+        "BlauUITests/TopicDetailUITests.swift": "b732821ce3de1aa8b6494fde674817b36240c1195dee222025a491dac598c1e1"
+      },
+      "started_at": "2026-10-11T14:51:09.037779+00:00",
+      "trace": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-topic-layout-cache/.build/results/Choff-9fdd-layout-profile.trace",
+      "qualification": "External native profiling only. Instrumented timings are excluded from acceptance and do not reproduce CI causality.",
+      "error": "No unique fresh Choff app process found",
+      "finished_at": "2026-10-11T14:51:09.623745+00:00",
+      "source_hash_matches": true,
+      "exit_code": 1
+    },
+    "symbolication_qualification": "Application symbols were already resolved in the original exported trace. Additional app-stub dSYM resymbolication was rejected as irrelevant; Debug dylib dSYM was generated separately. No unresolved application-symbol attribution is used."
+  },
+  "production_changes": [],
+  "qualification": "Three unchanged native original test executions pass, without reproducing the CI failure. External profiling is diagnostic; signpost tables were empty, so the first window uses sampled timer frames and is approximate. Action sizing appears in16 of267 first-window samples (nominal1.6ms at100us sampling), not direct wall duration. No cache optimization or CI causal fix is established; source remains unchanged and original failure/criterion is retained."
+}
