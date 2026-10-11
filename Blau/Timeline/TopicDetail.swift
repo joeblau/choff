@@ -21,13 +21,15 @@ enum TopicDetailAccessibility {
 /// it with the previous topic. (Split is on each line of the transcript
 /// below, "Split Topic Here".)
 ///
-/// It opens inline under the bullet, in the timeline's lazy stack, so
-/// expanding builds only this header and the transcript rows on screen.
-/// Its `onAppear` ends the tap-to-expand measurement (`TopicExpansionTimer`).
+/// Its controls stay mounted for visible lazy sections while collapsed,
+/// avoiding their initial construction during a tap's layout transaction.
+/// The visible overlay's `onAppear` ends the tap-to-expand measurement only
+/// after the expanded header is laid out (`TopicExpansionTimer`).
 struct TopicDetailHeader: View {
     let topic: TimelineTopic
     let placement: TopicTimeline.Placement
     let editor: TopicEditor
+    let isExpanded: Bool
     /// Continues the topic; `nil` hides Continue.
     let onContinue: (() -> Void)?
     /// Called once the header is laid out.
@@ -45,13 +47,13 @@ struct TopicDetailHeader: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityLabel(Text("Summary"))
                     .accessibilityValue(Text(verbatim: summary))
-                    .accessibilityIdentifier(TopicTimelineAccessibility.summary)
+                    .accessibilityIdentifier(isExpanded ? TopicTimelineAccessibility.summary : "")
             }
             Text(verbatim: TopicDetailDescription.span(of: topic))
                 .brandTextStyle(.timestamp)
                 .foregroundStyle(Color.brand(.secondaryText))
                 .accessibilityLabel(Text(verbatim: TopicDetailDescription.span(of: topic, spelledOut: true)))
-                .accessibilityIdentifier(TopicDetailAccessibility.span)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.span : "")
             actions
         }
         .padding(.leading, TopicTimelineLayout.textInset)
@@ -59,9 +61,23 @@ struct TopicDetailHeader: View {
         .padding(.top, 2)
         .padding(.bottom, 12)
         .accessibilityElement(children: .contain)
-        .accessibilityIdentifier(TopicDetailAccessibility.detail)
+        .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.detail : "")
         .timelineRail(placement.railBelow)
-        .onAppear(perform: onAppear)
+        .frame(height: isExpanded ? nil : 0)
+        .clipped()
+        .allowsHitTesting(isExpanded)
+        .accessibilityHidden(!isExpanded)
+        .overlay {
+            if isExpanded {
+                Color.clear
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+                    .onAppear(perform: onAppear)
+            }
+        }
+        .onChange(of: isExpanded) {
+            if !isExpanded { showsActions = false }
+        }
     }
 
     /// Side by side when they fit, stacked at large text sizes (#81).
@@ -79,7 +95,7 @@ struct TopicDetailHeader: View {
                 }
                 .buttonStyle(TopicActionButtonStyle(prominent: true))
                 .accessibilityHint("Starts a conversation that picks up this topic")
-                .accessibilityIdentifier(TopicDetailAccessibility.continueTopic)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.continueTopic : "")
             }
             if let container = environment.modelContainer {
                 ShareLink(
@@ -90,7 +106,7 @@ struct TopicDetailHeader: View {
                 }
                 .buttonStyle(TopicActionButtonStyle())
                 .accessibilityHint("Shares the topic as Markdown")
-                .accessibilityIdentifier(TopicDetailAccessibility.share)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.share : "")
             }
             if !topic.isSynthetic {
                 Button {
@@ -102,7 +118,7 @@ struct TopicDetailHeader: View {
                 }
                 .buttonStyle(TopicActionButtonStyle())
                 .accessibilityLabel("More Actions")
-                .accessibilityIdentifier(TopicDetailAccessibility.more)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.more : "")
                 // Build the edit presentation when requested rather than
                 // inserting a menu control into the expansion's layout.
                 .confirmationDialog("Topic Actions", isPresented: $showsActions, titleVisibility: .hidden) {
@@ -114,9 +130,8 @@ struct TopicDetailHeader: View {
     }
 }
 
-/// These controls are inserted during a tap's layout transaction. Keep
-/// their first sizing pass simple while preserving the native button,
-/// sharing and edit actions.
+/// Keep the controls' sizing pass simple while preserving the native
+/// button, sharing and edit actions.
 private struct TopicActionButtonStyle: ButtonStyle {
     var prominent = false
     @Environment(\.isEnabled) private var isEnabled

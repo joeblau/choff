@@ -121,8 +121,12 @@ final class XAIKeyEntryUITests: XCTestCase {
         scrollTo(accountRow, in: list)
         XCTAssertTrue(accountRow.label.contains("Connected"), accountRow.label)
         accountRow.tap()
-        XCTAssertTrue(element(containing: "e5f6", in: app).waitForExistence(timeout: 10))
-        XCTAssertTrue(element(containing: "UI test key", in: app).exists)
+        let status = app.descendants(matching: .any)["xai.account.status"]
+        XCTAssertTrue(status.waitForExistence(timeout: 10))
+        XCTAssertTrue(status.label.contains("e5f6"), status.label)
+        let name = app.descendants(matching: .any)["xai.account.keyName"]
+        XCTAssertTrue(name.waitForExistence(timeout: 10))
+        XCTAssertTrue(name.label.contains("UI test key"), name.label)
         XCTAssertFalse(app.secureTextFields["xai.apiKey.field"].exists)
     }
 }
