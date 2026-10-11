@@ -1,11 +1,12 @@
-# Python 3.12 (coremltools 9.0 has no wheels for 3.14). The versions the #59
-# numbers were produced with; see docs/benchmarks.md.
+# Python 3.12 (coremltools 9.0 has no wheels for 3.14). This conversion
+# toolchain passes the offline Gemma3 and Qwen3 fixtures. Recorded #59
+# benchmarks retain their original toolchain versions; see docs/benchmarks.md.
 #
 #   uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -r scripts/embeddings/requirements.txt
 numpy==2.2.6
-torch==2.7.1
-transformers==4.57.1
-sentence-transformers==5.1.2
+torch==2.13.0
+transformers==5.10.1
+sentence-transformers==5.6.0
 model2vec==0.7.0
 coremltools==9.0
 huggingface_hub>=0.34
