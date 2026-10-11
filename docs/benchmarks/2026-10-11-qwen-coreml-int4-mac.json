@@ -1,0 +1,183 @@
+{
+  "reference": "PyTorch fp32 on CPU",
+  "computeUnits": {
+    "CPU_ONLY": {
+      "loadSeconds": 1.31,
+      "nonFiniteOutputs": 0,
+      "cosineToReference": {
+        "full": {
+          "min": 0.84965,
+          "mean": 0.92675
+        },
+        "256d": {
+          "min": 0.85254,
+          "mean": 0.92246
+        }
+      },
+      "retrieval256Int8": {
+        "count": 200,
+        "recall@5": 0.8067,
+        "hit@1": 0.565,
+        "hit@5": 0.845,
+        "recall@10": 0.8517,
+        "mrr@10": 0.684,
+        "ndcg@10": 0.7165
+      },
+      "predictMs": {
+        "128tok": {
+          "p50": 44.78,
+          "p95": 46.35
+        }
+      }
+    },
+    "CPU_AND_NE": {
+      "loadSeconds": 4.42,
+      "nonFiniteOutputs": 0,
+      "cosineToReference": {
+        "full": {
+          "min": 0.84776,
+          "mean": 0.92685
+        },
+        "256d": {
+          "min": 0.85066,
+          "mean": 0.92253
+        }
+      },
+      "retrieval256Int8": {
+        "count": 200,
+        "recall@5": 0.8042,
+        "hit@1": 0.575,
+        "hit@5": 0.845,
+        "recall@10": 0.8492,
+        "mrr@10": 0.688,
+        "ndcg@10": 0.7186
+      },
+      "predictMs": {
+        "128tok": {
+          "p50": 59.79,
+          "p95": 61.98
+        }
+      }
+    }
+  },
+  "referenceRetrieval256Int8": {
+    "count": 200,
+    "recall@5": 0.8092,
+    "hit@1": 0.61,
+    "hit@5": 0.845,
+    "recall@10": 0.8467,
+    "mrr@10": 0.7136,
+    "ndcg@10": 0.7349
+  },
+  "model": "qwen3-embedding-0.6b",
+  "source": {
+    "repo": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
+  },
+  "computePrecision": "fp16",
+  "weights": "int4",
+  "splitTokenEmbeddings": true,
+  "tokenTable": "int8",
+  "sequenceLengths": [
+    128
+  ],
+  "packageBytes": 248618608,
+  "tokenTableBytes": 155915732,
+  "convertSeconds": 35.7,
+  "maxTokensInEvalSet": 72,
+  "computePlan": {
+    "operations": {
+      "cpu": 1055,
+      "neuralEngine": 868
+    },
+    "neuralEngineShareOfOps": 0.4514,
+    "estimatedCostShare": {
+      "cpu": 0.957,
+      "neuralEngine": 0.0151
+    }
+  },
+  "acceptanceProvenance": {
+    "producer": {
+      "status": "completed",
+      "source_head": "a9ea5718dced8dcb1cf4d4d8ce3eaeff811c8459",
+      "script_sha256": "d239ec4b1592139ef77744ee88480ee84706667c9c07443dcfc0ae49b10f34ed",
+      "model": "Qwen/Qwen3-Embedding-0.6B",
+      "pinned_revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+      "command": [
+        "/Users/joeblau/Developer/joeblau/src/voice/.build/Dependency117Venv/bin/python",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-dependency-acceptance/scripts/embeddings/convert_coreml.py",
+        "--model",
+        "qwen3-embedding-0.6b",
+        "--weights",
+        "int4",
+        "--lengths",
+        "128",
+        "--output",
+        "/Users/joeblau/Developer/joeblau/src/voice/.build/EmbeddingsDeviceCandidateInt4"
+      ],
+      "started_at": "2026-10-11T12:13:20.673187+00:00",
+      "scope": "Existing public candidate int4 compression with original verification. Separate output; no model selection, hosting publication, 400MBbudget increase or physical acceptance claim.",
+      "environment": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "OMP_NUM_THREADS": "2",
+        "OPENBLAS_NUM_THREADS": "2",
+        "MKL_NUM_THREADS": "2"
+      },
+      "exit_code": 0,
+      "finished_at": "2026-10-11T12:15:34.352609+00:00",
+      "script_hash_matches": true
+    },
+    "hostingManifest": [
+      {
+        "path": "Qwen3Embedding06B.mlmodelc/analytics/coremldata.bin",
+        "size": 243,
+        "sha256": "7245b8da53755540c4f1815ceadfbb2c32df5b921b84fbb5b1c392801480784d"
+      },
+      {
+        "path": "Qwen3Embedding06B.mlmodelc/coremldata.bin",
+        "size": 415,
+        "sha256": "86bca723b02e4544767bdfedb3dc71c618e331a95a699d0971e1f1b83bb16b19"
+      },
+      {
+        "path": "Qwen3Embedding06B.mlmodelc/metadata.json",
+        "size": 2446,
+        "sha256": "8429ec4f1f7a68f320805fbf46d1364790e01060a216e663f566366daf6bbd14"
+      },
+      {
+        "path": "Qwen3Embedding06B.mlmodelc/model.mil",
+        "size": 661180,
+        "sha256": "c28864bd8bb07e3bd1b0816a06d86b3d8c53e4b14e23d7b38c6b4d02b101bfc3"
+      },
+      {
+        "path": "Qwen3Embedding06B.mlmodelc/weights/weight.bin",
+        "size": 247977024,
+        "sha256": "bbc9803bf8d375faeb7b91a7eaf57d4eaec9eb2ac1bed4812799f740027eabe5"
+      },
+      {
+        "path": "Qwen3Embedding06B.token-embeddings.i8",
+        "size": 155915732,
+        "sha256": "5d0ffeab0b3a07ea8fe934862793bc4c9029b0747cc8aec73addf4ae5302bcc9"
+      },
+      {
+        "path": "blau-embedding.json",
+        "size": 859,
+        "sha256": "c6b9cdf266c34ed640a91cf261da0de716ae5ab8e04487de23b6993e7e19d283"
+      },
+      {
+        "path": "tokenizer.json",
+        "size": 11423705,
+        "sha256": "def76fb086971c7867b829c23a26261e38d9d74e02139253b38aeb9df8b4b50a"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "size": 9706,
+        "sha256": "253153d0738ceb4c668d2eff957714dd2bea0b56de772a9fdccd96cbf517e6a0"
+      }
+    ],
+    "hostingBytes": 415991310,
+    "originalDownloadBudgetBytes": 400000000,
+    "downloadBudgetPassed": false,
+    "qualification": "Actual public cached Qwen4-bitcandidate/Mac200queries216docs. CPU+NE computeplan estimatedCPUcost95.7%, not physicalprocessordispatchproof. Finiteoutputsbut cosine/qualitydifferencesretained. No physical,A17,Gemma,selectedmodel,publishedhostingor originalbudgetincrease."
+  }
+}

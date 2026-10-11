@@ -1150,3 +1150,13 @@ boundaries, including the brief digression and re-segmentation. Mean Pk is
 0.000 against the unchanged0.25limit at the default0.5depth. The
 [complete original output](benchmarks/2026-10-11-qwen-topics-mac.json) is
 retained; selected-model,A17and live-conversation acceptance remain pending.
+
+The existing four-bit weight option was also measured with the fixed float32
+reference loader. Its [complete Mac report](benchmarks/2026-10-11-qwen-coreml-int4-mac.json)
+retains the full200-query evaluation. Hosting size is415,991,310bytes, still
+above the unchanged400,000,000-byte limit. CPU/CPU+Neural Engine Recall@5 is
+0.8067/0.8042, but minimum256-dimensional cosine to the reference drops to
+0.85254/0.85066. Both outputs remain finite. CPU+Neural Engine128-tokenp95
+is61.98ms; the compute plan assigns95.7% of estimated cost to CPU and1.51%
+to the Neural Engine. These are Mac measurements and plan estimates. This
+variant remains a candidate; no budget or model-selection change was made.
