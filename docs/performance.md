@@ -186,7 +186,7 @@ From the command line:
 make trace TRACE_DEVICE=<device name or UDID>
 # which runs:
 xcrun xctrace record --template Tools/Instruments/Blau.tracetemplate \
-    --device <device> --attach Blau --output .build/traces/
+    --device <device> --attach Choff --output .build/traces/
 ```
 
 ### Checking the pipeline from the Mac
