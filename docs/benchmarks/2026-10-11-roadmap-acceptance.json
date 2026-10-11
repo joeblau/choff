@@ -138,7 +138,8 @@
           "completion": "failed current original acceptance",
           "evidence": [
             "CI 38114217207 restores Swift package cache, but UI shard 1 runs 1432 seconds against original 900-second target",
-            "CI38123804979 at2acfe8c completed allrequiredPASS but2277seconds end-to-end, exceeding original900seconds warm-cache target. LongestUIjob1501seconds. Original runtime requirement remains failed."
+            "CI 38123804979 at2acfe8c completed allrequiredPASS but2277seconds end-to-end, exceeding original900seconds warm-cache target. LongestUIjob1501seconds. Original runtime requirement remains failed.",
+            "Two-worker experiment PR190 at d47201b CI 38127622172 remains inprogress beyond 900 s. Completed UI 1: Build 127 / Warm 208 / Test 693 s; UI 4: Build 121 / Warm 179 / Test 596 s. Separate unchanged expansion job FAIL: 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No limits or assertions changed; remaining UI 2 and whole-run terminal measurements pending."
           ]
         }
       ],
@@ -989,7 +990,8 @@
           "evidence": [
             "Current26cd0ba originalfive layout/Settings UItestsPASS0skip each on iPhoneSE3/iOS26.5 and iPhone17ProMax/iOS27.0: portrait/landscape/AX5 controls ordered in bottomleft/rightquarters,bounds/hittability,contentunderbar. StandardiPhone17 current242 allMainScreen casesalsoPASS. Representative smallest/largest/currentstandard cover adaptivegeometry, no every-model exhaustive claim.",
             "/tmp/voice-choff-main-screen-small-ios26-summary.json",
-            "/tmp/voice-choff-main-screen-large-ios27-summary.json"
+            "/tmp/voice-choff-main-screen-large-ios27-summary.json",
+            "Original a122d7e CI 38126102076 portrait assertion observed setup card overlapping Settings; local old-source control passed five repetitions of each original layout test. f24c6bc changes only the setup-card transition to fade in place. All 11 original main-screen/setup/empty-main AX cases PASS on each of iOS 26/27,0 FAIL / 0 SKIP; test assertions unchanged. Fresh requiredCI 38129326531 running; no controlled local causal RED claim."
           ]
         },
         {
@@ -997,7 +999,8 @@
           "completion": "verified",
           "evidence": [
             "MainScreenUITests.testSettingsIsBottomLeftAndRecordIsBottomRight PASS locatesblau.settings.open/blau.record identifiersandhittability; allothermainscreenUIcasesPASSacrossfourshards.",
-            "/tmp/voice-ci-242-ui2-tests.json"
+            "/tmp/voice-ci-242-ui2-tests.json",
+            "Original a122d7e CI 38126102076 portrait assertion observed setup card overlapping Settings; local old-source control passed five repetitions of each original layout test. f24c6bc changes only the setup-card transition to fade in place. All 11 original main-screen/setup/empty-main AX cases PASS on each of iOS 26/27,0 FAIL / 0 SKIP; test assertions unchanged. Fresh requiredCI 38129326531 running; no controlled local causal RED claim."
           ]
         }
       ],
@@ -1566,7 +1569,7 @@
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
             "Exact current app on iOS26.5 at8ee1add (test-only difference from26cd0ba): Now passes, drag paging fails on first page at drag18. Original checks unchanged; producer exit65. /tmp/voice-choff-paging-current-ios26-8ee1add.log",
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
-            "Source2acfe8c full original iOS27 suite:12PASS0FAIL0SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
+            "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
           ],
           "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         },
@@ -1577,7 +1580,7 @@
             "iOS 27 original paging test passed its unchanged 60 MB footprint growth budget at eeb5ed4",
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
-            "Source2acfe8c full original iOS27 suite:12PASS0FAIL0SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
+            "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
           ],
           "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         }
@@ -2499,7 +2502,7 @@
           "evidence": [
             "RealCI38116933575 separate nativeunit/fourfunctionalUIshards/optimizedlatency; UIjobdurations1350/1568/1519/1771sec versus2700limit, native675secversus1800. Completebounded originalcoverage. Absolute warm-CI<900secoriginal#15 stillunmet; distincttasknotwaived.",
             "/tmp/voice-ci-242-jobs.json",
-            "CI38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
+            "CI 38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
           ]
         },
         {
@@ -2512,7 +2515,7 @@
             "/tmp/voice-ci-242-ui2-tests.json",
             "/tmp/voice-ci-242-ui3-tests.json",
             "/tmp/voice-ci-242-ui4-tests.json",
-            "CI38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
+            "CI 38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
           ]
         },
         {
@@ -2520,7 +2523,7 @@
           "completion": "verified",
           "evidence": [
             "Real required CI 38119809945 at26cd0ba completed successfully: app unit tests, all four UI shards, original expansion performance and aggregate app-tests all pass. The separate long-paging failure is retained under#57 and blocks merge.",
-            "CI38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
+            "CI 38123804979 at2acfe8c terminalPASS: all9required jobs and app-tests aggregate;93UIselected91PASS2existinglongSKIP0fail,301nativePASS8existingSKIP,package3246PASS68existingSKIP. Long paging separatelypasses bothOS0skip. UIjobs1118/1128/1501/1302seconds below the configured3600second functional UI joblimit; original900second warmCI#15 remains failed."
           ]
         }
       ],
@@ -2646,14 +2649,14 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T09:03:43.636646+00:00",
+  "last_evidence_update": "2026-10-11T09:44:16.638034+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
     "Verified criteria cite actual source, tests, reports or historical measured controls. Historical-author evidence is explicitly labelled; it is not represented as a fresh execution.",
     "Not-yet-proven criteria are unverified, not automatically failing. Partial results do not establish real hardware, model access, multi-device or release acceptance.",
     "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
-    "PR187 ata122d7e passes original both-OS topic/AX5/latency checks and has fresh requiredCI38126102076 running. Preceding2acfe8c requiredCI38123804979 passed all checks. PR188 retains the separately tested093c20f score-reuse proof. These PRs and the whole goal are not claimed merged or complete."
+    "PR187 at f24c6bc has fresh requiredCI 38129326531 running. Original a122d7e CI 38126102076 failed one portrait setup-card overlap check; unchanged local old-code repetitions passed and the failure is retained. The setup card now fades in place; all 11 original screen/setup/empty-main accessibility cases PASS on each of iOS 26/27 with unchanged assertions. Original both-OS topic/AX5/latency checks at a122d7e and complete green 2acfe8c CI 38123804979 remain qualified preceding evidence. PR188 retains separately tested 093c20f score-reuse proof. PR190 parallel-CI experiment exceeds 900 seconds and failed the separate unchanged 100 ms expansion check; final whole-run result pending. No PR or whole goal is claimed merged or complete."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
@@ -2663,8 +2666,8 @@
     "certificateIdentifier": "84M7UGLL47"
   },
   "criteriaStatusCounts": {
-    "verified": 120,
-    "not yet proven in this acceptance audit": 51,
+    "verified": 125,
+    "not yet proven in this acceptance audit": 46,
     "failed current original acceptance": 1,
     "partially verified": 16,
     "verified on Mac real-model replay": 1,
@@ -2673,7 +2676,7 @@
     "pending external prerequisites": 1
   },
   "currentReviewSources": {
-    "integration": "a122d7e887db88c2dd5c05978037d1f0b323fefd",
+    "integration": "f24c6bc456fec4ce992f30c702b557b13eedf96e",
     "voice_score_reuse": "093c20fe638bcfd6c0761f758271946c08152696",
     "two_hour_soak": "13556587e3e8d89ed39609d8f5f6b81da2db42c7"
   }
