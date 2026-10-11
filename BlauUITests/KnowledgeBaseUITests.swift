@@ -152,10 +152,11 @@ final class KnowledgeBaseUITests: XCTestCase {
         let text = element("knowledge.aboutMe.text", in: app)
         text.tap()
         text.typeText("I'm building Choff, a voice app.")
-        let status = element("knowledge.saveStatus", in: app)
-        let saved = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label BEGINSWITH %@", "Saved"), object: status)
-        XCTAssertEqual(XCTWaiter.wait(for: [saved], timeout: 10), .completed, "About Me wasn't saved: \(status.label)")
+        // Saving and Saved are different SwiftUI text leaves. Query the
+        // current matching leaf instead of observing the replaced element.
+        let statuses = app.staticTexts.matching(identifier: "knowledge.saveStatus")
+        let saved = statuses.matching(NSPredicate(format: "label BEGINSWITH %@", "Saved")).firstMatch
+        XCTAssertTrue(saved.waitForExistence(timeout: 10), "About Me wasn't saved: \(statuses.firstMatch.label)")
         screenshot(app, "About Me")
         goBack(from: "About Me", in: app)
         XCTAssertTrue(app.staticTexts["Joe"].waitForExistence(timeout: 10), "The About Me row doesn't show the name")
