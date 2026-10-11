@@ -170,20 +170,20 @@ public enum IssueCode: String, Sendable, Hashable, CaseIterable, CustomStringCon
     public var message: String {
         switch self {
         case .offline:
-            "Blau keeps listening and saving what you say. Grok answers when you're back online."
+            "Choff keeps listening and saving what you say. Grok answers when you're back online."
         case .reconnecting:
             "The connection dropped. What you say is saved and sent as soon as it's back."
         case .grokUnreachable:
-            "Blau couldn't connect to xAI and keeps trying. What you say is saved and sent once it connects."
+            "Choff couldn't connect to xAI and keeps trying. What you say is saved and sent once it connects."
         case .secureConnectionFailed:
-            "Blau couldn't verify xAI's server. Check the date and time, sign in to this network if it asks, "
+            "Choff couldn't verify xAI's server. Check the date and time, sign in to this network if it asks, "
                 + "or turn off a VPN."
         case .rateLimited:
-            "xAI is limiting requests from your key right now. Blau tries again shortly."
+            "xAI is limiting requests from your key right now. Choff tries again shortly."
         case .xaiServerError:
-            "xAI's servers returned an error. Blau keeps trying; what you say is saved."
+            "xAI's servers returned an error. Choff keeps trying; what you say is saved."
         case .missingAPIKey:
-            "Grok needs your xAI API key to answer. Blau keeps transcribing meanwhile."
+            "Grok needs your xAI API key to answer. Choff keeps transcribing meanwhile."
         case .invalidAPIKey:
             "Your API key was rejected. It may have been revoked or mistyped. Enter it again or create a new "
                 + "one at console.x.ai."
@@ -203,22 +203,22 @@ public enum IssueCode: String, Sendable, Hashable, CaseIterable, CustomStringCon
         case .replyTimedOut:
             "Grok didn't respond in time. Say it again to retry."
         case .unexpectedResponse:
-            "xAI sent something Blau didn't expect. Try again; if it keeps happening, update Blau."
+            "xAI sent something Choff didn't expect. Try again; if it keeps happening, update Choff."
         case .microphoneDenied:
-            "Blau needs the microphone to hear you. Turn it on in Settings."
+            "Choff needs the microphone to hear you. Turn it on in Settings."
         case .microphoneUnavailable:
             "The microphone went away and there's no other one to use. Connect a headset or unplug the "
                 + "accessory, then resume."
         case .microphoneBusy:
             "A call or another app is using the microphone. Resume when it's free."
         case .audioInterrupted:
-            "A call or another app interrupted Blau. It resumes on its own, or tap Resume."
+            "A call or another app interrupted Choff. It resumes on its own, or tap Resume."
         case .audioPaused:
-            "Audio stopped while Blau was in the background. Resume to keep going."
+            "Audio stopped while Choff was in the background. Resume to keep going."
         case .audioRecovering:
-            "Audio stopped flowing, so Blau is restarting it. Nothing you said is lost."
+            "Audio stopped flowing, so Choff is restarting it. Nothing you said is lost."
         case .audioFailed:
-            "Blau couldn't start the microphone and speaker. Try again."
+            "Choff couldn't start the microphone and speaker. Try again."
         case .modelsWaitingForNetwork:
             "The speech models download when you're back online."
         case .modelsWaitingForWiFi:
@@ -235,13 +235,13 @@ public enum IssueCode: String, Sendable, Hashable, CaseIterable, CustomStringCon
             "New conversations are saved on this iPhone but won't sync until you free up iCloud storage "
                 + "(Settings > your name > iCloud)."
         case .iCloudUnavailable:
-            "Sign in to iCloud and turn it on for Blau to sync. Everything is saved on this iPhone."
+            "Sign in to iCloud and turn it on for Choff to sync. Everything is saved on this iPhone."
         case .iCloudSyncPaused:
             "Sync resumes on its own. Everything is saved on this iPhone."
         case .transcriptNotSaved:
             "The latest lines couldn't be written. Make sure your iPhone has free storage."
         case .storeUnavailable:
-            "Blau couldn't open its database, so new conversations aren't kept. Restart Blau; your existing "
+            "Choff couldn't open its database, so new conversations aren't kept. Restart Choff; your existing "
                 + "data is untouched."
         }
     }

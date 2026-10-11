@@ -4,7 +4,7 @@ import Foundation
 public enum BlauCloud {
     /// The CloudKit container every synced model is mirrored to. Must match
     /// `com.apple.developer.icloud-container-identifiers` in `project.yml`.
-    public static let containerIdentifier = "iCloud.com.joeblau.blau"
+    public static let containerIdentifier = "iCloud.com.joeblau.choff"
 
     /// `ModelConfiguration` name of the synced store (text and voiceprint).
     public static let syncedConfigurationName = "Blau"

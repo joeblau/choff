@@ -397,7 +397,7 @@ public enum DiagnosticsExport {
 
     /// `Blau-Diagnostics-20261007-120000.json` (UTC).
     public static func fileName(exportedAt: Date) -> String {
-        "Blau-Diagnostics-\(exportedAt.formatted(fileStamp)).json"
+        "Choff-Diagnostics-\(exportedAt.formatted(fileStamp)).json"
     }
 
     private static let fileStamp = Date.VerbatimFormatStyle(

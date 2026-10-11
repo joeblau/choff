@@ -41,7 +41,17 @@ final class SettingsUITests: XCTestCase {
 
     /// Taps a Form switch itself (tapping the row's label doesn't toggle it).
     private func flip(_ toggle: XCUIElement) {
+        let previous = toggle.value as? String
         toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        guard let previous, previous == "0" || previous == "1" else {
+            XCTFail("The switch didn't expose its on/off value")
+            return
+        }
+        let changed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", previous == "0" ? "1" : "0"), object: toggle)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [changed], timeout: 10), .completed,
+            "The switch didn't change from \(previous): \(String(describing: toggle.value))")
     }
 
     /// Taps the back button of the pane titled `title`. (The main screen's
@@ -206,7 +216,7 @@ final class SettingsUITests: XCTestCase {
         let learn = app.switches["settings.memory.learn"]
         scrollTo(learn, in: app.collectionViews.firstMatch)
         XCTAssertTrue(learn.waitForExistence(timeout: 10), "No Learn From Conversations in Settings → Knowledge")
-        XCTAssertTrue(app.buttons["settings.memory.learned"].exists, "No What Blau Learned in Settings → Knowledge")
+        XCTAssertTrue(app.buttons["settings.memory.learned"].exists, "No What Choff Learned in Settings → Knowledge")
 
         let status = app.descendants(matching: .any)["settings.memory.status"]
         scrollTo(status, in: app.collectionViews.firstMatch)
@@ -262,7 +272,7 @@ final class SettingsUITests: XCTestCase {
         let confirm = app.buttons.matching(identifier: "Delete Learned Facts").firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5), "No confirmation before deleting")
         XCTAssertTrue(
-            app.staticTexts["Delete what Blau learned?"].exists, "The confirmation doesn't say what it deletes")
+            app.staticTexts["Delete what Choff learned?"].exists, "The confirmation doesn't say what it deletes")
         confirm.tap()
         let result = app.staticTexts["settings.privacy.result"]
         XCTAssertTrue(result.waitForExistence(timeout: 10), "No result after deleting")

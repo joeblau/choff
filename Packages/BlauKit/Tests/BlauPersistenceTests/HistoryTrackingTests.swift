@@ -307,7 +307,7 @@ struct PersistentHistoryTrackerTests {
 struct StoreChangeNotificationTests {
     @Test func remoteChangesForTheSyncedStoreAreSignalled() async throws {
         let center = NotificationCenter()
-        let storeURL = URL(filePath: "/data/Blau/Blau.store")
+        let storeURL = URL(filePath: "/data/Choff/Blau.store")
         let changes = RemoteChangeMonitor(storeURL: storeURL, notificationCenter: center).changes()
 
         center.post(name: .NSPersistentStoreRemoteChange, object: nil, userInfo: ["storeURL": storeURL])
@@ -316,9 +316,10 @@ struct StoreChangeNotificationTests {
     }
 
     @Test func otherStoresAreIgnored() {
-        let storeURL = URL(filePath: "/data/Blau/Blau.store")
-        #expect(!RemoteChangeMonitor.matches(URL(filePath: "/data/Blau/Derived/BlauDerived.store"), storeURL: storeURL))
-        #expect(RemoteChangeMonitor.matches(URL(filePath: "/data/Blau/./Blau.store"), storeURL: storeURL))
+        let storeURL = URL(filePath: "/data/Choff/Blau.store")
+        #expect(
+            !RemoteChangeMonitor.matches(URL(filePath: "/data/Choff/Derived/BlauDerived.store"), storeURL: storeURL))
+        #expect(RemoteChangeMonitor.matches(URL(filePath: "/data/Choff/./Blau.store"), storeURL: storeURL))
         #expect(RemoteChangeMonitor.matches(nil, storeURL: storeURL))
     }
 }

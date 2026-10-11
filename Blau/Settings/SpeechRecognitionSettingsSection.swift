@@ -41,9 +41,9 @@ struct SpeechRecognitionSettingsSection: View {
         } footer: {
             Text(
                 languageNeedsApple
-                    ? "Parakeet understands English only, so Blau uses Apple's speech recognition for the language "
+                    ? "Parakeet understands English only, so Choff uses Apple's speech recognition for the language "
                         + "you chose below."
-                    : "Blau transcribes you on this iPhone with Parakeet, and uses Apple's speech recognition when "
+                    : "Choff transcribes you on this iPhone with Parakeet, and uses Apple's speech recognition when "
                         + "Parakeet can't run. Turn this on to always use Apple's."
             )
         }

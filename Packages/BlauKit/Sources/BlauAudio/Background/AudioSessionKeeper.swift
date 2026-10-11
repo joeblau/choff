@@ -359,7 +359,7 @@ public actor AudioSessionKeeper: AudioService {
         // Interruptions that ended without `.shouldResume` don't publish a
         // new controller state; pick them up here.
         if controllerState == .interrupted, !awaitingManualResume, await controller.isAwaitingManualResume {
-            logger.notice("The interruption ended without .shouldResume; resuming when Blau is in use")
+            logger.notice("The interruption ended without .shouldResume; resuming when Choff is in use")
             await syncWithController()
         }
 
@@ -396,7 +396,7 @@ public actor AudioSessionKeeper: AudioService {
                 await recover(attempt: attempts + 1)
             } else if phase.isBackground {
                 logger.fault(
-                    "Audio still stalled after \(attempts, privacy: .public) rebuild(s); resuming when Blau is opened")
+                    "Audio still stalled after \(attempts, privacy: .public) rebuild(s); resuming when Choff is opened")
                 stall = .gaveUp
                 update(force: nil)
             } else {

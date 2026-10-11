@@ -167,6 +167,37 @@ struct ProfileMemoryAppTests {
         #expect(pinned.facts.map(\.text) == ["User lives in Lisbon"])
     }
 
+    @Test func foregroundCatchUpKeepsTheCallersPriority() async throws {
+        let persistence = PersistenceController.inMemory()
+        await persistence.start()
+        let container = try #require(persistence.stack?.container)
+        let seed = ModelContext(container)
+        seed.insert(Fact(predicate: "works at", objectText: "Acme", validFrom: Self.t0, origin: .extracted))
+        try seed.save()
+
+        let (priorities, continuation) = AsyncStream<TaskPriority>.makeStream()
+        let model = StubGenerator { _ in
+            continuation.yield(Task.currentPriority)
+            continuation.finish()
+            return #"{"profile":"Work: Acme.","topics":[]}"#
+        }
+        let store = DeferredProfileMemoryStore { @MainActor [weak persistence] in persistence?.stack?.container }
+        let profile = ProfileMemory(
+            consolidator: ProfileConsolidator(generator: model, store: store, signposter: .disabled(.memory)),
+            pinned: PinnedMemoryProvider(store: store), schedulesBackgroundWork: true)
+
+        let foreground = Task(priority: .userInitiated) {
+            profile.catchUpIfOverdue()
+            var iterator = priorities.makeAsyncIterator()
+            return await iterator.next()
+        }
+        let observed = try #require(await foreground.value)
+        #expect(observed == .userInitiated)
+        await profile.consolidator.waitUntilIdle()
+        let block = try #require(try ModelContext(container).fetch(FetchDescriptor<ProfileBlock>()).first)
+        #expect(block.text == "Work: Acme.")
+    }
+
     @Test func everyOutcomeHasAStatusLine() {
         let outcomes: [ProfileConsolidationOutcome] = [
             .unchanged, .notDue(nextCheck: Self.t0), .failed("x"),

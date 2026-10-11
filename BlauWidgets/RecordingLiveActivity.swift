@@ -96,6 +96,6 @@ private struct StopButton: View {
                 .font(.subheadline.bold())
         }
         .tint(.red)
-        .accessibilityHint(Text("Turns Blau's microphone off"))
+        .accessibilityHint(Text("Turns Choff's microphone off"))
     }
 }

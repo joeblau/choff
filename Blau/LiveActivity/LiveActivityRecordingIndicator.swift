@@ -35,7 +35,7 @@ final class LiveActivityRecordingIndicator: RecordingIndicator {
             self.activityID = nil
         }
         guard ActivityAuthorizationInfo().areActivitiesEnabled else {
-            logger.notice("Live Activities are off for Blau; no lock-screen recording indicator")
+            logger.notice("Live Activities are off for Choff; no lock-screen recording indicator")
             return
         }
         await Self.endAll()

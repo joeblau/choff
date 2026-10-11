@@ -21,21 +21,47 @@ enum TopicDetailAccessibility {
 /// it with the previous topic. (Split is on each line of the transcript
 /// below, "Split Topic Here".)
 ///
-/// It opens inline under the bullet, in the timeline's lazy stack, so
-/// expanding builds only this header and the transcript rows on screen.
-/// Its `onAppear` ends the tap-to-expand measurement (`TopicExpansionTimer`).
+/// On iOS 27, its controls stay mounted for visible lazy sections while
+/// collapsed, avoiding initial construction during a tap's transaction.
+/// The visible overlay's `onAppear` ends the tap-to-expand measurement only
+/// after the expanded header is laid out (`TopicExpansionTimer`).
 struct TopicDetailHeader: View {
     let topic: TimelineTopic
     let placement: TopicTimeline.Placement
     let editor: TopicEditor
+    let isExpanded: Bool
     /// Continues the topic; `nil` hides Continue.
     let onContinue: (() -> Void)?
     /// Called once the header is laid out.
     let onAppear: () -> Void
 
     @Environment(AppEnvironment.self) private var environment
+    @State private var showsActions = false
 
     var body: some View {
+        if #available(iOS 27, *) {
+            content
+                .frame(height: isExpanded ? nil : 0)
+                .clipped()
+                .allowsHitTesting(isExpanded)
+                .accessibilityHidden(!isExpanded)
+                .overlay {
+                    if isExpanded {
+                        Color.clear
+                            .allowsHitTesting(false)
+                            .accessibilityHidden(true)
+                            .onAppear(perform: onAppear)
+                    }
+                }
+                .onChange(of: isExpanded) {
+                    if !isExpanded { showsActions = false }
+                }
+        } else {
+            content.onAppear(perform: onAppear)
+        }
+    }
+
+    private var content: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let summary = topic.summary?.trimmingCharacters(in: .whitespacesAndNewlines), !summary.isEmpty {
                 Text(verbatim: summary)
@@ -44,34 +70,30 @@ struct TopicDetailHeader: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityLabel(Text("Summary"))
                     .accessibilityValue(Text(verbatim: summary))
-                    .accessibilityIdentifier(TopicTimelineAccessibility.summary)
+                    .accessibilityIdentifier(isExpanded ? TopicTimelineAccessibility.summary : "")
+                    .accessibilityHidden(!isExpanded)
             }
             Text(verbatim: TopicDetailDescription.span(of: topic))
                 .brandTextStyle(.timestamp)
                 .foregroundStyle(Color.brand(.secondaryText))
                 .accessibilityLabel(Text(verbatim: TopicDetailDescription.span(of: topic, spelledOut: true)))
-                .accessibilityIdentifier(TopicDetailAccessibility.span)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.span : "")
+                .accessibilityHidden(!isExpanded)
             actions
         }
         .padding(.leading, TopicTimelineLayout.textInset)
         .padding(.trailing)
         .padding(.top, 2)
-        .padding(.bottom, 8)
+        .padding(.bottom, 12)
         .accessibilityElement(children: .contain)
-        .accessibilityIdentifier(TopicDetailAccessibility.detail)
+        .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.detail : "")
         .timelineRail(placement.railBelow)
-        .onAppear(perform: onAppear)
     }
 
     /// Side by side when they fit, stacked at large text sizes (#81).
     private var actions: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 8) { actionButtons }
-            VStack(alignment: .leading, spacing: 8) { actionButtons }
-        }
-        .controlSize(.small)
-        .buttonBorderShape(.capsule)
-        .font(.subheadline.weight(.medium))
+        TopicActionsLayout { actionButtons }
+            .font(.subheadline.weight(.medium))
     }
 
     @ViewBuilder
@@ -79,37 +101,77 @@ struct TopicDetailHeader: View {
         Group {
             if let onContinue {
                 Button(action: onContinue) {
-                    Label("Continue", systemImage: "arrow.uturn.forward")
+                    actionLabel("Continue", systemImage: "arrow.uturn.forward")
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(TopicActionButtonStyle(prominent: true))
                 .accessibilityHint("Starts a conversation that picks up this topic")
-                .accessibilityIdentifier(TopicDetailAccessibility.continueTopic)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.continueTopic : "")
+                .accessibilityHidden(!isExpanded)
             }
             if let container = environment.modelContainer {
                 ShareLink(
                     item: TopicMarkdownDocument(topic: topic, container: container),
                     preview: SharePreview(Text(verbatim: topic.title))
                 ) {
-                    Label("Share", systemImage: "square.and.arrow.up")
+                    actionLabel("Share", systemImage: "square.and.arrow.up")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(TopicActionButtonStyle())
                 .accessibilityHint("Shares the topic as Markdown")
-                .accessibilityIdentifier(TopicDetailAccessibility.share)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.share : "")
+                .accessibilityHidden(!isExpanded)
             }
             if !topic.isSynthetic {
-                Menu {
-                    TopicEditMenuItems(
-                        topicID: topic.id, title: topic.title, canMerge: placement.canMerge, editor: editor)
+                Button {
+                    showsActions = true
                 } label: {
-                    Label("More", systemImage: "ellipsis")
+                    actionLabel("More", systemImage: "ellipsis")
                         .labelStyle(.iconOnly)
                         .frame(minWidth: 20, minHeight: 20)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(TopicActionButtonStyle())
                 .accessibilityLabel("More Actions")
-                .accessibilityIdentifier(TopicDetailAccessibility.more)
+                .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.more : "")
+                .accessibilityHidden(!isExpanded)
+                // Build the edit presentation when requested rather than
+                // inserting a menu control into the expansion's layout.
+                .confirmationDialog("Topic Actions", isPresented: $showsActions, titleVisibility: .hidden) {
+                    TopicEditMenuItems(
+                        topicID: topic.id, title: topic.title, canMerge: placement.canMerge, editor: editor)
+                }
             }
         }
+    }
+
+    /// Mounted collapsed controls must also hide their text leaves from
+    /// accessibility; a custom button style can expose them independently.
+    private func actionLabel(_ title: LocalizedStringKey, systemImage: String) -> some View {
+        Label {
+            Text(title)
+                .accessibilityHidden(!isExpanded)
+        } icon: {
+            Image(systemName: systemImage)
+                .accessibilityHidden(true)
+        }
+    }
+}
+
+/// Keep the controls' sizing pass simple while preserving the native
+/// button, sharing and edit actions.
+private struct TopicActionButtonStyle: ButtonStyle {
+    var prominent = false
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.horizontal, 12)
+            .frame(minHeight: 44)
+            .foregroundStyle(prominent ? Color.white : Color.brand(.accent))
+            .background(
+                prominent ? Color.brand(.accentFill) : Color(uiColor: .secondarySystemFill),
+                in: Capsule()
+            )
+            .contentShape(Capsule())
+            .opacity(isEnabled ? (configuration.isPressed ? 0.72 : 1) : 0.4)
     }
 }
 

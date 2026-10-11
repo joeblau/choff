@@ -6,7 +6,7 @@ import SwiftData
 import os
 
 /// Reads and writes memory entities and facts in the synced SwiftData store
-/// for the extraction pipeline (#66) and the "What Blau learned" screen.
+/// for the extraction pipeline (#66) and the "What Choff learned" screen.
 ///
 /// A `ModelActor` on `DispatchQueueModelExecutor`, like `ConversationStore`,
 /// so it never runs or saves on the main thread. Each `apply` is one save.

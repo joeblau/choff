@@ -146,7 +146,7 @@ struct VoiceIDSettingsView: View {
         } footer: {
             Text(
                 "Every device uses your synced voiceprint. Adding a device's own microphone takes about 15 seconds "
-                    + "and helps Blau recognize you through it."
+                    + "and helps Choff recognize you through it."
             )
         }
     }
@@ -336,7 +336,7 @@ struct VoiceIDStatus: Equatable {
         case .notEnrolled:
             String(
                 localized:
-                    "Enroll by saying a few short things, so Blau answers only you. It takes less than a minute."
+                    "Enroll by saying a few short things, so Choff answers only you. It takes less than a minute."
             )
         case .enrolled:
             String(
@@ -346,12 +346,12 @@ struct VoiceIDStatus: Equatable {
         case .needsReenrollment:
             String(
                 localized:
-                    "Blau's voice model changed since you enrolled. Re-enroll so Blau can recognize you again."
+                    "Choff's voice model changed since you enrolled. Re-enroll so Choff can recognize you again."
             )
         case .unreadable:
             String(
                 localized:
-                    "Your voiceprint couldn't be read on this device, for example after an iCloud Keychain reset. Re-enroll so Blau can recognize you again."
+                    "Your voiceprint couldn't be read on this device, for example after an iCloud Keychain reset. Re-enroll so Choff can recognize you again."
             )
         }
     }

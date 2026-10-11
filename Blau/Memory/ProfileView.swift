@@ -44,12 +44,12 @@ struct ProfileView: View {
                         .textSelection(.enabled)
                         .accessibilityIdentifier(ProfileIdentifiers.summary)
                 } else {
-                    Text("Blau hasn't written a profile yet. It writes one from what it learns in your conversations.")
+                    Text("Choff hasn't written a profile yet. It writes one from what it learns in your conversations.")
                         .foregroundStyle(.secondary)
                 }
                 ProfileBudgetRow(tokens: pinned.map(ProfileComposer.tokens) ?? 0)
             } header: {
-                Text("Blau's Summary")
+                Text("Choff's Summary")
             } footer: {
                 if let block, block.updatedAt > .distantPast {
                     Text("Updated \(block.updatedAt.formatted(date: .abbreviated, time: .shortened)).")
@@ -70,7 +70,7 @@ struct ProfileView: View {
                     Text("In Your Words")
                 } footer: {
                     Text(
-                        "Your own profile pages are given to Blau exactly as you wrote them; updates never rewrite them."
+                        "Your own profile pages are given to Choff exactly as you wrote them; updates never rewrite them."
                     )
                 }
             }
@@ -96,7 +96,7 @@ struct ProfileView: View {
                 }
             } footer: {
                 Text(
-                    "About once a week, while your iPhone charges, Blau sends what it has learned to xAI to rewrite "
+                    "About once a week, while your iPhone charges, Choff sends what it has learned to xAI to rewrite "
                         + "this summary and keep it under \(ProfileBlock.tokenBudget.formatted()) tokens. It doesn't "
                         + "run while Learn From Conversations is off."
                 )
@@ -138,10 +138,10 @@ struct ProfileView: View {
         case .notDue: String(localized: "Nothing new to add yet.")
         case .skipped(.disabled): String(localized: "Learn From Conversations is off.")
         case .skipped(.generatorUnavailable): String(localized: "Add your xAI API key to update the profile.")
-        case .skipped(.nothingToConsolidate): String(localized: "Blau hasn't learned anything about you yet.")
+        case .skipped(.nothingToConsolidate): String(localized: "Choff hasn't learned anything about you yet.")
         case .skipped(.conflict): String(localized: "Another device just updated the profile.")
         case .skipped(.deferred): String(localized: "Waiting for the device to cool down.")
-        case .failed: String(localized: "Couldn't update the profile. Blau will try again later.")
+        case .failed: String(localized: "Couldn't update the profile. Choff will try again later.")
         }
     }
 }
@@ -286,8 +286,8 @@ struct ProfileChangeView: View {
             ProfileChangeView(
                 record: ProfileConsolidationRecord(
                     date: Date(), reason: .weekly,
-                    before: "Work: The user works at Stripe.\n\nGoals: Ship Blau.",
-                    after: "Work: The user runs Acme Robotics with Dana.\n\nGoals: Ship Blau and raise a seed round.",
+                    before: "Work: The user works at Stripe.\n\nGoals: Ship Choff.",
+                    after: "Work: The user runs Acme Robotics with Dana.\n\nGoals: Ship Choff and raise a seed round.",
                     topicChanges: [
                         TopicSummaryChange(
                             topicID: UUID(), title: "Seed Round", before: "They talk about money.",

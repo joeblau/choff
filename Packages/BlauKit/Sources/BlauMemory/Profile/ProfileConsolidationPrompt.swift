@@ -79,8 +79,8 @@ public struct ProfileConsolidationPrompt: Hashable, Sendable {
 
     /// The system prompt.
     public static let instructions = """
-        You maintain the profile that Blau, a voice assistant, keeps about its user. The profile is read at the \
-        start of every conversation so Blau knows who it is talking to. While the user is away, you rewrite it \
+        You maintain the profile that Choff, a voice assistant, keeps about its user. The profile is read at the \
+        start of every conversation so Choff knows who it is talking to. While the user is away, you rewrite it \
         from everything memory knows now.
 
         Rules for profile:

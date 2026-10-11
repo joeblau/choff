@@ -6,7 +6,7 @@ import Testing
 
 /// Guards the wiring Config/*.xcconfig -> project.yml Info.plist keys ->
 /// AppConfig in the built app. The unit-test bundle is hosted in the app, so
-/// `Bundle.main` is the built Blau.app (Debug configuration).
+/// `Bundle.main` is the built Choff.app (Debug configuration).
 @Suite("AppConfig in the built app")
 struct AppConfigBundleTests {
     private let info = Bundle.main.infoDictionary ?? [:]

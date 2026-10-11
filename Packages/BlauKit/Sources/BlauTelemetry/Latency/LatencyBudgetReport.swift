@@ -156,7 +156,7 @@ public struct LatencyBudgetReport: Codable, Sendable, Hashable {
 
     /// `Blau-Latency-20261009-120000.json` (UTC).
     public static func fileName(generatedAt: Date) -> String {
-        "Blau-Latency-\(generatedAt.formatted(fileStamp)).json"
+        "Choff-Latency-\(generatedAt.formatted(fileStamp)).json"
     }
 
     /// Writes the export into `directory` and returns the file.

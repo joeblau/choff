@@ -34,13 +34,13 @@ struct DataMaintenanceTests {
                 context.insert(utterance)
             }
         }
-        let document = MemoryDocument(kind: .company, title: "Blau", body: "A voice app", createdAt: start)
+        let document = MemoryDocument(kind: .company, title: "Choff", body: "A voice app", createdAt: start)
         context.insert(document)
         context.insert(CollectionItem(document: document, ordinal: 0, prompt: "Why now?", createdAt: start))
         let entity = MemoryEntity(name: "Joe", type: .person, createdAt: start)
         context.insert(entity)
-        context.insert(Fact(subject: entity, predicate: "builds", objectText: "Blau", validFrom: start, origin: .user))
-        context.insert(ProfileBlock(text: "Joe builds Blau.", updatedAt: start))
+        context.insert(Fact(subject: entity, predicate: "builds", objectText: "Choff", validFrom: start, origin: .user))
+        context.insert(ProfileBlock(text: "Joe builds Choff.", updatedAt: start))
         let profile = VoiceProfile(name: "Me", embeddingModelVersion: "test", centroid: [0.1, 0.2], createdAt: start)
         context.insert(profile)
         context.insert(
@@ -182,7 +182,7 @@ struct DataMaintenanceTests {
         #expect(snapshots[0].lines.map(\.text) == ["Line 0", "Line 1", "Line 2"])
 
         let markdown = exporter.markdown(for: snapshots, exportedAt: start.addingTimeInterval(86_400))
-        #expect(markdown.hasPrefix("# Blau conversations\n\nExported Oct 8, 2026"))
+        #expect(markdown.hasPrefix("# Choff conversations\n\nExported Oct 8, 2026"))
         #expect(markdown.contains("· 2 conversations"))
         #expect(markdown.contains("\n### Topic 0\n"))
         #expect(markdown.contains("\n**You:** Line 0\n"))
@@ -206,7 +206,7 @@ struct DataMaintenanceTests {
         #expect(markdown.contains("\n## Interview prep\n"))
         #expect(markdown.contains("\n**You:** Hello\n"))
         #expect(!markdown.contains("**Grok:**"))
-        #expect(markdown.contains("\n**Blau:** Reconnected\n"))
+        #expect(markdown.contains("\n**Choff:** Reconnected\n"))
         #expect(markdown.contains("\n## Oct 7, 2026"))
     }
 
@@ -228,7 +228,7 @@ struct DataMaintenanceTests {
         defer { try? FileManager.default.removeItem(at: directory) }
 
         let url = try exporter.write([], exportedAt: start, to: directory)
-        #expect(url.lastPathComponent == "Blau Conversations 2026-10-07.md")
+        #expect(url.lastPathComponent == "Choff Conversations 2026-10-07.md")
         let text = try String(contentsOf: url, encoding: .utf8)
         #expect(text.contains("0 conversations"))
     }

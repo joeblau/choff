@@ -19,9 +19,19 @@ final class SpeechModelSetupUITests: XCTestCase {
         openSettingsPane(SettingsPaneID.models, in: app)
     }
 
+    /// Release the fixture's Wi-Fi wait through the production permission
+    /// action, after the test has finished inspecting the setup card.
+    private func allowCellularDownload(in app: XCUIApplication) {
+        let download = app.buttons["blau.models.action"]
+        XCTAssertTrue(download.waitForExistence(timeout: 10))
+        XCTAssertEqual(download.label, "Download Using Cellular Data")
+        download.tap()
+    }
+
     func testFreshInstallShowsProgressThenReady() throws {
         let app = XCUIApplication()
         app.launchEnvironment["BLAU_MODEL_FIXTURES"] = "1"
+        app.launchEnvironment["BLAU_MODEL_FIXTURE_CELLULAR"] = "1"
         app.launch()
 
         let setup = app.descendants(matching: .any)["blau.models.setup"]
@@ -38,6 +48,7 @@ final class SpeechModelSetupUITests: XCTestCase {
             settings.frame.intersects(setup.frame),
             "The setup card covers the Settings button: \(settings.frame) \(setup.frame)")
 
+        allowCellularDownload(in: app)
         XCTAssertTrue(setup.waitForNonExistence(timeout: 120), "The setup card should go away once models are ready")
 
         openSpeechModelSettings(in: app)
@@ -55,9 +66,11 @@ final class SpeechModelSetupUITests: XCTestCase {
     func testDeletingAModelFromSettings() throws {
         let app = XCUIApplication()
         app.launchEnvironment["BLAU_MODEL_FIXTURES"] = "1"
+        app.launchEnvironment["BLAU_MODEL_FIXTURE_CELLULAR"] = "1"
         app.launch()
         let setup = app.descendants(matching: .any)["blau.models.setup"]
         XCTAssertTrue(setup.waitForExistence(timeout: 15))
+        allowCellularDownload(in: app)
         XCTAssertTrue(setup.waitForNonExistence(timeout: 120), "Models should become ready")
 
         openSpeechModelSettings(in: app)

@@ -11,6 +11,11 @@ enum SpeechModels {
     /// honored in every configuration; the performance tests run Release.
     static let fixturesEnvironmentKey = "BLAU_MODEL_FIXTURES"
 
+    /// Holds fixture downloads at the real Wi-Fi permission boundary until
+    /// the UI test chooses Download Using Cellular Data. This lets it inspect
+    /// progress and layout without racing an automatically finished download.
+    static let fixtureCellularEnvironmentKey = "BLAU_MODEL_FIXTURE_CELLULAR"
+
     /// Set by XCTest in an app that hosts unit tests.
     static let hostedTestsEnvironmentKey = "XCTestConfigurationFilePath"
 
@@ -35,7 +40,8 @@ enum SpeechModels {
         // Unit and UI tests run the app: never download real models there.
         if usesFixtures(environment) {
             Log.ui.notice("Using fixture speech models")
-            return fixtureManager(root: fixtureRoot)
+            let network: NetworkStatus = environment[fixtureCellularEnvironmentKey] == "1" ? .cellular : .unmetered
+            return fixtureManager(root: fixtureRoot, network: network)
         }
 
         // ModelManager is the only thing that downloads models: FluidAudio's
@@ -80,7 +86,8 @@ enum SpeechModels {
     @MainActor
     static func fixtureManager(
         root: URL = defaultFixtureRoot,
-        delayPerChunk: Duration? = nil
+        delayPerChunk: Duration? = nil,
+        network: NetworkStatus = .unmetered
     ) -> ModelManager {
         let delayPerChunk = delayPerChunk ?? launchArgumentChunkDelay ?? .milliseconds(15)
         try? FileManager.default.removeItem(at: root)
@@ -92,7 +99,7 @@ enum SpeechModels {
             manifest: manifest,
             store: ModelStore(root: root),
             transport: ModelFixtures.Transport(manifest: manifest, chunkCount: 25, delayPerChunk: delayPerChunk),
-            networkMonitor: StaticNetworkMonitor(.unmetered),
+            networkMonitor: StaticNetworkMonitor(network),
             warmer: ModelFixtures.Warmer(duration: .milliseconds(300)),
             preferencesStore: InMemoryModelPreferencesStore()
         )

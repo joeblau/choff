@@ -49,10 +49,10 @@ struct ProfileComposerTests {
     // MARK: User-authored text stays verbatim
 
     @Test func theUsersOwnWordsArePinnedVerbatimBeforeTheSummary() {
-        let body = "I'm Joe.  I build *Blau*,\na voice app — and I hate small talk!"
+        let body = "I'm Joe.  I build *Choff*,\na voice app — and I hate small talk!"
         let pinned = composer.pinnedProfile(
-            documents: [document(body)], summary: "Work: The user is building Blau.")
-        #expect(pinned == "In the user's own words:\nAbout me:\n\(body)\n\nWork: The user is building Blau.")
+            documents: [document(body)], summary: "Work: The user is building Choff.")
+        #expect(pinned == "In the user's own words:\nAbout me:\n\(body)\n\nWork: The user is building Choff.")
     }
 
     @Test func pagesWithoutTitlesOrBodiesAreHandled() {

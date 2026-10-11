@@ -189,9 +189,9 @@ private struct SettingsPaneRow: View {
         LabeledContent {
             if let summary {
                 Text(summary)
-                    // The list's own gray is under 4.5:1 on the grouped
-                    // cells (#81).
-                    .foregroundStyle(Color.brand(.secondaryText))
+                    // LabeledContent can further dim its value in grouped
+                    // cells. Keep summaries legible at accessibility sizes.
+                    .foregroundStyle(.primary)
                     .lineLimit(1)
             }
         } label: {
@@ -272,11 +272,11 @@ enum SettingsSummary {
         return "\(name) · \(locale.localizedString(forLanguageCode: code) ?? identifier)"
     }
 
-    /// "Blau 1.0 (42)" from the bundle.
+    /// "Choff 1.0 (42)" from the bundle.
     static func version(bundle: Bundle = .main) -> String {
         let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "–"
         let build = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "–"
-        return "Blau \(version) (\(build))"
+        return "Choff \(version) (\(build))"
     }
 }
 

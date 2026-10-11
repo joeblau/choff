@@ -50,7 +50,7 @@ extension ConversationExportSnapshot {
 /// which the exporter would then rewrite or remove.
 public struct TopicMarkdownRenderer: Sendable {
     /// The `generator:` value of a shared topic.
-    public static let generator = "Blau topic"
+    public static let generator = "Choff topic"
     public static let formatVersion = 1
 
     public let timeZone: TimeZone

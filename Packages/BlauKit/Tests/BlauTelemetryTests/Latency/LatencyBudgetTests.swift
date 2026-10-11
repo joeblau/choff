@@ -256,11 +256,11 @@ struct LatencyBudgetReportTests {
         #expect(json.contains("\"generatedAt\" : \"2026-10-09T12:00:00Z\""))
         #expect(try LatencyBudgetReport.decode(data) == report)
 
-        #expect(LatencyBudgetReport.fileName(generatedAt: Self.generatedAt) == "Blau-Latency-20261009-120000.json")
+        #expect(LatencyBudgetReport.fileName(generatedAt: Self.generatedAt) == "Choff-Latency-20261009-120000.json")
         let folder = FileManager.default.temporaryDirectory.appending(path: "LatencyReport-\(UUID().uuidString)")
         defer { try? FileManager.default.removeItem(at: folder) }
         let file = try report.write(to: folder)
-        #expect(file.lastPathComponent == "Blau-Latency-20261009-120000.json")
+        #expect(file.lastPathComponent == "Choff-Latency-20261009-120000.json")
         #expect(try LatencyBudgetReport.decode(Data(contentsOf: file)) == report)
     }
 

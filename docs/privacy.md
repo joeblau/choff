@@ -8,7 +8,7 @@ user-facing side is Settings → Privacy & Data (`Blau/Settings/PrivacySettingsV
 
 | Data | Where | Synced | Deleted by |
 | ---- | ----- | ------ | ---------- |
-| Conversations, topics, transcript (`Conversation`, `Topic`, `Utterance`) | SwiftData, private CloudKit database of `iCloud.com.joeblau.blau` | Yes | Delete All Conversations, Delete All Data |
+| Conversations, topics, transcript (`Conversation`, `Topic`, `Utterance`) | SwiftData, private CloudKit database of `iCloud.com.joeblau.choff` | Yes | Delete All Conversations, Delete All Data |
 | Knowledge base pages (`Document`, `CollectionItem`): About Me, Company, Notes, Collections | Same | Yes | Delete Knowledge Base, Delete All Data |
 | What Blau learned (`Fact`, `MemoryEntity`) and the pinned profile summary (`ProfileBlock`) | Same | Yes | Delete Learned Facts, Delete Knowledge Base, Delete All Data |
 | Voiceprint (`VoiceProfile`, `VoiceEnrollmentSet`); vectors are CloudKit-encrypted fields | Same | Yes ([product decision 2 in #1](voice-id.md)) | Delete Voiceprint (here or in Voice ID), Delete All Data |
@@ -213,7 +213,7 @@ resource (photos, contacts, location...) is used. Live Activities need
   attributes for the extension) for the required-reason symbols, and fails
   when one is used but its category isn't declared, naming the file and
   line. A declared category no source uses is a warning;
-- with `PRIVACY_BUNDLE=<Blau.app or .xcarchive>`, checks that the app and
+- with `PRIVACY_BUNDLE=<Choff.app or .xcarchive>`, checks that the app and
   every extension in the build carry a valid manifest at their root, and
   validates resource bundles' manifests.
 
@@ -254,7 +254,7 @@ Development, or TestFlight with Production).
 | 1 | On A, record two conversations, add a note, let Blau learn a fact (or say "remember that..."), enroll the voiceprint. Wait for B to show all of it. | B has the conversations, the note, the fact in What Blau Learned, and "Enrolled" in Voice ID. | pending |
 | 2 | On A, Settings → Privacy & Data → Export All Data → Share Export → Save to Files. Unzip it in Files. | The folder has `README.md`, `blau-data.json`, `Conversations.md`, `Knowledge.md`; the JSON has both conversations, the note, the fact and the voiceprint without vectors. | pending |
 | 3 | On A, Delete Learned Facts. | A's What Blau Learned is empty; the note stays. Within a minute B's is empty too. The next conversation's instructions (Console, `realtime` category) carry no facts. | pending |
-| 4 | On A, Delete All Conversations. | Both disappear on A, then on B. In the CloudKit Console (`iCloud.com.joeblau.blau`, private database, zone `com.apple.coredata.cloudkit.zone`), querying `CD_Conversation` and `CD_Utterance` returns no records. | pending |
+| 4 | On A, Delete All Conversations. | Both disappear on A, then on B. In the CloudKit Console (`iCloud.com.joeblau.choff`, private database, zone `com.apple.coredata.cloudkit.zone`), querying `CD_Conversation` and `CD_Utterance` returns no records. | pending |
 | 5 | On A, Delete Voiceprint. | Voice ID says "Not enrolled" on A and then on B; `CD_VoiceProfile` and `CD_VoiceEnrollmentSet` have no records. | pending |
 | 6 | Put B in airplane mode, Delete All Data on A, then reconnect B. | B empties after it reconnects; nothing reappears on A. | pending |
 | 7 | Archive a signed build in Xcode → Organizer → right-click → Generate Privacy Report. | The report lists Blau (Other User Content; UserDefaults, FileTimestamp, DiskSpace, SystemBootTime), BlauWidgets and GRDB, with no errors. Validate App succeeds. | pending |

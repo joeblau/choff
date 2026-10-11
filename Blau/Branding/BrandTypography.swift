@@ -11,7 +11,7 @@ import SwiftUI
 /// Apply with `.font(.brand(.transcript))` or `.brandTextStyle(.transcript)`.
 /// The cases are declared from the largest style to the smallest.
 enum BrandTextStyle: CaseIterable, Sendable {
-    /// The "Blau" wordmark on the empty main screen.
+    /// The "Choff" wordmark on the empty main screen.
     case wordmark
     /// The title of the current topic above the timeline's bullets (#56).
     case topicTitle

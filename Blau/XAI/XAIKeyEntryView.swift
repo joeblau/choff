@@ -9,6 +9,7 @@ enum XAIKeyIdentifiers {
     static let problemTitle = "xai.apiKey.problem.title"
     static let saveAnyway = "xai.apiKey.saveAnyway"
     static let status = "xai.account.status"
+    static let keyName = "xai.account.keyName"
     static let replace = "xai.account.replace"
     static let remove = "xai.account.remove"
     static let openOnboarding = "xai.onboarding.open"
@@ -44,6 +45,11 @@ struct XAIKeyEntryView: View {
                 .submitLabel(.go)
                 .focused($isFieldFocused)
                 .onSubmit(connect)
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    isFieldFocused = true
+                }
                 .disabled(account.isBusy)
                 .accessibilityIdentifier(XAIKeyIdentifiers.field)
                 .onChange(of: input) {

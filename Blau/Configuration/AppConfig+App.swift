@@ -31,7 +31,7 @@ extension AppConfig {
 // MARK: - Loading from a bundle
 
 extension AppConfig {
-    private static let logger = Logger(subsystem: "com.joeblau.blau", category: "config")
+    private static let logger = Logger(subsystem: "com.joeblau.choff", category: "config")
 
     /// Configuration of the running app, read once from `Bundle.main`, with
     /// the run-time overrides in `UserDefaults` applied. An override changed

@@ -1,0 +1,60 @@
+{
+  "worktree": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-knowledge-field-query",
+  "base": "a1e33b9",
+  "unchanged_control_session": 56583,
+  "scope": "SameoriginalhelperIDs/assertions/timeouts, exact identifier predicate replacesaliasINidentifiers lookup. Spindump provesframework fetchingelementtype/placeholder/identifieraliases; originalnamefieldvisibleandCPU.161sof3.43ssampled. No productionfix/rootcauseclaimed; controlandcandidatepending.",
+  "unchanged_control": {
+    "passed_executions": 3,
+    "failed_executions": 0,
+    "skipped_executions": 0,
+    "durations_s": [
+      44.185,
+      42.87,
+      44.207
+    ],
+    "summary": "/tmp/voice-choff-knowledge-field-query-a1-unchanged-control-summary.json",
+    "qualification": "Summarycountsoneuniquefunction; actualproducerloghasthreePASSexecutions. OriginalCIqueryfailure not locallyreproduced."
+  },
+  "candidate_controller_session": 12582,
+  "lint": "Repositorymake lintPASS1100Swiftfiles",
+  "ios27": {
+    "selected": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "summary": "/tmp/voice-choff-knowledge-field-exact-id-ios27-candidate-summary.json",
+    "producer": "/tmp/voice-choff-knowledge-field-exact-id-ios27-candidate-producer.json"
+  },
+  "v1_both_os": {
+    "ios26": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ios27": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "test_sha256": "2efbb70d35accc4a19459f8153ba3d3d3ab5937f86b5bf6fc874efa59abaf91d",
+    "qualification": "V1genericfieldhelper only; V2sharedSettings/Paste/fullcreatepath separatelyunder validation."
+  },
+  "v2_controller_session": 59526,
+  "v2_ios27": {
+    "selected": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "summary": "/tmp/voice-choff-knowledge-exact-id-v2-ios27-summary.json",
+    "producer": "/tmp/voice-choff-knowledge-exact-id-v2-ios27-producer.json"
+  },
+  "v2_ios26": {
+    "selected": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "summary": "/tmp/voice-choff-knowledge-exact-id-v2-ios26-summary.json",
+    "producer": "/tmp/voice-choff-knowledge-exact-id-v2-ios26-producer.json"
+  },
+  "status": "v2_allfiveoriginalcases_bothOS_pass"
+}

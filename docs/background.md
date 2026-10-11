@@ -1,6 +1,6 @@
 # Long sessions in the background
 
-Issue #26 (epic #3). A Blau conversation must keep working for an hour or
+Issue #26 (epic #3). A Choff conversation must keep working for an hour or
 more with the screen locked: capture, transcription and Grok's replies all
 continue, and nothing stalls silently when the app moves between the
 foreground and the background. This document covers what keeps the process
@@ -10,7 +10,7 @@ a device.
 
 | Piece | Where | What it does |
 | ----- | ----- | ------------ |
-| `audio` background mode | `project.yml` (`UIBackgroundModes`) | An active `.playAndRecord` session with a running engine keeps Blau running off screen |
+| `audio` background mode | `project.yml` (`UIBackgroundModes`) | An active `.playAndRecord` session with a running engine keeps Choff running off screen |
 | `AudioSessionKeeper` | `BlauAudio/Background` | The app's `AudioService`: starts and stops the conversation's audio, never stops it for backgrounding, watches for silent stalls, resumes on return what couldn't resume off screen, drives the indicator, counts everything |
 | `ConversationAudio` | `BlauAudio/Background` | Capture (#24) and playback (#25) on one `AudioSessionController` (#23), with a keeper in charge. `AppEnvironment.live()` builds it |
 | `InferenceBackendSwitchable`, `InferenceObserver` | `BlauCore/Inference` | The seams every on-device model stage adopts: switch backend, report each inference |
@@ -22,10 +22,10 @@ a device.
 | `LongSessionReport` | `BlauTranscription/Background` | The soak run's report and its pass/fail rules |
 | Long session soak screen | `Blau/Debug/LongSession` | Debug menu → **Long session soak test** |
 
-## What keeps Blau running
+## What keeps Choff running
 
 iOS keeps an app with the `audio` background mode running while its audio
-session is active and doing audio. Blau's session is `.playAndRecord` /
+session is active and doing audio. Choff's session is `.playAndRecord` /
 `.voiceChat` with voice processing (docs/audio.md), active and recording for
 the whole conversation, so locking the screen changes nothing for the
 process: the engine keeps delivering 20 ms buffers, the capture thread keeps
@@ -37,7 +37,7 @@ continued processing is a user-initiated job with system progress UI
 
 The keeper's rules follow from that:
 
-1. **Never stop audio because Blau left the screen.** `appPhaseDidChange`
+1. **Never stop audio because Choff left the screen.** `appPhaseDidChange`
    only records the phase. Stopping the engine off screen would deactivate
    the session and iOS would suspend the app within seconds.
 2. **Never deactivate the session to recover off screen.** iOS refuses to
@@ -47,7 +47,7 @@ The keeper's rules follow from that:
 3. **Leave what needs a fresh start for the foreground.** When the session
    is lost off screen (a failed rebuild, an interruption that ended without
    `.shouldResume`, a stall that rebuilding didn't fix), the keeper marks
-   the conversation `paused`, the indicator says "Open Blau to resume", and
+   the conversation `paused`, the indicator says "Open Choff to resume", and
    the next return to the foreground restarts it from scratch.
 
 ### Keeper states
@@ -74,7 +74,7 @@ stateDiagram-v2
     live --> inactive: stopCapture() / Stop on the lock screen
 ```
 
-A call still in progress when the user opens Blau is left alone: on
+A call still in progress when the user opens Choff is left alone: on
 returning to the foreground the keeper only restarts after an interruption
 has *ended* (the controller's `isAwaitingManualResume`), so it never fights
 the phone app for the mic.
@@ -99,7 +99,7 @@ never count. `Statistics.longestSilentCaptureSeconds` records the longest
 silence seen; on a healthy run it is 0.
 
 The watchdog's clock keeps counting while the device sleeps
-(`ContinuousClock`), so if iOS ever did suspend Blau, the first check after
+(`ContinuousClock`), so if iOS ever did suspend Choff, the first check after
 resuming sees the gap, reports it and recovers.
 
 ## Neural Engine restrictions (iOS 27)
@@ -133,7 +133,7 @@ runtime policy that works whatever the verdict turns out to be:
   window), moves the stage one step down its ladder. A backend that fails
   to load is skipped. A stage with nowhere left to go is *exhausted*: it
   stays put and the monitor logs a fault once. `isExhausted` clears when
-  Blau comes back on screen, but `exhaustedOffScreen` keeps counting for the
+  Choff comes back on screen, but `exhaustedOffScreen` keeps counting for the
   life of the registration, so the soak report still sees it after the
   user unlocks.
 - **Back on screen** every stage returns to the Neural Engine, and the
@@ -172,7 +172,7 @@ a stage's backend with the reason, every switch with its duration, faults
 for exhausted stages), `Log.ui` for the Live Activity and device lock.
 
 ```sh
-log stream --level debug --predicate 'subsystem == "com.joeblau.blau" && (category == "audio" || category == "asr")'
+log stream --level debug --predicate 'subsystem == "com.joeblau.choff" && (category == "audio" || category == "asr")'
 ```
 
 Signposts (lifecycle markers, not canonical pipeline intervals):
@@ -184,26 +184,26 @@ Signposts (lifecycle markers, not canonical pipeline intervals):
 
 ## The lock-screen indicator
 
-While a conversation is on, Blau shows a Live Activity on the lock screen
+While a conversation is on, Choff shows a Live Activity on the lock screen
 and in the Dynamic Island: a microphone (red while listening), the status
-("Blau is listening", "Reconnecting the microphone", "Paused for a call",
-"Paused. Open Blau to resume"), a timer since the conversation started, and
+("Choff is listening", "Reconnecting the microphone", "Paused for a call",
+"Paused. Open Choff to resume"), a timer since the conversation started, and
 a **Stop** button. iOS shows its own microphone indicator too; the Live
 Activity says why the microphone is on and lets the user turn it off
 without unlocking (privacy and control).
 
 - The keeper drives it through `RecordingIndicator`: `show` when the
-  conversation starts (Blau is in the foreground then, which
+  conversation starts (Choff is in the foreground then, which
   `Activity.request` requires) and on every status change, `hide` when it
   ends. Updates run one at a time, in order, and always show the current
   status.
 - **Stop** is `StopConversationIntent`, a `LiveActivityIntent`: it runs in
-  Blau's process (which is running, since it is recording) and calls
+  Choff's process (which is running, since it is recording) and calls
   `AppEnvironment.stopConversation()`.
 - An activity left behind by a run that was killed mid-conversation would
-  claim Blau is listening. The app ends any recording activity at launch,
+  claim Choff is listening. The app ends any recording activity at launch,
   and before starting a new one.
-- If the user has turned Live Activities off for Blau, nothing is shown and
+- If the user has turned Live Activities off for Choff, nothing is shown and
   the conversation is unaffected.
 - The `BlauWidgets` extension renders the activity. It doesn't link BlauKit;
   it shares `Blau/LiveActivity/RecordingActivityAttributes.swift` with the
@@ -241,15 +241,15 @@ doesn't hide it).
 
 | # | Scenario | Steps | Expected | Result |
 | - | -------- | ----- | -------- | ------ |
-| B1 | 30-minute locked session (iOS 27) | Start, talk for a minute, lock, leave 30+ min talking now and then, unlock, stop | Report passes; the Live Activity showed "Blau is listening" and its timer throughout; VAD segments for the speech while locked | Pending |
+| B1 | 30-minute locked session (iOS 27) | Start, talk for a minute, lock, leave 30+ min talking now and then, unlock, stop | Report passes; the Live Activity showed "Choff is listening" and its timer throughout; VAD segments for the speech while locked | Pending |
 | B2 | Same on iOS 26 | As B1 | As B1 | Pending |
 | B3 | Neural Engine off screen | During B1, check the **Background inference** section and the `asr` log | Either no switch (the Neural Engine kept working), or `vad` moved to `cpu` with the reason, and back to `neuralEngine` on unlock. Record which in the probe results table (docs/benchmarks.md) | Pending |
-| B4 | Foreground ↔ background bounces | Start, then 20 times: Home, wait 5 s, back to Blau; also lock/unlock 10 times | Status `live` the whole time; no stall faults; `Not live` ≈ 0 s; no crash | Pending |
-| B5 | Call while locked | Locked session, call the phone, answer, talk, hang up | Live Activity shows "Paused for a call", then "Blau is listening" again within ~1 s of hanging up, without unlocking | Pending |
+| B4 | Foreground ↔ background bounces | Start, then 20 times: Home, wait 5 s, back to Choff; also lock/unlock 10 times | Status `live` the whole time; no stall faults; `Not live` ≈ 0 s; no crash | Pending |
+| B5 | Call while locked | Locked session, call the phone, answer, talk, hang up | Live Activity shows "Paused for a call", then "Choff is listening" again within ~1 s of hanging up, without unlocking | Pending |
 | B6 | Declined / missed call while locked | As B5 but decline | Either no interruption or back to listening | Pending |
-| B7 | Interruption without resume | Locked session; play music in another app from Control Center | While the music plays, the Live Activity shows "Paused for a call" (status `interrupted`). If the music stops with an interruption-ended without `.shouldResume`, it shows "Paused. Open Blau to resume" and opening Blau resumes. If no interruption-ended arrives, opening Blau leaves it `interrupted`, and tapping record takes the session back (`live`) | Pending |
+| B7 | Interruption without resume | Locked session; play music in another app from Control Center | While the music plays, the Live Activity shows "Paused for a call" (status `interrupted`). If the music stops with an interruption-ended without `.shouldResume`, it shows "Paused. Open Choff to resume" and opening Choff resumes. If no interruption-ended arrives, opening Choff leaves it `interrupted`, and tapping record takes the session back (`live`) | Pending |
 | B8 | Stop from the lock screen | Locked session; tap **Stop** on the Live Activity | The activity disappears; the orange microphone indicator goes away; the soak screen shows `inactive` when unlocked | Pending |
 | B9 | AirPods while locked | Locked session; take AirPods out and back in | Route follows; capture continues (no `Capture dropped` beyond the rebuild) | Pending |
-| B10 | Killed mid-session | Start, then kill Blau from the app switcher; relaunch | The stale Live Activity is gone after relaunch | Pending |
-| B11 | Live Activities off | Settings → Blau → Live Activities off; start | No activity, conversation works, a `Live Activities are off` log | Pending |
+| B10 | Killed mid-session | Start, then kill Choff from the app switcher; relaunch | The stale Live Activity is gone after relaunch | Pending |
+| B11 | Live Activities off | Settings → Choff → Live Activities off; start | No activity, conversation works, a `Live Activities are off` log | Pending |
 | B12 | One hour | As B1 for 60+ minutes, plugged in and on battery | Report passes (including the #75 rule: no time hot at the `normal` level); note the report's worst thermal state, time at or below `fair` and battery drain | Pending |

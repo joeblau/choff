@@ -207,6 +207,86 @@ expect_output "the missing metric is named" "| **NOT MEASURED** |"
 expect "a missing baseline is an input error" 2 \
     python3 -I "$gate" check --results "$work/same.json" --baseline "$work/no-baseline.json"
 
+# XCTest embeds the measured process's bundle ID in CPU/memory identifiers.
+# The Choff rename must keep gating the historical Blau measurements, with
+# the original tolerances and minimum deltas, rather than treating them as new.
+python3 -I - "$work" <<'PY'
+import copy, json, pathlib, sys
+work = pathlib.Path(sys.argv[1])
+test = "ReplaySessionPerformanceTests/testScriptedSession()"
+entries = {
+    "CPU": {"time": (10.0, "s", 20.0, 0.01)},
+    "Memory": {
+        "physical": (100.0, "kB", 10.0, 0.0),
+        "physical_absolute": (40000.0, "kB", 10.0, 0.0),
+        "physical_peak": (45000.0, "kB", 10.0, 0.0),
+    },
+}
+baseline = {"statistic": "median", "defaultTolerancePercent": 10, "tests": {test: {}}}
+results = {"tests": {test: {}}}
+for family, metrics in entries.items():
+    for suffix, (value, unit, tolerance, minimum_delta) in metrics.items():
+        prefix = f"com.apple.dt.XCTMetric_{family}-com.joeblau."
+        baseline["tests"][test][f"{prefix}blau.{suffix}"] = {
+            "name": f"{family} {suffix} (blau)", "unit": unit, "baseline": value,
+            "tolerancePercent": tolerance, "minimumDelta": minimum_delta, "note": "retained override",
+        }
+        results["tests"][test][f"{prefix}choff.{suffix}"] = {
+            "name": f"{family} {suffix} (choff)", "unit": unit, "values": [value],
+        }
+def write(name, document):
+    (work / name).write_text(json.dumps(document))
+write("rename-baseline.json", baseline)
+write("rename-results.json", results)
+for name, identifier, value in (
+    ("cpu", "com.apple.dt.XCTMetric_CPU-com.joeblau.choff.time", 13.0),
+    ("memory", "com.apple.dt.XCTMetric_Memory-com.joeblau.choff.physical_peak", 50000.0),
+):
+    regressed = copy.deepcopy(results)
+    regressed["tests"][test][identifier]["values"] = [value]
+    write(f"rename-{name}-regressed.json", regressed)
+missing = copy.deepcopy(results)
+del missing["tests"][test]["com.apple.dt.XCTMetric_CPU-com.joeblau.choff.time"]
+write("rename-missing.json", missing)
+unrelated = copy.deepcopy(results)
+unrelated["tests"][test] = {key.replace("com.joeblau.choff.", "com.joeblau.choff.widgets."): value
+                             for key, value in unrelated["tests"][test].items()}
+write("rename-unrelated.json", unrelated)
+PY
+expect "Choff CPU and memory match the unchanged Blau baseline" 0 \
+    python3 -I "$gate" check --results "$work/rename-results.json" --baseline "$work/rename-baseline.json"
+if grep -qE 'NOT MEASURED|new, not gated' "$work/out"; then
+    fail "renamed metrics are all gated"
+else
+    pass "renamed metrics are all gated"
+fi
+expect "a CPU regression after renaming still fails" 1 \
+    python3 -I "$gate" check --results "$work/rename-cpu-regressed.json" --baseline "$work/rename-baseline.json"
+expect_output "renamed CPU regression is reported, not missing" "| **REGRESSED** |"
+expect "a memory regression after renaming still fails" 1 \
+    python3 -I "$gate" check --results "$work/rename-memory-regressed.json" --baseline "$work/rename-baseline.json"
+expect_output "renamed memory regression is reported, not missing" "| **REGRESSED** |"
+expect "a truly missing renamed metric still fails" 1 \
+    python3 -I "$gate" check --results "$work/rename-missing.json" --baseline "$work/rename-baseline.json"
+expect_output "the absent CPU measurement is reported" "| **NOT MEASURED** |"
+expect "the widget process cannot substitute for the app" 1 \
+    python3 -I "$gate" check --results "$work/rename-unrelated.json" --baseline "$work/rename-baseline.json"
+expect "recording Choff measurements retains the historical overrides" 0 \
+    python3 -I "$gate" record --results "$work/rename-results.json" --baseline "$work/rename-baseline.json"
+if python3 -I - "$work/rename-baseline.json" <<'PY'
+import json, sys
+metrics = json.load(open(sys.argv[1]))["tests"]["ReplaySessionPerformanceTests/testScriptedSession()"]
+assert len(metrics) == 4, metrics
+cpu = metrics["com.apple.dt.XCTMetric_CPU-com.joeblau.choff.time"]
+assert cpu["tolerancePercent"] == 20 and cpu["minimumDelta"] == 0.01, cpu
+assert all(metric["note"] == "retained override" for metric in metrics.values()), metrics
+PY
+then
+    pass "renamed baseline retains its tolerances, minimum deltas and notes"
+else
+    fail "renamed baseline retains its tolerances, minimum deltas and notes"
+fi
+
 # Per-metric tolerance and minimum delta, kept when re-recording.
 python3 -I -c '
 import json, sys

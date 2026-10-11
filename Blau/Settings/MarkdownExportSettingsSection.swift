@@ -52,8 +52,8 @@ struct MarkdownExportSettingsSection: View {
             Text("Markdown Export")
         } footer: {
             Text(
-                "Saves each conversation as a Markdown file, with its topics and timestamps, in iCloud Drive → Blau. "
-                    + "Automatic export updates a file when its conversation ends or changes. Blau replaces its "
+                "Saves each conversation as a Markdown file, with its topics and timestamps, in iCloud Drive → Choff. "
+                    + "Automatic export updates a file when its conversation ends or changes. Choff replaces its "
                     + "files on every export, so keep your own notes in other files."
             )
         }
@@ -72,11 +72,11 @@ struct MarkdownExportStatus: Equatable {
         switch outcome?.result {
         case nil:
             guard lastExportedAt != nil else { return nil }
-            message = String(localized: "Your conversations are in iCloud Drive → Blau.")
+            message = String(localized: "Your conversations are in iCloud Drive → Choff.")
             isWarning = false
         case .success(let report) where !report.failures.isEmpty:
             message = String(
-                localized: "\(report.failures.count) conversations couldn't be exported. Blau will try again.")
+                localized: "\(report.failures.count) conversations couldn't be exported. Choff will try again.")
             isWarning = true
         case .success(let report):
             message = Self.summary(of: report)
@@ -102,14 +102,14 @@ struct MarkdownExportStatus: Equatable {
         case .iCloudDriveUnavailable:
             String(
                 localized:
-                    "iCloud Drive isn't available. Sign in to iCloud and turn on iCloud Drive for Blau in the Settings app."
+                    "iCloud Drive isn't available. Sign in to iCloud and turn on iCloud Drive for Choff in the Settings app."
             )
         case .notAvailableInThisBuild:
             String(localized: "This build isn't signed for iCloud, so it can't export to iCloud Drive.")
         case .storeUnavailable:
             String(localized: "Your conversations couldn't be read. Try again.")
         case .folderUnavailable:
-            String(localized: "The Blau folder in iCloud Drive couldn't be opened. Try again.")
+            String(localized: "The Choff folder in iCloud Drive couldn't be opened. Try again.")
         }
     }
 }

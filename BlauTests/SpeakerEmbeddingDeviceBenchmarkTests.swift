@@ -22,7 +22,7 @@ struct SpeakerEmbeddingDeviceBenchmarkTests {
         let store = try ModelStore.applicationSupport()
         let descriptor = try #require(ModelManifest.pinned[.speakerEmbedding])
         guard store.installation(of: descriptor) != nil else {
-            Issue.record("The speaker model isn't installed. Launch Blau and finish model setup, then run again.")
+            Issue.record("The speaker model isn't installed. Launch Choff and finish model setup, then run again.")
             return
         }
         let bundle = store.directory(for: descriptor).appending(path: WeSpeakerEmbedder.modelBundleName)

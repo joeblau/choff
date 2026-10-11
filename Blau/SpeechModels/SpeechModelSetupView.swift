@@ -28,7 +28,7 @@ struct SpeechModelSetupView: View {
                 statusText("Checking speech models…")
             case .needsDownload:
                 statusText(
-                    "Blau needs \(status.totalBytes.formattedByteCount) of speech models to listen. They stay on this iPhone."
+                    "Choff needs \(status.totalBytes.formattedByteCount) of speech models to listen. They stay on this iPhone."
                 )
                 actionButton("Download") { await downloadRequired() }
             case .downloading:

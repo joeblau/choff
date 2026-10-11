@@ -25,10 +25,10 @@ extension XCTestCase {
     @MainActor
     @discardableResult
     func openSettings(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) -> XCUIElement {
-        let button = app.buttons["blau.settings.open"]
+        let button = app.buttons.matchingAccessibilityIdentifier("blau.settings.open").firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 15), "No Settings button", file: file, line: line)
         button.tap()
-        let list = app.collectionViews["settings.list"]
+        let list = app.collectionViews.matchingAccessibilityIdentifier("settings.list").firstMatch
         XCTAssertTrue(list.waitForExistence(timeout: 10), "Settings did not open", file: file, line: line)
         return list
     }
@@ -39,7 +39,7 @@ extension XCTestCase {
         _ identifier: String, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line
     ) {
         let list = openSettings(in: app, file: file, line: line)
-        let row = app.buttons[identifier]
+        let row = app.buttons.matchingAccessibilityIdentifier(identifier).firstMatch
         scrollTo(row, in: list, file: file, line: line)
         row.tap()
     }

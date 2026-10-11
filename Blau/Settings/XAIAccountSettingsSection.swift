@@ -19,7 +19,7 @@ struct XAIAccountSettingsSection: View {
             case .unknown:
                 ProgressView()
             case .noKey:
-                Text("Not connected. Blau needs your own xAI API key to talk with Grok.")
+                Text("Not connected. Choff needs your own xAI API key to talk with Grok.")
                     .accessibilityIdentifier(XAIKeyIdentifiers.status)
                 XAIKeyEntryView()
             case .connected(let key):
@@ -48,7 +48,7 @@ struct XAIAccountSettingsSection: View {
         } footer: {
             Text(
                 "Your key is kept in your iCloud Keychain, so it's available on your other devices. "
-                    + "Blau talks to xAI directly with it; there is no Blau server. "
+                    + "Choff talks to xAI directly with it; there is no Choff server. "
                     + "Manage keys and credits at console.x.ai."
             )
         }
@@ -72,6 +72,7 @@ struct XAIAccountSettingsSection: View {
         .accessibilityIdentifier(XAIKeyIdentifiers.status)
         if let name = key.name {
             LabeledContent("Name", value: name)
+                .accessibilityIdentifier(XAIKeyIdentifiers.keyName)
         }
 
         if isReplacing {
@@ -141,7 +142,7 @@ private struct ConnectionTestRows: View {
                     Text(
                         realtimeVerified
                             ? "Checked \(date.formatted(.relative(presentation: .named)))."
-                            : "xAI accepted the key, but couldn't confirm voice access. Blau checks again when you start talking."
+                            : "xAI accepted the key, but couldn't confirm voice access. Choff checks again when you start talking."
                     )
                     .font(.footnote)
                     .foregroundStyle(.secondary)

@@ -157,7 +157,7 @@ public struct ConversationMarkdownRenderer: Sendable {
         switch role {
         case .user: "You"
         case .agent: "Grok"
-        case .system: "Blau"
+        case .system: "Choff"
         case nil: "Unknown"
         }
     }

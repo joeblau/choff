@@ -1,0 +1,186 @@
+{
+  "source_base": "822063818bcbdfa0e6cd60077bb20c572d25ed75",
+  "production_source_sha256": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+  "change": "Explicitly hide each mounted collapsed action title Text from accessibility and hide decorative icons. Parent button visibility, native action behavior and visual layout stay unchanged.",
+  "preceding_required_ci": {
+    "run": 38140894068,
+    "source": "8220638",
+    "functional": {
+      "selected": 93,
+      "passed": 90,
+      "failed": 1,
+      "skipped": 2
+    },
+    "failure": "Original latest-line accessibility audit reports contrast for invisible Continue StaticText (type48) at (28,477,114,44). Screenshot shows collapsed history rather than the action.",
+    "activities": "/tmp/voice-ci-8220638-ui2-latest-audit-activities.json",
+    "attachments": "/tmp/voice-ci-8220638-ui2-latest-audit-attachments",
+    "whole_workflow_terminal": true
+  },
+  "unchanged_control": {
+    "producer": {
+      "status": "completed",
+      "source": "822063818bcbdfa0e6cd60077bb20c572d25ed75",
+      "source_hashes": {
+        "Blau/Timeline/TopicDetail.swift": "0c7e1343e02416707d4c9c5e239d577314f4d6de605a351a1102e485a3e835ea",
+        "BlauUITests/AccessibilityAuditUITests.swift": "6ad679b5abf20d31fa3a7fc9af80f170b1e86e5a77661a6bded09450d6bf9a18"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/DerivedDataCollapsedActions27",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/results/codex-choff-collapsed-action-822-control.xcresult",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testTimelineAtTheLatestLine",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testTimelineAtTheLatestLineAtTheLargestTextSize",
+        "-test-iterations",
+        "3",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/results/codex-choff-collapsed-action-822-control.xcresult",
+      "started_at": "2026-10-11T13:29:40.202200+00:00",
+      "qualification": "Unchanged original normal/largest latest-line accessibility audits, three iterations each. No exclusions, diagnostics or timeout changes.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T13:32:32.056109+00:00",
+      "source_hash_matches": true
+    },
+    "unique_original_methods": 2,
+    "iterations_each": 3,
+    "executions": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "qualification": "Original normal/largest latest-line audits passed all six local executions at822. The CI failure has no controlled local reproduction; causal resolution is unproven."
+  },
+  "candidate_scope": "All seven original TopicDetail tests and four normal/largest latest/history AccessibilityAudit tests on each supported OS. Original test sources, exclusions, actions, assertions and100ms expansion budget unchanged.",
+  "ios27": {
+    "producer": {
+      "status": "completed",
+      "source_base": "822063818bcbdfa0e6cd60077bb20c572d25ed75",
+      "source_hashes": {
+        "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+        "BlauUITests/AccessibilityAuditUITests.swift": "6ad679b5abf20d31fa3a7fc9af80f170b1e86e5a77661a6bded09450d6bf9a18",
+        "BlauUITests/TopicDetailUITests.swift": "b732821ce3de1aa8b6494fde674817b36240c1195dee222025a491dac598c1e1"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/DerivedDataCollapsedActions27",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/results/codex-choff-collapsed-action-label-ios27-candidate.xcresult",
+        "-only-testing:BlauUITests/TopicDetailUITests",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testTimelineAtTheLatestLine",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testTimelineAtTheLatestLineAtTheLargestTextSize",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testHistoryWithCaption",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testHistoryWithCaptionAtTheLargestTextSize",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/results/codex-choff-collapsed-action-label-ios27-candidate.xcresult",
+      "started_at": "2026-10-11T13:33:23.148417+00:00",
+      "qualification": "Production action-label Text leaves explicitly hidden when collapsed; decorative icons hidden. All eleven original audit/detail/action cases, including AX5 and original100ms expansion budget, unchanged. Six unchanged control executions passed locally; precedingCI collapsedContinuecontrast failure retained, causalresolutionunproven.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T13:38:16.739768+00:00",
+      "source_hash_matches": true
+    },
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "original_expansion_ms": [
+      27.4,
+      26.9,
+      26.7,
+      26.4,
+      25.3
+    ],
+    "limit_ms": 100
+  },
+  "ios26": {
+    "producer": {
+      "status": "completed",
+      "source_base": "822063818bcbdfa0e6cd60077bb20c572d25ed75",
+      "source_hashes": {
+        "Blau/Timeline/TopicDetail.swift": "705860a54858f84a526a3562fd92ef1e0c93464aee21eb5465b2eac9c359fa80",
+        "BlauUITests/AccessibilityAuditUITests.swift": "6ad679b5abf20d31fa3a7fc9af80f170b1e86e5a77661a6bded09450d6bf9a18",
+        "BlauUITests/TopicDetailUITests.swift": "b732821ce3de1aa8b6494fde674817b36240c1195dee222025a491dac598c1e1"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=FFA3914B-71E9-48D6-B42F-1EDD2CDF3793",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/DerivedDataCollapsedActions26",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/results/codex-choff-collapsed-action-label-ios26-candidate.xcresult",
+        "-only-testing:BlauUITests/TopicDetailUITests",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testTimelineAtTheLatestLine",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testTimelineAtTheLatestLineAtTheLargestTextSize",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testHistoryWithCaption",
+        "-only-testing:BlauUITests/AccessibilityAuditUITests/testHistoryWithCaptionAtTheLargestTextSize",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-collapsed-action-label/.build/results/codex-choff-collapsed-action-label-ios26-candidate.xcresult",
+      "started_at": "2026-10-11T13:38:16.965585+00:00",
+      "qualification": "Production action-label Text leaves explicitly hidden when collapsed; decorative icons hidden. All eleven original audit/detail/action cases, including AX5 and original100ms expansion budget, unchanged. Six unchanged control executions passed locally; precedingCI collapsedContinuecontrast failure retained, causalresolutionunproven.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T13:42:35.641855+00:00",
+      "source_hash_matches": true
+    },
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "original_expansion_ms": [
+      61.9,
+      13.7,
+      13.4,
+      13.2,
+      13.6
+    ],
+    "limit_ms": 100
+  },
+  "current_required_ci": "Pending validated integration push; no green-current-CI claim.",
+  "lint": {
+    "status": "passed",
+    "swift_files": 1100,
+    "log": "/tmp/voice-choff-collapsed-action-label-lint.log"
+  },
+  "status": "Both supported OS versions: all eleven original cases pass, zero failures/skips. Fresh required CI pending."
+}

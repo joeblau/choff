@@ -44,6 +44,11 @@ struct RootView: View {
             }
         }
         .animation(reduceMotion ? nil : .default, value: isOnboarding)
+        #if DEBUG
+            .environment(
+                \.reportsChatRowFrames,
+                environment.kind == .uiTest && ProcessInfo.processInfo.arguments.contains("-BlauChatGeometry"))
+        #endif
     }
 }
 
@@ -51,7 +56,6 @@ struct RootView: View {
 /// from `RootView` so it can own the `RecordButtonModel` built from the
 /// environment's conversation session.
 struct MainScreenScaffold: View {
-    @Environment(ModelManager.self) private var models
     @Environment(AppEnvironment.self) private var environment
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -95,6 +99,14 @@ struct MainScreenScaffold: View {
                 }
                 .toolbar {
                     #if DEBUG
+                        if TopicTimelineFixture.offersRelabelControl(in: environment) {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button("Refine fixture titles") {
+                                    TopicTimelineFixture.refineTitles(in: environment.persistence)
+                                }
+                                .accessibilityIdentifier(TopicTimelineFixture.relabelButtonIdentifier)
+                            }
+                        }
                         ToolbarItem(placement: .topBarTrailing) {
                             DebugMenuButton { isShowingDebugMenu = true }
                         }
@@ -129,15 +141,8 @@ struct MainScreenScaffold: View {
                 // above the bottom bar instead of drawn over Settings and
                 // Record while the speech models download.
                 .safeAreaInset(edge: .bottom) {
-                    // Hidden while checking, so an offline launch with every
-                    // model installed doesn't flash the card.
-                    if !models.isReady && models.setupStatus.phase != .checking {
-                        SpeechModelSetupView()
-                            .padding()
-                            .transition(Motion.slide(from: .bottom, reduceMotion: reduceMotion))
-                    }
+                    SpeechModelSetupInset()
                 }
-                .animation(.default, value: models.isReady)
         }
         // The timeline's Continue This Topic (#58) starts or seeds the
         // conversation through the record button's model, so the button,
@@ -268,6 +273,34 @@ extension MainScreenScaffold {
                 continueFailure = String(localized: "The conversation couldn't pick up the topic. Try again.")
             }
         }
+    }
+}
+
+/// The speech model setup card at the bottom of the main screen, while the
+/// models aren't ready.
+///
+/// Its own view, so only it follows the download's progress (`setupStatus`
+/// reads every model's state, which changes many times a second): the
+/// scaffold around it, with its toolbar, sheets and alerts, isn't evaluated
+/// again for each progress report (#182).
+private struct SpeechModelSetupInset: View {
+    @Environment(ModelManager.self) private var models
+
+    var body: some View {
+        // Hidden while checking, so an offline launch with every model
+        // installed doesn't flash the card.
+        Group {
+            if !models.isReady && models.setupStatus.phase != .checking {
+                SpeechModelSetupView()
+                    .padding()
+                    // Keep the card above Settings and Record throughout its
+                    // transition; moving through the bottom edge crosses the bar.
+                    .transition(.opacity)
+            }
+        }
+        // Readiness belongs to the card, so finishing setup doesn't
+        // reevaluate the scaffold that owns the active sheets and controls.
+        .animation(.default, value: models.isReady)
     }
 }
 

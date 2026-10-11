@@ -31,10 +31,10 @@ extension RecordingActivityAttributes.ContentState.Status {
     /// The headline the activity shows.
     var title: LocalizedStringResource {
         switch self {
-        case .listening: "Blau is listening"
+        case .listening: "Choff is listening"
         case .reconnecting: "Reconnecting the microphone"
         case .interrupted: "Paused for a call"
-        case .needsAttention: "Paused. Open Blau to resume"
+        case .needsAttention: "Paused. Open Choff to resume"
         }
     }
 
@@ -48,7 +48,7 @@ extension RecordingActivityAttributes.ContentState.Status {
 /// `ConversationControl`.
 struct StopConversationIntent: LiveActivityIntent {
     static let title: LocalizedStringResource = "Stop Listening"
-    static let description = IntentDescription("Stops the conversation and turns Blau's microphone off.")
+    static let description = IntentDescription("Stops the conversation and turns Choff's microphone off.")
 
     func perform() async throws -> some IntentResult {
         await ConversationControl.stop()

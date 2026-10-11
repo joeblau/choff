@@ -1,6 +1,6 @@
 # Release
 
-Blau ships to testers through TestFlight. Every build comes from
+Choff ships to testers through TestFlight. Every build comes from
 [`.github/workflows/release.yml`](../.github/workflows/release.yml): push a
 `v*` tag on `main` and the workflow archives that commit in Release, exports
 an App Store Connect IPA, checks it, uploads it to TestFlight and publishes a
@@ -155,13 +155,13 @@ A local upload uses up a build number the workflow will reach later, so raise
 ### Apple Developer and App Store Connect
 
 1. **App IDs** (developer.apple.com → Certificates, Identifiers & Profiles →
-   Identifiers): `com.joeblau.blau` with **iCloud** (CloudKit, container
-   `iCloud.com.joeblau.blau` assigned) and **Push Notifications** (CloudKit
-   change notifications), and `com.joeblau.blau.widgets`. Automatic signing
+   Identifiers): `com.joeblau.choff` with **iCloud** (CloudKit, container
+   `iCloud.com.joeblau.choff` assigned) and **Push Notifications** (CloudKit
+   change notifications), and `com.joeblau.choff.widgets`. Automatic signing
    can register them, but assigning the iCloud container is most reliable by
    hand or with one archive from Xcode.
 2. **The app record** (App Store Connect → Apps → +): iOS, bundle ID
-   `com.joeblau.blau`, name Blau, any SKU.
+   `com.joeblau.choff`, name Choff, any SKU.
 3. **An API key** (App Store Connect → Users and Access → Integrations → App
    Store Connect API → Team Keys → +) with the **Admin** role. The export
    signs with a cloud-managed Apple Distribution certificate and creates or
@@ -169,9 +169,9 @@ A local upload uses up a build number the workflow will reach later, so raise
    Download `AuthKey_<id>.p8` (only possible once) and note the key ID and the
    issuer ID shown above the key list.
 4. **Export compliance** needs no action: `ITSAppUsesNonExemptEncryption` is
-   `NO` in the Info.plist (`project.yml`), because Blau only uses the
+   `NO` in the Info.plist (`project.yml`), because Choff only uses the
    encryption built into iOS (HTTPS and WSS, the Keychain, CloudKit) and
-   SHA-256 digests. Revisit it if Blau ever adds its own cryptography.
+   SHA-256 digests. Revisit it if Choff ever adds its own cryptography.
 
 ### GitHub
 
@@ -238,14 +238,14 @@ certificates in the developer portal from time to time.
 Before anything is uploaded, `release.py verify-ipa` unpacks the exported IPA
 and fails the release unless:
 
-- the bundle ID is `com.joeblau.blau`, and the version and build number are
-  the ones the run computed, in the app and in `BlauWidgets.appex`;
+- the bundle ID is `com.joeblau.choff`, and the version and build number are
+  the ones the run computed, in the app and in `ChoffWidgets.appex`;
 - it is a Release build (`BlauEnvironment = release`) with CloudKit on
   (`BlauCloudKitEnabled = YES`, which only a signed build has), no developer
   xAI key and `ITSAppUsesNonExemptEncryption = NO`;
 - every bundle has a valid signature from an Apple Distribution certificate,
   an App Store provisioning profile (no device list) and no `get-task-allow`;
-- the app is entitled to `iCloud.com.joeblau.blau` for CloudKit and iCloud
+- the app is entitled to `iCloud.com.joeblau.choff` for CloudKit and iCloud
   Drive, with `aps-environment = production` and the Production iCloud
   environment.
 
@@ -261,7 +261,7 @@ replaces the manual `codesign -d --entitlements` check on the exported IPA.
 | `… is not on main` | Only commits merged to `main` are released. |
 | `Set the BLAU_TEAM_ID variable` | Add the variable to the `testflight` environment or the repository. |
 | `Cloud signing permission error` or `No signing certificate "iOS Distribution" found` during export | The API key's role is too low; create an Admin key. |
-| `No profiles for 'com.joeblau.blau' were found` or an iCloud container error during archive | The App ID lacks a capability or the container isn't assigned; see [One-time setup](#apple-developer-and-app-store-connect). |
+| `No profiles for 'com.joeblau.choff' were found` or an iCloud container error during archive | The App ID lacks a capability or the container isn't assigned; see [One-time setup](#apple-developer-and-app-store-connect). |
 | altool: `The bundle version must be higher than the previously uploaded version` | Raise `BLAU_BUILD_NUMBER_OFFSET` and push a new tag. |
 | altool: `No suitable application records were found` | Create the app record in App Store Connect. |
 | The build sits in "Missing Compliance" | `ITSAppUsesNonExemptEncryption` is missing from the Info.plist; it belongs in `project.yml`. |
@@ -269,7 +269,7 @@ replaces the manual `codesign -d --entitlements` check on the exported IPA.
 
 ## Why the schema needs a deploy
 
-Blau syncs through the private database of `iCloud.com.joeblau.blau`
+Choff syncs through the private database of `iCloud.com.joeblau.choff`
 ([sync.md](sync.md)). CloudKit has two environments:
 
 | Build | CloudKit environment |
@@ -314,7 +314,7 @@ and tick it there.
 - [ ] On a device or simulator signed in to a **developer** iCloud account,
       run a Debug build of the release commit with the launch argument
       `-BlauInitializeCloudKitSchema` (Scheme → Run → Arguments).
-- [ ] Check the log (`subsystem == "com.joeblau.blau" && category == "data"`)
+- [ ] Check the log (`subsystem == "com.joeblau.choff" && category == "data"`)
       for `Initialized the CloudKit development schema`. An
       `initializeCloudKitSchema failed` line means the schema is not complete:
       fix it before going on.
@@ -323,7 +323,7 @@ and tick it there.
 
 **3. Review the Development schema in the CloudKit Console**
 
-- [ ] [CloudKit Console](https://icloud.developer.apple.com) → `iCloud.com.joeblau.blau`
+- [ ] [CloudKit Console](https://icloud.developer.apple.com) → `iCloud.com.joeblau.choff`
       → Development → Schema → Record Types.
 - [ ] Every model has a record type (`CD_<Entity>`): `CD_Conversation`,
       `CD_Topic`, `CD_Utterance`, `CD_VoiceProfile`, `CD_VoiceEnrollmentSet`
@@ -351,7 +351,7 @@ and tick it there.
 **5. Verify the build against Production**
 
 - [ ] The release run's **IPA verification** passed (summary page or
-      `verify-report.md`): distribution signature, `iCloud.com.joeblau.blau`,
+      `verify-report.md`): distribution signature, `iCloud.com.joeblau.choff`,
       `CloudKit`, `aps-environment = production` and the Production iCloud
       environment. For a build made outside the workflow, run
       `scripts/release/release.py verify-ipa --ipa Blau.ipa --version <v> --build <n>`.
@@ -377,7 +377,7 @@ archive); the rest needs Xcode and App Store Connect.
       declared, and the app and BlauWidgets carry their manifests. (Automatic
       in the release workflow; run it by hand for an archive made in Xcode.)
 - [ ] Xcode → Organizer → the archive → right-click → **Generate Privacy
-      Report**. It lists Blau, BlauWidgets and GRDB with no errors, and Blau's
+      Report**. It lists Choff, BlauWidgets and GRDB with no errors, and Choff's
       entries match the table in privacy.md. (`make release-archive` leaves
       an archive in `.build/release/Blau.xcarchive`; open it in the
       Organizer.)

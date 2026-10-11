@@ -71,7 +71,7 @@ public enum MarkdownExportFileName {
 /// What the exporter reads back from a file's front matter.
 public struct MarkdownExportMetadata: Sendable, Equatable {
     /// The `generator:` value's prefix in every file Blau writes.
-    public static let generator = "Blau Markdown export"
+    public static let generator = "Choff Markdown export"
 
     public var conversationID: UUID
     /// The time zone the file was rendered in, when it names a known one.

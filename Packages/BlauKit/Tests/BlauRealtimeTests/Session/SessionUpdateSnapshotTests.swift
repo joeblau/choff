@@ -71,7 +71,7 @@ struct SessionUpdateSnapshotTests {
         #expect((session["audio"] as? [String: Any])?["input"] == nil)
         #expect(session["model"] == nil)
         #expect(session["tools"] == nil)
-        #expect((session["instructions"] as? String)?.hasPrefix("You are Blau,") == true)
+        #expect((session["instructions"] as? String)?.hasPrefix("You are Choff,") == true)
     }
 
     @Test func wireBytesRoundTrip() throws {

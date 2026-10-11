@@ -132,7 +132,7 @@ struct FactExtractionPromptTests {
         #expect(text.contains("- F1: user | works at | Stripe (since Thursday, October 8, 2026)"))
         #expect(text.contains("- F2: Acme | raised | a seed round"))
         #expect(text.contains("[1] User: I just joined Acme."))
-        #expect(text.contains("[2] Blau: Congratulations!"))
+        #expect(text.contains("[2] Choff: Congratulations!"))
         #expect(prompt.factHandles["F1"]?.objectText == "Stripe")
         #expect(prompt.factHandles["F2"]?.subjectID == acme.id)
 

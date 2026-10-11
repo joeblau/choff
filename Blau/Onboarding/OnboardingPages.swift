@@ -18,7 +18,7 @@ struct WelcomeOnboardingPage: View {
                 BrandLockup()
                     .padding(.top, 32)
                 Text(
-                    "Talk with Grok for as long as you like. Blau listens on this iPhone, keeps the conversation, and remembers what matters."
+                    "Talk with Grok for as long as you like. Choff listens on this iPhone, keeps the conversation, and remembers what matters."
                 )
                 .font(.title3)
                 .multilineTextAlignment(.center)
@@ -26,7 +26,7 @@ struct WelcomeOnboardingPage: View {
                 VStack(alignment: .leading, spacing: 16) {
                     WelcomeRow(
                         systemImage: "key.horizontal.fill", title: "Your xAI account",
-                        detail: "Blau talks with Grok using your own API key.")
+                        detail: "Choff talks with Grok using your own API key.")
                     WelcomeRow(
                         systemImage: "mic.fill", title: "Your microphone",
                         detail: "Speech is turned into text on this iPhone.")
@@ -87,7 +87,7 @@ struct MicrophoneOnboardingPage: View {
         case .granted:
             OnboardingPage(
                 systemImage: "mic.fill", title: "Microphone is on",
-                message: "Blau listens only while a conversation is on, and shows when it's listening."
+                message: "Choff listens only while a conversation is on, and shows when it's listening."
             ) {
                 status("Microphone allowed", systemImage: "checkmark.circle.fill", color: .green)
             } actions: {
@@ -97,7 +97,7 @@ struct MicrophoneOnboardingPage: View {
             OnboardingPage(
                 systemImage: "mic.fill", title: "Allow the microphone",
                 message:
-                    "Blau needs the microphone to hear you. It listens only while a conversation is on, and turns your speech into text on this iPhone."
+                    "Choff needs the microphone to hear you. It listens only while a conversation is on, and turns your speech into text on this iPhone."
             ) {
                 EmptyView()
             } actions: {
@@ -114,7 +114,7 @@ struct MicrophoneOnboardingPage: View {
             OnboardingPage(
                 systemImage: "mic.slash.fill", title: "Microphone access is off",
                 message:
-                    "Blau can't hear you without the microphone. Turn it on in Settings: open Blau's settings and switch on Microphone, then come back."
+                    "Choff can't hear you without the microphone. Turn it on in Settings: open Choff's settings and switch on Microphone, then come back."
             ) {
                 status("Microphone not allowed", systemImage: "xmark.circle.fill", color: .red)
             } actions: {
@@ -156,7 +156,7 @@ struct SpeechModelsOnboardingPage: View {
             systemImage: "waveform",
             title: "Download the speech models",
             message:
-                "Blau turns your speech into text on this iPhone, so nothing you say leaves it until it's sent to Grok. That takes \(status.totalBytes.formattedByteCount) of speech models, downloaded once."
+                "Choff turns your speech into text on this iPhone, so nothing you say leaves it until it's sent to Grok. That takes \(status.totalBytes.formattedByteCount) of speech models, downloaded once."
         ) {
             if models.preferences.downloadPolicy == .wifiOnly {
                 Label(
@@ -197,7 +197,7 @@ struct ICloudOnboardingPage: View {
             systemImage: "icloud.fill",
             title: "Sync with iCloud",
             message:
-                "Your conversations, what Blau learns and your voiceprint sync privately through your iCloud account, so they're on all your devices."
+                "Your conversations, what Choff learns and your voiceprint sync privately through your iCloud account, so they're on all your devices."
         ) {
             VStack(alignment: .leading, spacing: 6) {
                 Label {
@@ -242,14 +242,14 @@ struct VoiceEnrollmentOnboardingPage: View {
     var body: some View {
         OnboardingPage(
             systemImage: "person.wave.2.fill",
-            title: "Teach Blau your voice",
+            title: "Teach Choff your voice",
             message:
-                "With your voiceprint, Blau answers only you, even with other people talking nearby. Enrolling takes reading a few short phrases, once for all your devices."
+                "With your voiceprint, Choff answers only you, even with other people talking nearby. Enrolling takes reading a few short phrases, once for all your devices."
         ) {
             Button("Enroll Your Voice") {}
                 .buttonStyle(.bordered)
                 .disabled(true)
-            Text("Voice enrollment is coming in an update. Until then, Blau answers anyone it hears.")
+            Text("Voice enrollment is coming in an update. Until then, Choff answers anyone it hears.")
                 .font(.footnote)
                 .foregroundStyle(Color.brand(.secondaryText))
                 .fixedSize(horizontal: false, vertical: true)
@@ -261,7 +261,7 @@ struct VoiceEnrollmentOnboardingPage: View {
 
 // MARK: - About you
 
-/// "Tell Blau about you": an optional note that seeds the knowledge base as
+/// "Tell Choff about you": an optional note that seeds the knowledge base as
 /// the profile document (`AboutYouDocument`), so Grok knows who it's
 /// talking to from the first conversation.
 struct AboutYouOnboardingPage: View {
@@ -277,9 +277,9 @@ struct AboutYouOnboardingPage: View {
     var body: some View {
         OnboardingPage(
             systemImage: "person.text.rectangle.fill",
-            title: "Tell Blau about you",
+            title: "Tell Choff about you",
             message:
-                "Your name, what you do, what you're working on, how you like answers. Grok reads it so you don't have to explain yourself. You can skip this; Blau also learns as you talk."
+                "Your name, what you do, what you're working on, how you like answers. Grok reads it so you don't have to explain yourself. You can skip this; Choff also learns as you talk."
         ) {
             TextField(
                 "About you", text: $text,
@@ -354,14 +354,14 @@ struct ReadyOnboardingPage: View {
                 .accessibilityIdentifier(OnboardingIdentifiers.stillMissing)
             }
         } actions: {
-            OnboardingPrimaryButton("Start Using Blau", action: onFinish)
+            OnboardingPrimaryButton("Start Using Choff", action: onFinish)
         }
     }
 
     static func missingText(_ step: OnboardingStep) -> LocalizedStringKey {
         switch step {
         case .xaiAccount: "Grok can't answer until you connect your xAI account in Settings → xAI Account."
-        case .microphone: "Blau can't hear you until you allow the microphone."
+        case .microphone: "Choff can't hear you until you allow the microphone."
         case .speechModels: "The speech models aren't downloaded yet. Download them in Settings → Speech Models."
         default: ""
         }

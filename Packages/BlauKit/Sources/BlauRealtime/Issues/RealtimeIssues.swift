@@ -148,7 +148,7 @@ extension UserFacingIssue {
     /// dropped: the user says it again instead (the next utterance starts a
     /// new turn). The severity is capped at warning so the banner can be
     /// dismissed, even for `account.noCredits`, which blocks only when it
-    /// stops the connection itself. Connection-level wording ("Blau tries
+    /// stops the connection itself. Connection-level wording ("Choff tries
     /// again shortly") is replaced, since nothing is retried by itself.
     public var asReplyFailure: UserFacingIssue {
         var issue = self
@@ -164,7 +164,7 @@ extension UserFacingIssue {
                 "Your xAI team has no credits left or hit its spending limit. Add credits at console.x.ai, then "
                 + "say it again."
         case .unexpectedResponse:
-            issue.message = "xAI sent something Blau didn't expect. Say it again; if it keeps happening, update Blau."
+            issue.message = "xAI sent something Choff didn't expect. Say it again; if it keeps happening, update Choff."
         default:
             break
         }

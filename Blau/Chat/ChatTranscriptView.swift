@@ -60,8 +60,8 @@ struct ChatRowView: View {
     }
 
     private var utterance: some View {
-        // The element, and what the long-press lifts, is the text itself;
-        // the frames around it only place it.
+        // The accessibility element is the text. The column also accepts
+        // row-menu presses outside selectable words.
         VStack(alignment: .trailing, spacing: 2) {
             text
                 .multilineTextAlignment(textAlignment)
@@ -78,10 +78,14 @@ struct ChatRowView: View {
                 Button("Split Topic Here", action: onSplit)
             }
         }
-        .modifier(ChatRowMenu(row: row, onSplit: onSplit))
+        #if DEBUG
+            .modifier(ChatRowGeometryProbe(identifier: accessibilityIdentifier))
+        #endif
         .containerRelativeFrame(.horizontal, alignment: frameAlignment) { length, _ in
             row.role == .system ? length : length * ChatTranscriptLayout.maxWidthFraction
         }
+        .contentShape(.rect)
+        .modifier(ChatRowMenu(row: row, onSplit: onSplit))
         .frame(maxWidth: .infinity, alignment: frameAlignment)
     }
 
@@ -130,7 +134,7 @@ struct ChatRowView: View {
         switch row.role {
         case .user: Text("You")
         case .agent: Text("Grok")
-        case .system: Text("Blau")
+        case .system: Text("Choff")
         }
     }
 
@@ -223,7 +227,7 @@ struct ChatToolChip: View {
     var body: some View {
         chip
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("Blau"))
+            .accessibilityLabel(Text("Choff"))
             .accessibilityValue(Text(verbatim: call.title))
             .accessibilityIdentifier(ChatTranscriptAccessibility.toolRow)
             .frame(maxWidth: .infinity, alignment: .center)

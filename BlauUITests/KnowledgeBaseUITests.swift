@@ -20,7 +20,7 @@ final class KnowledgeBaseUITests: XCTestCase {
     }
 
     private func element(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
-        app.descendants(matching: .any)[identifier].firstMatch
+        app.descendants(matching: .any).matchingAccessibilityIdentifier(identifier).firstMatch
     }
 
     private func screenshot(_ app: XCUIApplication, _ name: String) {
@@ -32,7 +32,7 @@ final class KnowledgeBaseUITests: XCTestCase {
 
     private func openKnowledgeRow(_ identifier: String, in app: XCUIApplication) {
         openSettingsPane(SettingsPaneID.knowledge, in: app)
-        let row = app.buttons[identifier]
+        let row = app.buttons.matchingAccessibilityIdentifier(identifier).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10), "No \(identifier) row in Settings → Knowledge")
         row.tap()
     }
@@ -74,27 +74,29 @@ final class KnowledgeBaseUITests: XCTestCase {
         let app = launch()
         let start = Date()
         openKnowledgeRow("knowledge.collections", in: app)
-        let new = app.buttons["knowledge.collections.new"]
+        let new = app.buttons.matchingAccessibilityIdentifier("knowledge.collections.new").firstMatch
         XCTAssertTrue(new.waitForExistence(timeout: 10))
         new.tap()
 
         // The system Paste button: no permission prompt, one tap.
-        let paste = app.buttons["Paste"].firstMatch
+        let paste = app.buttons.matching(NSPredicate(format: "label == %@", "Paste")).firstMatch
         XCTAssertTrue(paste.waitForExistence(timeout: 10), "No Paste button")
         paste.tap()
         let preview = element("knowledge.collection.preview", in: app)
         scrollTo(
             preview,
-            in: app.collectionViews.containing(.any, identifier: "knowledge.collection.pasteText").firstMatch)
+            in: app.collectionViews.containing(
+                NSPredicate(format: "identifier == %@", "knowledge.collection.pasteText")
+            ).firstMatch)
         let counted = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label == %@", "30 questions"), object: preview)
         XCTAssertEqual(XCTWaiter.wait(for: [counted], timeout: 10), .completed, "Preview: \(preview.label)")
         // The heading named the collection.
-        let name = app.textFields["knowledge.collection.name"]
+        let name = app.textFields.matchingAccessibilityIdentifier("knowledge.collection.name").firstMatch
         XCTAssertEqual(name.value as? String, "YC interview questions")
         screenshot(app, "New collection, pasted")
 
-        app.buttons["knowledge.collection.create"].tap()
+        app.buttons.matchingAccessibilityIdentifier("knowledge.collection.create").firstMatch.tap()
         let header = app.staticTexts["30 questions"].firstMatch
         XCTAssertTrue(header.waitForExistence(timeout: 10), "The new collection didn't open with 30 questions")
         XCTAssertTrue(app.navigationBars["YC interview questions"].exists)
@@ -151,11 +153,12 @@ final class KnowledgeBaseUITests: XCTestCase {
         myName.typeText("Joe")
         let text = element("knowledge.aboutMe.text", in: app)
         text.tap()
-        text.typeText("I'm building Blau, a voice app.")
-        let status = element("knowledge.saveStatus", in: app)
-        let saved = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label BEGINSWITH %@", "Saved"), object: status)
-        XCTAssertEqual(XCTWaiter.wait(for: [saved], timeout: 10), .completed, "About Me wasn't saved: \(status.label)")
+        text.typeText("I'm building Choff, a voice app.")
+        // Saving and Saved are different SwiftUI text leaves. Query the
+        // current matching leaf instead of observing the replaced element.
+        let statuses = app.staticTexts.matching(identifier: "knowledge.saveStatus")
+        let saved = statuses.matching(NSPredicate(format: "label BEGINSWITH %@", "Saved")).firstMatch
+        XCTAssertTrue(saved.waitForExistence(timeout: 10), "About Me wasn't saved: \(statuses.firstMatch.label)")
         screenshot(app, "About Me")
         goBack(from: "About Me", in: app)
         XCTAssertTrue(app.staticTexts["Joe"].waitForExistence(timeout: 10), "The About Me row doesn't show the name")

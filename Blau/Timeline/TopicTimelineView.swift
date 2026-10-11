@@ -168,6 +168,10 @@ private final class PrependScrollTracker {
     /// load after that: while the screen opens, its geometry passes through
     /// the top before the bottom anchor applies.
     var hasScrolled = false
+    /// Visible bullets' actual positions, before a tap changes their rows.
+    var bulletPositions: [UUID: CGFloat] = [:]
+    /// The bullet held while its detail and lazy transcript are laid out.
+    var expandingBullet: (id: UUID, y: CGFloat)?
     /// Ends a page's hold once it has settled, or gives up on it.
     var timeout: Task<Void, Never>?
     /// Finishes Now's trip to the latest line (`finishReturningToNow`).
@@ -179,6 +183,17 @@ private final class PrependScrollTracker {
     /// The scroll view's `UIScrollView`, to put the rows back in the frame
     /// they strayed.
     let scrollView = EnclosingScrollView()
+
+    /// Corrects an expanding bullet using the live tracker, without capturing
+    /// the timeline view and all of its state in every geometry callback.
+    func bulletMoved(_ id: UUID, to y: CGFloat) {
+        bulletPositions[id] = y
+        guard let held = expandingBullet, held.id == id, isIdle else { return }
+        let distance = y - held.y
+        if abs(distance) > 0.5 {
+            _ = scrollView.shiftContent(by: distance)
+        }
+    }
 }
 
 /// The scroll view, its position and which bullets are expanded. Separate
@@ -280,6 +295,7 @@ private struct TopicTimelineScrollView: View {
             if phase == .tracking || phase == .interacting {
                 // The user took over: Now stops finishing its trip.
                 tracker.returnToNow?.cancel()
+                tracker.expandingBullet = nil
             }
             if tracker.isIdle {
                 loadOlderIfNeeded()
@@ -345,6 +361,14 @@ private struct TopicTimelineScrollView: View {
         return isAtBottom && topAnchorHolds == 0 ? .bottom : .top
     }
 
+    /// iOS 26's lazy pinned sections must stay empty while collapsed:
+    /// zero-height detail content disrupts their history-page estimates.
+    /// iOS 27 can retain the controls to prepare their first expansion.
+    private var retainsCollapsedDetails: Bool {
+        if #available(iOS 27, *) { return true }
+        return false
+    }
+
     @ViewBuilder
     private func row(for item: TopicTimeline.Item) -> some View {
         switch item {
@@ -357,15 +381,15 @@ private struct TopicTimelineScrollView: View {
         case .topic(let topic, let placement):
             let isExpanded = expansion.isExpanded(topic.id, current: timeline.currentTopicID)
             Section {
-                if isExpanded {
-                    if !placement.isCurrent {
-                        TopicDetailHeader(
-                            topic: topic, placement: placement, editor: editor,
-                            onContinue: continueAction(for: topic)
-                        ) {
-                            expansionTimer.appeared(topic.id)
-                        }
+                if !placement.isCurrent, isExpanded || retainsCollapsedDetails {
+                    TopicDetailHeader(
+                        topic: topic, placement: placement, editor: editor, isExpanded: isExpanded,
+                        onContinue: continueAction(for: topic)
+                    ) { [expansionTimer] in
+                        expansionTimer.appeared(topic.id)
                     }
+                }
+                if isExpanded {
                     TopicTranscriptRows(
                         topic: topic,
                         membership: timeline.membership(in: topic.conversationID),
@@ -383,6 +407,12 @@ private struct TopicTimelineScrollView: View {
                 }
                 .accessibilityRotorEntry(id: topic.id, in: rotor)
                 .prependAnchor(item.id == anchorID, moved: anchorMoved)
+                .onGeometryChange(for: CGFloat.self) {
+                    $0.frame(in: .global).minY
+                } action: { [tracker] y in
+                    tracker.bulletMoved(topic.id, to: y)
+                }
+                .onDisappear { [tracker] in tracker.bulletPositions[topic.id] = nil }
             }
         }
     }
@@ -441,7 +471,7 @@ private struct TopicTimelineScrollView: View {
             // The page landed without the offset moving with it
             // (FB24968838), or the lazy stack measured rows it had
             // estimated: put the rows back, in this frame.
-            if tracker.scrollView.shiftContent(by: distance) {
+            if tracker.scrollView.shiftContent(by: distance, clampToContent: false) {
                 tracker.corrections.count += 1
                 tracker.corrections.distance += distance
                 Signposts.ui.event("timeline.prependCorrected")
@@ -513,34 +543,56 @@ private struct TopicTimelineScrollView: View {
         // layout (#58).
         if expansion.isExpanded(topic.id, current: timeline.currentTopicID) {
             expansionTimer.cancelled(topic.id)
+            // Collapsing at the latest line should keep following that line.
+            if isAtBottom, let current = timeline.currentTopicID {
+                holdBullet(current, whileToggling: topic.id)
+                return
+            }
+            toggleExpansion(of: topic.id)
+            return
         } else {
             expansionTimer.began(topic.id)
         }
-        guard isAtBottom else {
-            toggleExpansion(of: topic.id)
-            return
-        }
-        // Anchor to the top first, so the tapped bullet stays where it is and
-        // its transcript opens below it, even at the latest line. The anchor
-        // must be in place before the content grows: in the same update the
-        // bottom anchor would still push the bullet up. It holds until the
-        // animation and the lazy rows' measuring are done, then the geometry
-        // decides again: collapsing at the latest line stays there (and keeps
-        // following new lines), expanding scrolls it out of view.
+        // Hold the tapped bullet while its transcript opens below it.
+        // Lazy section estimates can change above the viewport even while
+        // reading history, especially at accessibility text sizes.
+        // The top anchor and rendered-position hold are
+        // installed in the same transaction as the detail; deferring the
+        // expansion to another main-actor task adds a layout/scheduling turn
+        // to tap latency. Once the lazy rows settle, the geometry decides
+        // again whether to follow the latest line.
+        holdBullet(topic.id, whileToggling: topic.id)
+    }
+
+    private func holdBullet(_ anchor: UUID, whileToggling topic: UUID) {
         topAnchorHolds += 1
+        // A previous Now target must stop following the bottom while this
+        // topic changes height; its rendered bullet supplies the anchor.
+        // Initial offset and user scrolling leave no requested target. A
+        // fresh binding in that case only triggers another scroll update.
+        if position.edge != nil || position.point != nil || position.viewID != nil {
+            position = ScrollPosition(idType: TopicTimeline.ItemID.self)
+        }
+        if let y = tracker.bulletPositions[anchor] { tracker.expandingBullet = (anchor, y) }
+        toggleExpansion(of: topic)
         Task { @MainActor in
-            toggleExpansion(of: topic.id)
             try? await Task.sleep(for: Self.topAnchorHold)
             topAnchorHolds -= 1
+            if topAnchorHolds == 0 { tracker.expandingBullet = nil }
         }
     }
 
-    /// How long a tap at the latest line keeps the top anchor: the
-    /// expansion's animation and a little more.
+    /// How long a tap at the latest line holds its bullet while lazy rows
+    /// settle.
     private static let topAnchorHold = Duration.milliseconds(400)
 
     private func toggleExpansion(of id: UUID) {
-        withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) {
+        // A height animation also animates SwiftUI's scroll offset, defeating
+        // the same-frame hold. Insert the detail immediately; Now still
+        // returns with its spring and refined titles still cross-fade.
+        var transaction = Transaction(animation: nil)
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
             _ = expansion.toggle(id, current: timeline.currentTopicID)
         }
     }
@@ -641,7 +693,11 @@ private struct ExpandLatencyProbe: View {
             .frame(width: 1, height: 1)
             .accessibilityElement()
             .accessibilityLabel("Expand latency")
-            .accessibilityValue(timer.last.map { String(format: "%.1f", $0.latency / .milliseconds(1)) } ?? "")
+            .accessibilityValue(
+                timer.last.map {
+                    "\(timer.measurementCount):" + String(format: "%.1f", $0.latency / .milliseconds(1))
+                } ?? ""
+            )
             .accessibilityIdentifier(TopicDetailAccessibility.expandLatency)
             .allowsHitTesting(false)
     }
@@ -656,8 +712,12 @@ private struct NowButton: View {
         Button(action: action) {
             Label("Now", systemImage: "arrow.down")
                 .font(.subheadline.weight(.semibold))
+                .padding(.horizontal, 14)
+                .frame(minHeight: 44)
+                .contentShape(Capsule())
+                .glassEffect(.regular.interactive(), in: .capsule)
         }
-        .buttonStyle(.glass)
+        .buttonStyle(.plain)
         .accessibilityIdentifier(TopicTimelineAccessibility.now)
         .accessibilityHint("Returns to the current topic")
     }

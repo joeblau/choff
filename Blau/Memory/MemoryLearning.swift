@@ -9,7 +9,7 @@ import os
 
 /// Learning from conversations (#66): the fact and entity extraction
 /// pipeline, fed by the topic lifecycle, and what Settings → Knowledge → Memory binds
-/// to (the toggle and "What Blau Learned").
+/// to (the toggle and "What Choff Learned").
 ///
 /// BlauMemory can't import BlauTopics or BlauRealtime (siblings), so this
 /// composition-root type connects them: each topic the lifecycle reports
@@ -20,7 +20,7 @@ final class MemoryLearning {
     /// The "Learn From Conversations" toggle.
     let settings: MemoryLearningSettings
     let pipeline: FactExtractionPipeline
-    /// Facts and entities in the current store; the "What Blau Learned"
+    /// Facts and entities in the current store; the "What Choff Learned"
     /// screen deletes through it.
     let facts: any MemoryFactStoring
 
@@ -33,6 +33,12 @@ final class MemoryLearning {
         self.facts = facts
     }
 
+    deinit {
+        for follower in followers {
+            follower.cancel()
+        }
+    }
+
     /// Queues every topic `topics` closes from now on, follows the toggle,
     /// and starts on topics left in the queue by an earlier launch. Call
     /// once, at launch.
@@ -41,7 +47,9 @@ final class MemoryLearning {
         let pipeline = pipeline
         let events = topics.events()
         followers.append(
-            Task(priority: .utility) {
+            // Forward lifecycle events promptly; the pipeline schedules
+            // extraction separately at utility priority.
+            Task {
                 for await event in events {
                     if case .closed(let topic) = event {
                         await pipeline.topicClosed(topic.id)

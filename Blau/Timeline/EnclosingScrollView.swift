@@ -19,16 +19,22 @@ import UIKit
 final class EnclosingScrollView {
     private(set) weak var scrollView: UIScrollView?
 
-    /// Moves the content offset down by `distance`, keeping it in range.
+    /// Moves the content offset down by `distance`.
+    ///
+    /// A prepended row can report its new position before UIKit updates
+    /// `contentSize`. Its correction must pass the previous end of the
+    /// content; clamping to that stale end discards part of the movement.
+    /// Other corrections stay within the current content bounds.
     ///
     /// - Returns: `false` when the scroll view isn't known yet.
-    func shiftContent(by distance: CGFloat) -> Bool {
+    func shiftContent(by distance: CGFloat, clampToContent: Bool = true) -> Bool {
         guard let scrollView else { return false }
         let maxY = max(
             -scrollView.adjustedContentInset.top,
             scrollView.contentSize.height + scrollView.adjustedContentInset.bottom - scrollView.bounds.height)
         var offset = scrollView.contentOffset
-        offset.y = min(max(offset.y + distance, -scrollView.adjustedContentInset.top), maxY)
+        offset.y = max(offset.y + distance, -scrollView.adjustedContentInset.top)
+        if clampToContent { offset.y = min(offset.y, maxY) }
         scrollView.contentOffset = offset
         return true
     }

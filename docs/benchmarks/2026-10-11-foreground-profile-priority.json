@@ -1,0 +1,366 @@
+{
+  "source_base": "36943d3fe3f313cea67540072d5fc042db4db3c4",
+  "change": "Foreground profile catch-up inherits the caller task priority instead of forcing utility. Background processing stays at utility priority. No original functional assertion, five-second condition wait, skip policy or performance budget changes.",
+  "original_ci_failure": {
+    "selected": 309,
+    "passed": 300,
+    "failed": 1,
+    "skipped": 8,
+    "test": "ProfileMemoryAppTests/aDeletedFactLeavesTheProfileAtTheNextActivation",
+    "reason": "Originalconditionwaitexpiredat14:00:32.772; consolidationloggedcompleted14:00:33.009633, subsequentfunctionalassertionspassed. Causeunproven.",
+    "summary": "/tmp/voice-ci-36943d3-native-summary.json",
+    "log": "/tmp/voice-ci-36943d3-native.log"
+  },
+  "unchanged_control": {
+    "status": "completed",
+    "exit_code": 0,
+    "unique_cases": 5,
+    "requested_iterations_each": 3,
+    "producer": "/tmp/voice-choff-profile-priority-369-control-producer.json",
+    "summary": "/tmp/voice-choff-profile-priority-369-control-summary.json",
+    "qualification": "Five originalcasesPASS; three starts percase logged, aggregate resultPASS. Originalfive-secondwait unchanged."
+  },
+  "excluded_selector_run": "Initial method-only selection executed zero tests and is excluded from pass/regression evidence. /tmp/voice-choff-profile-priority-red-summary.json",
+  "regression_red": {
+    "producer": {
+      "status": "completed",
+      "source_base": "36943d3fe3f313cea67540072d5fc042db4db3c4",
+      "source_hashes": {
+        "Blau/Memory/ProfileMemory.swift": "fe9355e9bef9baca0949a4f4e90c5a9b7fb60fdb24d1e738e4f868f45d3d617d",
+        "BlauTests/ProfileMemoryAppTests.swift": "283f1371011b1aa7e5fa5bfb7251f12bee8f20326a16346f545917ae883ac845"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/DerivedDataProfilePriority27",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-red-v2.xcresult",
+        "-only-testing:BlauTests/ProfileMemoryAppTests",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-red-v2.xcresult",
+      "started_at": "2026-10-11T14:13:21.207380+00:00",
+      "qualification": "New regression observes the actual text-generation task priority from a userInitiated foreground caller. No timing-based priority assertion. Green also runs all five unchanged original profile tests with the original five-second wait. The CI deadline failure and passing local control remain retained; scheduling behavior is tested separately from CI causality.",
+      "exit_code": 65,
+      "finished_at": "2026-10-11T14:13:37.658080+00:00",
+      "source_hash_matches": true
+    },
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+            "deviceName": "Choff Balanced UI Shard 2",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "24A434",
+            "osVersion": "27.0",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 1,
+          "passedTests": 5,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.2",
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "finishTime": 1791728014.494,
+      "passedTests": 5,
+      "result": "Failed",
+      "runtimeWarnings": [],
+      "skippedTests": 0,
+      "startTime": 1791728002.596,
+      "statistics": [],
+      "testFailures": [
+        {
+          "failureText": "Expectation failed: observed == .userInitiated\nobserved \u2192 TaskPriority.low\n.userInitiated \u2192 TaskPriority.high",
+          "targetName": "BlauTests",
+          "testIdentifier": 4,
+          "testIdentifierString": "ProfileMemoryAppTests/foregroundCatchUpKeepsTheCallersPriority()",
+          "testIdentifierURL": "test://com.apple.xcode/Blau/BlauTests/ProfileMemoryAppTests/foregroundCatchUpKeepsTheCallersPriority()",
+          "testName": "foregroundCatchUpKeepsTheCallersPriority()"
+        }
+      ],
+      "title": "Test - Blau",
+      "topInsights": [],
+      "totalTestCount": 6
+    }
+  },
+  "regression_green": {
+    "producer": {
+      "status": "completed",
+      "source_base": "36943d3fe3f313cea67540072d5fc042db4db3c4",
+      "source_hashes": {
+        "Blau/Memory/ProfileMemory.swift": "e34a82a29a1109b73d78495f47b446f2e740212cba63746cbaaa1458b5d16351",
+        "BlauTests/ProfileMemoryAppTests.swift": "283f1371011b1aa7e5fa5bfb7251f12bee8f20326a16346f545917ae883ac845"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/DerivedDataProfilePriority27",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-green.xcresult",
+        "-only-testing:BlauTests/ProfileMemoryAppTests",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-green.xcresult",
+      "started_at": "2026-10-11T14:15:00.821363+00:00",
+      "qualification": "New regression observes the actual text-generation task priority from a userInitiated foreground caller. No timing-based priority assertion. Green also runs all five unchanged original profile tests with the original five-second wait. The CI deadline failure and passing local control remain retained; scheduling behavior is tested separately from CI causality.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T14:15:21.147494+00:00",
+      "source_hash_matches": true
+    },
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+            "deviceName": "Choff Balanced UI Shard 2",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "24A434",
+            "osVersion": "27.0",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "passedTests": 6,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.2",
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "finishTime": 1791728118.005,
+      "passedTests": 6,
+      "result": "Passed",
+      "runtimeWarnings": [],
+      "skippedTests": 0,
+      "startTime": 1791728102.221,
+      "statistics": [],
+      "testFailures": [],
+      "title": "Test - Blau",
+      "topInsights": [],
+      "totalTestCount": 6
+    }
+  },
+  "ios27_native": {
+    "producer": {
+      "status": "completed",
+      "source_base": "36943d3fe3f313cea67540072d5fc042db4db3c4",
+      "source_hashes": {
+        "Blau/Memory/ProfileMemory.swift": "e34a82a29a1109b73d78495f47b446f2e740212cba63746cbaaa1458b5d16351",
+        "BlauTests/ProfileMemoryAppTests.swift": "283f1371011b1aa7e5fa5bfb7251f12bee8f20326a16346f545917ae883ac845"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/DerivedDataProfilePriority27",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-ios27-validation.xcresult",
+        "-only-testing:BlauTests",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-ios27-validation.xcresult",
+      "started_at": "2026-10-11T14:16:34.495861+00:00",
+      "qualification": "Foreground catch-up inherits caller priority. All native app tests on27, focused six profile-memory tests on26. Original native assertions, five-second profile wait, skips and performance budgets unchanged. Priority regression RED thenGREEN; priorCI timingfailure and passingoldcontrol retained, causalresolutionunproven.",
+      "exit_code": 0,
+      "source_hash_matches": true,
+      "finished_at": "2026-10-11T14:17:35.256898+00:00"
+    },
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+            "deviceName": "Choff Balanced UI Shard 2",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "24A434",
+            "osVersion": "27.0",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "passedTests": 384,
+          "skippedTests": 8,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.2",
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "finishTime": 1791728252.076,
+      "passedTests": 302,
+      "result": "Passed",
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Set a .modelContext in view's environment to use Query",
+          "sourceURL": "file:///Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/BlauTests/AppEnvironmentTests.swift"
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Set a .modelContext in view's environment to use Query",
+          "sourceURL": "file:///Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/BlauTests/AppEnvironmentTests.swift"
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+          "sourceURL": "file:///Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/BlauTests/PerfReplayTests.swift"
+        }
+      ],
+      "skippedTests": 8,
+      "startTime": 1791728195.935,
+      "statistics": [
+        {
+          "subtitle": "101 test runs",
+          "title": "19 tests ran with dynamic parameters"
+        }
+      ],
+      "testFailures": [],
+      "title": "Test - Blau",
+      "topInsights": [
+        {
+          "category": "Longest Test Runs",
+          "impact": "65% of duration",
+          "text": "2 longest test runs with outlier durations exceeding 3.33s (three standard deviations)"
+        }
+      ],
+      "totalTestCount": 310
+    }
+  },
+  "ios26_profile": {
+    "producer": {
+      "status": "completed",
+      "source_base": "36943d3fe3f313cea67540072d5fc042db4db3c4",
+      "source_hashes": {
+        "Blau/Memory/ProfileMemory.swift": "e34a82a29a1109b73d78495f47b446f2e740212cba63746cbaaa1458b5d16351",
+        "BlauTests/ProfileMemoryAppTests.swift": "283f1371011b1aa7e5fa5bfb7251f12bee8f20326a16346f545917ae883ac845"
+      },
+      "command": [
+        "xcrun",
+        "xcodebuild",
+        "test",
+        "-scheme",
+        "Blau",
+        "-testPlan",
+        "Blau",
+        "-destination",
+        "id=FFA3914B-71E9-48D6-B42F-1EDD2CDF3793",
+        "-derivedDataPath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/DerivedDataProfilePriority26",
+        "-resultBundlePath",
+        "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-ios26-validation.xcresult",
+        "-only-testing:BlauTests/ProfileMemoryAppTests",
+        "-parallel-testing-enabled",
+        "NO",
+        "-enableCodeCoverage",
+        "NO",
+        "-collect-test-diagnostics",
+        "never",
+        "CODE_SIGNING_ALLOWED=NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-foreground-profile-priority/.build/results/codex-choff-profile-priority-ios26-validation.xcresult",
+      "started_at": "2026-10-11T14:17:35.416850+00:00",
+      "qualification": "Foreground catch-up inherits caller priority. All native app tests on27, focused six profile-memory tests on26. Original native assertions, five-second profile wait, skips and performance budgets unchanged. Priority regression RED thenGREEN; priorCI timingfailure and passingoldcontrol retained, causalresolutionunproven.",
+      "exit_code": 0,
+      "source_hash_matches": true,
+      "finished_at": "2026-10-11T14:18:24.896053+00:00"
+    },
+    "summary": {
+      "devicesAndConfigurations": [
+        {
+          "device": {
+            "architecture": "arm64",
+            "deviceId": "FFA3914B-71E9-48D6-B42F-1EDD2CDF3793",
+            "deviceName": "Blau Codex iOS 26 Verification",
+            "modelName": "iPhone 17",
+            "osBuildNumber": "23F77",
+            "osVersion": "26.5",
+            "platform": "iOS Simulator"
+          },
+          "expectedFailures": 0,
+          "failedTests": 0,
+          "passedTests": 6,
+          "skippedTests": 0,
+          "testPlanConfiguration": {
+            "configurationId": "1",
+            "configurationName": "Default"
+          }
+        }
+      ],
+      "environmentDescription": "Blau \u00b7 Built with macOS 27.2",
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "finishTime": 1791728301.544,
+      "passedTests": 6,
+      "result": "Passed",
+      "runtimeWarnings": [],
+      "skippedTests": 0,
+      "startTime": 1791728256.86,
+      "statistics": [],
+      "testFailures": [],
+      "title": "Test - Blau",
+      "topInsights": [],
+      "totalTestCount": 6
+    }
+  },
+  "lint": "Repository lint:1100 Swift files clean.",
+  "qualification": "The actual foreground priority loss is reproduced deterministically: low rather than high. It is corrected without changing original test timing. The preceding CI functional deadline failure was not reproduced locally, so causal resolution remains unproven until fresh required CI. All original five profile tests, including the failed deletion case, and the new priority test pass."
+}

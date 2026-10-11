@@ -56,7 +56,7 @@ struct PersistenceControllerTests {
         #expect(controller.accountStatus == .available)
         #expect(controller.generation == 1)
         #expect(controller.syncState == .upToDate(lastSync: nil))
-        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.blau"])
+        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.choff"])
     }
 
     @Test func worksSignedOutOfICloud() async throws {
@@ -101,7 +101,7 @@ struct PersistenceControllerTests {
         #expect(controller.stack?.mode == cloudKit)
         #expect(controller.generation == 2)
         #expect(try conversationIDs(controller) == [id])
-        #expect(recorder.containerIdentifiers == [nil, "iCloud.com.joeblau.blau"])
+        #expect(recorder.containerIdentifiers == [nil, "iCloud.com.joeblau.choff"])
     }
 
     @Test func signingOutFallsBackToLocalOnlyWithoutLosingData() async throws {
@@ -161,7 +161,7 @@ struct PersistenceControllerTests {
         #expect(controller.stack?.mode == cloudKit)
         #expect(controller.accountStatus == .couldNotDetermine)
         #expect(controller.syncState == .upToDate(lastSync: nil))
-        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.blau"])
+        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.choff"])
 
         // The next definite answer still decides.
         provider.set(.available)
@@ -224,7 +224,7 @@ struct PersistenceControllerTests {
         await controller.refresh()
         await controller.refresh()
         #expect(controller.generation == 1)
-        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.blau", nil])
+        #expect(recorder.containerIdentifiers == ["iCloud.com.joeblau.choff", nil])
     }
 
     @Test func anUnentitledBuildNeverAsksCloudKit() async throws {

@@ -69,7 +69,11 @@ session would.
 
 `SoakAnalysis` judges the samples after a warm-up (the first 10% of the
 audio: caches, the first SQLite pages, the first topic). All eight must
-pass, and on a simulator the leak readings must not grow.
+pass in CI's unprofiled quantitative run. A separate simulator run collects
+leaks and requires all five correctness checks and zero leak growth. Its
+footprint and latency values are retained as diagnostics; quantitative
+acceptance comes from the first run. Both use the same pipeline, session
+length, sampling, warm-up and limits.
 
 | Check | Fails when | Default limit |
 | --- | --- | --- |
@@ -101,6 +105,25 @@ debuggable by `leaks` and the soak doesn't turn on malloc stack logging, so
 the readings count leaks but don't say where they were allocated: to find
 the owner of a new leak, record the soak with Instruments' Leaks template
 (below), which keeps the allocation stacks.
+
+CI invokes `make soak SOAK_LEAKS=0` first, then runs the same session with
+`SOAK_LEAKS=1` into `.build/results/soak-leaks`. The primary command's failure
+always fails the job. Its report and XCTest summary must also prove one
+completed test, no skips, the full requested session and all eight passing
+checks, so a skipped test cannot produce a green quantitative gate.
+`check-profiled-run.py` validates the second run's
+complete report, XCTest summary and leak readings: missing or skipped tests,
+runner errors, incomplete sessions, correctness failures, inconclusive leak
+readings and any leak growth fail the job. Only a single XCTest assertion
+that exactly matches footprint or latency failures in the profiling report
+can be diagnostic. Local `make soak` retains its original combined verdict.
+
+This separation follows a CI run whose footprint rises overlapped external
+leak scans while live heap stayed below the original limit. An earlier
+unprofiled → scanned → unprofiled control passed all eight checks in every
+phase, so those observations do not establish profiling as the sole cause
+of the failure. They support measuring acceptance without a concurrent
+scanner. The 2 MB/hour footprint limit and the 10% warm-up remain unchanged.
 
 **Scripted or recognized.** The report's outcome says where the transcript
 came from (`SoakOutcome.transcript`): `scripted`, the script's own word
@@ -155,8 +178,10 @@ them with a `TEST_RUNNER_` prefix when calling xcodebuild directly):
 
 - **Nightly, simulator, 20 minutes.** The `soak` job in
   [CI](ci.md) runs `make soak SOAK_MINUTES=20` on the runner's iPhone 17
-  simulator: 20 minutes of audio at 10x, renewal at 12 audio minutes, leaks
-  read every 20 s. The summary page shows the report and the leak table;
+  simulator: two sessions of 20 minutes of audio at 10x, renewal at 12 audio
+  minutes. The first gates all eight quantitative checks; the second reads
+  leaks every 20 s and gates correctness and zero leak growth. The summary
+  labels both reports and keeps the profiling measurements visible;
   `soak-results-<attempt>` keeps everything for 90 days. **Actions > CI >
   Run workflow** with **Also run the long-session soak test** runs it on
   demand, at any length (`soak_minutes`); the repository variables
@@ -192,10 +217,51 @@ onboarding), a development-signed build, plugged in and on a desk:
    Xcode (at the default 10x).
 4. Add a row to the table below.
 
+## Audio-buffer allocation regression (#183)
+
+The verification gate previously read a segment from its dictionary,
+appended each 20 ms frame to its audio array, then stored the segment back.
+The dictionary retained the original array while the local copy changed,
+so Swift's copy-on-write copied the whole growing buffer on every frame.
+This created large amounts of temporary allocation even though finished
+segments correctly released their audio. The fix removes the segment from
+the dictionary during the synchronous mutation, leaving one owner, and
+restores it before the actor can suspend.
+
+`VerificationGateMemoryTests` checks that a 16-second segment requires at
+most 16 buffer reallocations rather than one per frame, that completed
+segments retain no audio, and that 120 mixed segments have the same
+allocation pattern at the end as at the start. Reinstating the old copy
+pattern made both tests fail: the 16-second segment reallocated 815 times
+and the mixed-session test saw up to 415 reallocations per segment.
+Restoring the fix passed both tests. The existing 2 MB/hour
+footprint limit is unchanged. Each soak sample also records live malloc
+bytes, so a report shows live heap growth beside footprint growth.
+
+The [2026-10-10 two-hour simulator run](soak/2026-10-10-simulator-120min.md)
+passed all eight checks: footprint slope +0.80 MB/hour, live heap slope
++1.48 MB/hour, and 56 leaks / 1,792 bytes at each of six readings. This
+covers the scripted pipeline; the real-model device run remains pending
+in the table below.
+
+A separate 20-minute run also passed (+1.70 MB/hour footprint, +1.89
+MB/hour live heap) while Allocations recorded 45 seconds on the running
+app. Attach to the simulator explicitly, rather than the host process
+namespace:
+
+```sh
+xcrun xctrace record --template Allocations --device <simulator-udid> \
+  --attach <Blau-pid> --time-limit 45s --output .build/traces/gate-allocations.trace
+```
+
+The unprofiled two-hour report above is the memory gate evidence; tracing
+changes allocation overhead and its footprint is kept separate.
+
 ## Results
 
 | Date | Where | Run | Wall time | Result | Memory slope | Renewals | Leaks |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-10-10 | iPhone 17 simulator, iOS 27.0 (24A434), Xcode 27.2 beta | 120 min at 10x, scripted ASR ([report](soak/2026-10-10-simulator-120min.md)) | 12.1 min | passed, 8/8; 265 lines answered, no dropped frames | +0.80 MB/h; live heap +1.48 MB/h | 1, reseeded | 56 leaks / 1,792 bytes at all six readings: no growth |
 | 2026-10-09 | iPhone 17 simulator, iOS 27.0, Apple silicon Mac | 120 min at 10x, scripted ASR, through the verification gate ([report](soak/2026-10-09-simulator-120min.md)) | 12.1 min | passed, 8/8: 265 lines answered, 0 of 363,022 frames lost, ASR 3.5 → 4.8 µs/chunk, first audio 63.6 → 63.6 ms, 660 of 660 TV scores rejected and 831 of 831 user scores accepted by the gate, 43 topic boundaries for 44 changes | +0.45 MB/h (33.7 → 35.3 MB) | 1, reseeded (at 7.2 min wall, 72 audio min) | 56 leaks, 1,792 bytes at every reading (5 during, 1 after the run): no growth |
 | 2026-10-09 | same | the same, on main before the latency budget (#153) | 12.1 min | passed, 8/8 | +0.25 MB/h | 1 | no growth (56 leaks, 1,792 bytes) |
 | 2026-10-09 | same | 120 min at 10x, three earlier runs before the gate was wired in (voice ID scored beside the pipeline) | 12.1 min each | passed, 8/8 | +0.32, +0.28 and +0.30 MB/h | 1 each | no growth (56 leaks, 1,792 bytes) |

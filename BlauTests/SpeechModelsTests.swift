@@ -44,6 +44,23 @@ struct SpeechModelsTests {
         #expect(ModelStore.isExcludedFromBackup(store.root))
     }
 
+    @Test func fixtureDownloadWaitsForCellularPermission() async {
+        let root = FileManager.default.temporaryDirectory.appending(path: "blau-tests-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manager = SpeechModels.makeManager(
+            environment: [SpeechModels.fixturesEnvironmentKey: "1", SpeechModels.fixtureCellularEnvironmentKey: "1"],
+            fixtureRoot: root)
+        await manager.start()
+        await manager.waitUntilIdle()
+        #expect(!manager.isReady)
+        #expect(manager.setupStatus.phase == .waiting(for: .unmeteredNetwork))
+
+        manager.allowExpensiveNetworkThisSession()
+        await manager.waitUntilIdle()
+        #expect(manager.isReady)
+        #expect(manager.directory(for: .parakeetRealtimeEOU) != nil)
+    }
+
     @Test func fixtureManagerReachesReady() async {
         let root = FileManager.default.temporaryDirectory.appending(path: "blau-tests-\(UUID().uuidString)")
         defer { try? FileManager.default.removeItem(at: root) }

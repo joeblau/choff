@@ -42,7 +42,7 @@ struct PerformanceHUDView: View {
                 .frame(maxHeight: 420)
                 .fixedSize(horizontal: false, vertical: true)
             } else {
-                rows(controller.readout.compact)
+                rows(controller.compactRows)
             }
         }
         .font(.caption2.monospacedDigit())
@@ -51,7 +51,7 @@ struct PerformanceHUDView: View {
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
         .overlay {
             RoundedRectangle(cornerRadius: 10)
-                .strokeBorder(borderColor, lineWidth: controller.readout.level == .normal ? 0.5 : 1.5)
+                .strokeBorder(borderColor, lineWidth: controller.level == .normal ? 0.5 : 1.5)
         }
         .contentShape(RoundedRectangle(cornerRadius: 10))
         .onTapGesture {
@@ -88,14 +88,18 @@ struct PerformanceHUDView: View {
                     Text(row.label)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
+                        // GridRow forwards accessibility modifiers to both
+                        // columns. Expose one reading from the label instead.
+                        .accessibilityValue(row.value)
+                        .accessibilityIdentifier("blau.hud.row.\(row.id)")
                     Text(row.value)
                         .foregroundStyle(color(row.level))
                         // One line when compact, so the panel keeps its size
                         // (and isn't laid out again) as the values change.
                         .lineLimit(controller.isExpanded ? 2 : 1)
                         .fixedSize(horizontal: false, vertical: controller.isExpanded)
+                        .accessibilityHidden(true)
                 }
-                .accessibilityElement(children: .combine)
             }
         }
     }
@@ -139,7 +143,7 @@ struct PerformanceHUDView: View {
     }
 
     private var borderColor: Color {
-        switch controller.readout.level {
+        switch controller.level {
         case .normal: .secondary.opacity(0.4)
         case .warning: .orange
         case .critical: .red

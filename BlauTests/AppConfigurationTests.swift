@@ -4,17 +4,17 @@ import Testing
 @testable import Blau
 
 /// Guards the app configuration generated from `project.yml`. The unit-test
-/// bundle is hosted in the app, so `Bundle.main` is the built Blau.app.
+/// bundle is hosted in the app, so `Bundle.main` is the built Choff.app.
 @Suite("App configuration")
 struct AppConfigurationTests {
     private let info = Bundle.main.infoDictionary ?? [:]
 
-    @Test func bundleIdentifierIsBlau() {
-        #expect(Bundle.main.bundleIdentifier == "com.joeblau.blau")
+    @Test func bundleIdentifierIsChoff() {
+        #expect(Bundle.main.bundleIdentifier == "com.joeblau.choff")
     }
 
-    @Test func displayNameIsBlau() {
-        #expect(info["CFBundleDisplayName"] as? String == "Blau")
+    @Test func displayNameIsChoff() {
+        #expect(info["CFBundleDisplayName"] as? String == "Choff")
     }
 
     @Test func versionsComeFromBuildSettings() throws {

@@ -6,13 +6,30 @@ import Testing
 
 @testable import BlauTranscription
 
+/// Simulates scheduling delay before the quiet-period sleep is registered.
+private struct DelayedSettleRegistrationClock: BlauClock {
+    let base = ManualClock()
+    var now: Date { base.now }
+    var uptime: Duration { base.uptime }
+
+    func sleep(for duration: Duration) async throws {
+        if duration == .milliseconds(500) { base.advance(by: .milliseconds(500)) }
+        try await base.sleep(for: duration)
+    }
+
+    func sleep(until deadline: Duration) async throws {
+        if deadline == .milliseconds(500) { base.advance(by: .milliseconds(500)) }
+        try await base.sleep(until: deadline)
+    }
+}
+
 @Suite("TranscriberRouter: engine choice and switching at utterance boundaries")
 struct TranscriberRouterTests {
     private func makeRouter(
         _ engines: FakeEngines,
         preference: TranscriptionEnginePreference = .automatic,
         configuration: TranscriberRouter.Configuration = .standard,
-        clock: ManualClock = ManualClock()
+        clock: any BlauClock = ManualClock()
     ) -> TranscriberRouter {
         TranscriberRouter(
             parakeet: engines.provider(.parakeet), apple: engines.provider(.apple), preference: preference,
@@ -127,6 +144,29 @@ struct TranscriberRouterTests {
         let apple = try #require(engines.latest(.apple))
         #expect(await apple.startPositions == [nil])
         #expect(await engines.latest(.parakeet)?.finishes == 1)
+    }
+
+    @Test func aDelayedSettleTaskDoesNotExtendTheQuietPeriod() async throws {
+        let engines = FakeEngines()
+        let clock = DelayedSettleRegistrationClock()
+        let router = makeRouter(engines, clock: clock)
+        let log = TranscriptLog(router.events)
+        try await router.start()
+        let parakeet = try #require(engines.latest(.parakeet))
+        await parakeet.say("first", from: 0.5, to: 1.0)
+        try await log.waitForEvents(1)
+        await router.setPreference(.apple)
+        await clock.base.waitForSleepers()
+
+        // Half a second passes before the settle task registers its sleep.
+        // The quiet period has already elapsed: no second advance is needed.
+        await parakeet.commit("first part", from: 0.5, to: 1.5)
+        try await log.waitForFinals(1)
+        try await waitForEngine(.apple, on: router)
+        #expect(clock.uptime == .milliseconds(500))
+        #expect(router.statistics.forcedSwitches == 0)
+        #expect(await engines.latest(.apple)?.startPositions == [.seconds(1.5)])
+        await router.finish()
     }
 
     @Test func speechStraightAfterAFinalPostponesTheSwitch() async throws {

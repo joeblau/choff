@@ -10,7 +10,7 @@ private func makeContext() throws -> ModelContext {
     ModelContext(try BlauModelContainer.makeInMemory())
 }
 
-/// Onboarding's "Tell Blau about you" step (#44): the profile document it
+/// Onboarding's "Tell Choff about you" step (#44): the profile document it
 /// writes into the knowledge base.
 @Suite("About you document")
 struct AboutYouDocumentTests {
@@ -20,16 +20,16 @@ struct AboutYouDocumentTests {
         #expect(try AboutYouDocument.onboardingRequirement(in: context) == .missing)
 
         let saved = try #require(
-            try AboutYouDocument.save("  I'm Joe. I'm building Blau, a voice app.\n", in: context, at: t0))
+            try AboutYouDocument.save("  I'm Joe. I'm building Choff, a voice app.\n", in: context, at: t0))
         #expect(saved.kind == .profile)
         #expect(saved.title == AboutYouDocument.title)
-        #expect(saved.body == "I'm Joe. I'm building Blau, a voice app.")
+        #expect(saved.body == "I'm Joe. I'm building Choff, a voice app.")
         #expect(saved.createdAt == t0)
         #expect(saved.isContentHashCurrent)
 
         // Saved, so another context (the indexer's) sees it.
         let other = ModelContext(context.container)
-        #expect(try AboutYouDocument.text(in: other) == "I'm Joe. I'm building Blau, a voice app.")
+        #expect(try AboutYouDocument.text(in: other) == "I'm Joe. I'm building Choff, a voice app.")
         #expect(try AboutYouDocument.onboardingRequirement(in: other) == .satisfied)
     }
 
@@ -87,7 +87,7 @@ struct SyncStateOnboardingTests {
         #expect(SyncState.syncing(lastSync: nil).onboardingRequirement == .satisfied)
         #expect(SyncState.upToDate(lastSync: t0).onboardingRequirement == .satisfied)
         #expect(
-            SyncState.failing(CloudSyncError(domain: "Blau", code: 0, message: "x"), lastSync: nil)
+            SyncState.failing(CloudSyncError(domain: "Choff", code: 0, message: "x"), lastSync: nil)
                 .onboardingRequirement == .missing)
         #expect(SyncState.off(.signedOut).onboardingRequirement == .missing)
         #expect(SyncState.off(.notAvailableInThisBuild).onboardingRequirement == .missing)

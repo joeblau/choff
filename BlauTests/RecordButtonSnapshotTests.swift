@@ -69,11 +69,9 @@ struct RecordButtonSnapshotTests {
     /// it isn't: two levels give different images, or the same one.
     @Test func reduceMotionKeepsTheRingStill() throws {
         func png(_ level: Float, reducesMotion: Bool) throws -> Data {
-            let renderer = ImageRenderer(
-                content: button(.listening, input: level, output: 0, reducesMotion: reducesMotion)
-                    .frame(width: Self.size.width, height: Self.size.height))
-            renderer.scale = SnapshotAssertion.scale
-            return try #require(renderer.uiImage?.pngData())
+            try #require(
+                SnapshotAssertion.png(
+                    button(.listening, input: level, output: 0, reducesMotion: reducesMotion), size: Self.size))
         }
         #expect(
             SnapshotAssertion.compare(try png(0.1, reducesMotion: false), try png(0.9, reducesMotion: false)) != .match)

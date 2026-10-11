@@ -1,13 +1,13 @@
-# Blau
+# Choff
 
-Blau is a native iOS app for long-form voice conversation with Grok. It is
+Choff is a native iOS app for long-form voice conversation with Grok. It is
 built with Swift 6, SwiftUI and SwiftData, and targets iOS 26.0 and later.
 See issue #1 for the architecture overview and
 [`docs/architecture.md`](docs/architecture.md) for the module layout. Data is
 stored with SwiftData and synced through the user's private iCloud container
 ([`docs/sync.md`](docs/sync.md)), with an optional Markdown copy of every
-conversation in iCloud Drive → Blau ([`docs/export.md`](docs/export.md)).
-What Blau keeps, what it sends to xAI, exporting and deleting it, and the
+conversation in iCloud Drive → Choff ([`docs/export.md`](docs/export.md)).
+What Choff keeps, what it sends to xAI, exporting and deleting it, and the
 privacy manifest are in [`docs/privacy.md`](docs/privacy.md);
 [`docs/release.md`](docs/release.md) has the
 checklist to run before every TestFlight build.
@@ -38,8 +38,9 @@ configured. See [docs/configuration.md](docs/configuration.md).
 | `make open`      | Generate, then open the project in Xcode                         |
 | `make build`     | Build the app for the iOS Simulator (Debug)                      |
 | `make test`      | Run unit and UI tests (`Blau` scheme, `Blau` test plan, coverage) |
+| `make build-tests` | Build the app and the test bundles without running them         |
 | `make test-unit` | Run only `BlauTests`                                             |
-| `make test-ui`   | Run only `BlauUITests`                                           |
+| `make test-ui`   | Run only `BlauUITests` (`UI_SHARD=K/N`: one of N slices, as CI)   |
 | `make test-kit`  | Run the `BlauKit` package tests on the macOS host (`swift test`) |
 | `make perf`      | Run `BlauPerfTests` (`Blau-Perf` scheme, Release build with the scripted session, [docs](docs/performance.md#performance-suite)) |
 | `make perf-check` | Compare the last `make perf` with the committed baseline; fails on a >10% regression |
@@ -60,8 +61,8 @@ configured. See [docs/configuration.md](docs/configuration.md).
 | `make secrets`   | Create `Config/Secrets.xcconfig` from the example                |
 | `make test-scripts` | Test the secrets, CI, Instruments template, perf gate, privacy manifest and release scripts |
 | `make check-privacy` | Validate the privacy manifests and that every required-reason API the sources use is declared (`PRIVACY_BUNDLE=<.app or .xcarchive>` checks a build too, [docs](docs/privacy.md#the-privacy-manifest)) |
-| `make install-instruments-template` | Add the Blau template to Instruments' chooser ([docs](docs/performance.md#instruments-template)) |
-| `make trace`     | Record Blau on `TRACE_DEVICE` with the Blau Instruments template |
+| `make install-instruments-template` | Add the Choff template to Instruments' chooser ([docs](docs/performance.md#instruments-template)) |
+| `make trace`     | Record Choff on `TRACE_DEVICE` with the Choff Instruments template |
 | `make instruments-template` | Regenerate `Tools/Instruments/Blau.tracetemplate`     |
 | `make verify-instruments` | Record with the template on the Mac and check every interval is captured |
 | `make verify-hud` | Record a workload on the Mac and check the performance HUD's numbers match Instruments |
@@ -80,7 +81,8 @@ Formatting, branch naming, commit and pull request conventions are in
 
 ## Continuous integration
 
-GitHub Actions runs `lint`, `package-tests`, `app-tests` and the
+GitHub Actions runs `lint`, `package-tests`, the app's tests (unit tests and
+four UI-test shards, summed up by the `app-tests` check) and the
 micro-benchmark gate (`perf-kit`) on every pull request and push to `main`,
 and the performance suite, the long-session soak test, the ASR evaluation
 and the memory evaluation nightly. Each job calls
@@ -111,16 +113,16 @@ Store Connect setup and the pre-release checklists are in
 | `scripts/`       | `swift-format.sh` (behind `make format` and `make lint`), git hooks, embedded-secrets check, `Secrets.xcconfig` writer, `verify-signposts.sh`, `verify-hud.sh` and the Instruments template scripts (see [`docs/performance.md`](docs/performance.md)), `update-model-manifest.py` (see [`docs/models.md`](docs/models.md)), `make-vad-fixtures.py` (see [`docs/vad.md`](docs/vad.md)), `make-asr-fixtures.py` and `eval-asr.sh` (the ASR evaluation, see [`docs/asr-eval.md`](docs/asr-eval.md)), `eval-memory.sh` (the memory evaluation, see [`docs/memory-eval.md`](docs/memory-eval.md)), `fetch-deepfilternet3.sh` and `eval-noise-suppression.sh` (the noise suppression spike, see [`docs/noise-suppression.md`](docs/noise-suppression.md)), `voice-id-eval-librispeech.py` (the voice ID calibration set, see [`docs/voice-id-eval.md`](docs/voice-id-eval.md)), `make-language-id-fixtures.py` and `language-id-frontend-reference.py` (the language filter's fixtures and front-end reference, see [`docs/voice-id.md`](docs/voice-id.md#language-filter-50)), `embeddings/` (the text-embedding retrieval eval and Core ML conversion, see [`docs/benchmarks.md`](docs/benchmarks.md#text-embedding-model-59); the int8 token table, tokenizer parity and tokenizer fixtures, see [`docs/embeddings.md`](docs/embeddings.md); the memory eval vectors, see [`docs/memory-eval.md`](docs/memory-eval.md#recording-vectors)), the CI helpers in `scripts/ci/` ([`docs/ci.md`](docs/ci.md)), the TestFlight pipeline in `scripts/release/` ([`docs/release.md`](docs/release.md)), and the performance gates in `scripts/perf/` (`perf-gate.py` for the XCTest suite, `microbench.sh` for the micro-benchmarks; see [`docs/performance.md`](docs/performance.md#performance-suite)), and the long-session soak test in `scripts/soak/` (`soak.sh` behind `make soak`, `leaks-report.py` for the leak readings; see [`docs/soak.md`](docs/soak.md)) |
 | `Datasets/voice-id/` | The owner's voice ID evaluation recordings, stored with consent in LFS (see its README and [`docs/voice-id-eval.md`](docs/voice-id-eval.md)) |
 | `Datasets/asr/` | The owner's ASR evaluation recordings, stored with consent in LFS (see its README and [`docs/asr-eval.md`](docs/asr-eval.md)) |
-| `Tools/Instruments/` | `Blau.tracetemplate`, the Instruments template for profiling Blau, and the instrument list and options it is generated from |
+| `Tools/Instruments/` | `Blau.tracetemplate`, the Instruments template for profiling Choff, and the instrument list and options it is generated from |
 | `docs/`          | Developer documentation, including [on-device models](docs/models.md), [text embeddings](docs/embeddings.md), the [memory search index](docs/memory-index.md), its [incremental indexer](docs/memory-indexer.md), [hybrid memory search](docs/memory-search.md), the [pinned profile](docs/memory-profile.md), the [knowledge base screens](docs/knowledge-base.md), [practice mode](docs/practice.md) and the [memory evaluation](docs/memory-eval.md) |
 | `.github/`       | CI workflow ([docs](docs/ci.md)), pull request and issue templates |
 
 ### Targets and schemes
 
-- `Blau`: the app, bundle id `com.joeblau.blau`, iCloud container
-  `iCloud.com.joeblau.blau`. Background mode `audio` keeps a conversation
+- `Blau`: the app, bundle id `com.joeblau.choff`, iCloud container
+  `iCloud.com.joeblau.choff`. Background mode `audio` keeps a conversation
   running with the screen locked ([docs](docs/background.md)).
-- `BlauWidgets`: the app extension (`com.joeblau.blau.widgets`) that shows
+- `BlauWidgets`: the app extension (`com.joeblau.choff.widgets`) that shows
   the recording Live Activity on the lock screen and in the Dynamic Island.
 - `BlauTests`, `BlauUITests`, `BlauPerfTests`: unit, UI and performance tests.
 - Scheme `Blau`: runs Debug and tests with the `Blau` test plan.

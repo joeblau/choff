@@ -132,7 +132,9 @@ final class ProfileMemory {
     func catchUpIfOverdue(now: Date = Date()) {
         guard schedulesBackgroundWork else { return }
         let consolidator = consolidator
-        Task(priority: .utility) {
+        // Foreground activation keeps the caller's priority. Background
+        // processing is scheduled separately at utility priority.
+        Task {
             guard await consolidator.isLearningEnabled() else { return }
             guard case .due(let reason)? = try? await consolidator.decision() else { return }
             let last = try? await consolidator.lastConsolidatedAt()
