@@ -471,7 +471,7 @@ private struct TopicTimelineScrollView: View {
             // The page landed without the offset moving with it
             // (FB24968838), or the lazy stack measured rows it had
             // estimated: put the rows back, in this frame.
-            if tracker.scrollView.shiftContent(by: distance) {
+            if tracker.scrollView.shiftContent(by: distance, clampToContent: false) {
                 tracker.corrections.count += 1
                 tracker.corrections.distance += distance
                 Signposts.ui.event("timeline.prependCorrected")
