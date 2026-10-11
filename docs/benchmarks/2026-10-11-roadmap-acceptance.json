@@ -124,10 +124,11 @@
       "criteria": [
         {
           "requirement": "CI green on main",
-          "completion": "not yet proven in this acceptance audit",
+          "completion": "failed current original acceptance",
           "evidence": [
             "Latest main 504e307 CI run 38059919347 completed with failure. Integration #187 is not yet merged; no green-main claim.",
-            "Integration187squash-merged15:19:36UTC into actualmain e6a7fa8; fulltree matches tested9fddbe9, whose allrequiredchecks pass onqualifiedattempt2. Current mainCI38150804657 is queued; no green-main execution claim."
+            "Integration187squash-merged15:19:36UTC into actualmain e6a7fa8; fulltree matches tested9fddbe9, whose allrequiredchecks pass onqualifiedattempt2. Current mainCI38150804657 is queued; no green-main execution claim.",
+            "Actualmain e6 CI38150804657 terminalFAIL: all91original functional UIcasesPASS/twoexistingSKIP andnative302PASS/eightexistingSKIP. UI4artifact uploadDNSENOTFOUND plus original expansion102.5/108.8msFAIL. Green-main criterion fails. docs/benchmarks/2026-10-11-main-e6a7fa8-ci.json"
           ]
         },
         {
@@ -146,7 +147,8 @@
             "Two-worker experiment PR190 at d47201b CI 38127622172 remains inprogress beyond 900 s. Completed UI 1: Build 127 / Warm 208 / Test 693 s; UI 4: Build 121 / Warm 179 / Test 596 s. Separate unchanged expansion job FAIL: 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No limits or assertions changed; remaining UI 2 and whole-run terminal measurements pending.",
             "Latestexact822 CI38140894068 completed1945s>original900s; 90functionalPASS1accessibilityFAIL2existingSKIP. Prior2422sA1/3281sf97/2950s8shard experiment retained. No runtime target weakened. /tmp/voice-ci-8220638-terminal-report.json",
             "Latestexact36943d3 CI38144326888 terminal2183s>900. All91functionalPASS/twoexistingSKIP; one nativeprofileconditionwaitfailure. Earlier1945/2422/3281/2950s results retained; no runtime improvement claimed.",
-            "Exact9fddbe9 CI38146960809 firstattempt terminal2409seconds>original900seconds. All91functionalUIcasesPASS/twoexistingskips andnative302PASS/eightexistingskips; original expansion109.5msFAIL. Same-source performance-only repeat does not remeasure whole warm-cache pipeline or resolve runtime acceptance."
+            "Exact9fddbe9 CI38146960809 firstattempt terminal2409seconds>original900seconds. All91functionalUIcasesPASS/twoexistingskips andnative302PASS/eightexistingskips; original expansion109.5msFAIL. Same-source performance-only repeat does not remeasure whole warm-cache pipeline or resolve runtime acceptance.",
+            "Actualmain e6 CI38150804657 terminal3321seconds versus original900. Includes runner queue and completedrequiredchecks; no runtime improvement or waiver claimed."
           ]
         }
       ],
@@ -1747,11 +1749,11 @@
       "issue": 57,
       "title": "Paginate timeline history and work around the iOS 27 prepend scroll regression",
       "url": "https://github.com/joeblau/voice/issues/57",
-      "github_state": "OPEN",
+      "github_state": "CLOSED",
       "criteria": [
         {
           "requirement": "Scroll through 2,000 topics without jumps on iOS 26 and iOS 27",
-          "completion": "partially verified",
+          "completion": "verified",
           "evidence": [
             "/tmp/voice-choff-retained-header-paging-ios27-summary.json: both original 2000-topic cases passed, 0 skips at eeb5ed4",
             "/tmp/voice-choff-retained-header-ios26-summary.json: two iOS 26 failures at eeb5ed4",
@@ -1760,22 +1762,24 @@
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
             "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json",
             "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json",
-            "Same2e source/OS27/iPhone17model originalscrollingcase PASS alone on differentownedinstance:209drags349pt,shifts339\u2013583,1999bullets,footprint83\u219279MB. Originalconcurrentdrag140FAILretained/causeunproven. /tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-summary.json"
+            "Same2e source/OS27/iPhone17model originalscrollingcase PASS alone on differentownedinstance:209drags349pt,shifts339\u2013583,1999bullets,footprint83\u219279MB. Originalconcurrentdrag140FAILretained/causeunproven. /tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-summary.json",
+            "Merged b1087c7 tree equals tested a6aa24f: original 2000-topic paging suite 2P/0F/0S on each iOS26.5 and27.0. 212/207 drags, 1999 older bullets each; movements493\u2013532/339\u2013597pt; memory56\u219262/72\u219293MB. Original drag and60MB budgets unchanged. .build/results/main-screen-pinning/long-paging-terminal-producer.json"
           ],
-          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
+          "qualification": "Verified by unchanged original two-OS simulator tests on the merged new fixed-title timeline. Prior e6 iOS27 601pt failure is retained, with no cause attribution. Physical120Hz flings and device Instruments remain unperformed."
         },
         {
           "requirement": "Memory stays bounded",
-          "completion": "partially verified",
+          "completion": "verified",
           "evidence": [
             "iOS 27 original paging test passed its unchanged 60 MB footprint growth budget at eeb5ed4",
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
             "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json",
             "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json",
-            "Same2e source/OS27/iPhone17model originalscrollingcase PASS alone on differentownedinstance:209drags349pt,shifts339\u2013583,1999bullets,footprint83\u219279MB. Originalconcurrentdrag140FAILretained/causeunproven. /tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-summary.json"
+            "Same2e source/OS27/iPhone17model originalscrollingcase PASS alone on differentownedinstance:209drags349pt,shifts339\u2013583,1999bullets,footprint83\u219279MB. Originalconcurrentdrag140FAILretained/causeunproven. /tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-summary.json",
+            "Merged b1087c7 tree equals tested a6aa24f: original 2000-topic paging suite 2P/0F/0S on each iOS26.5 and27.0. 212/207 drags, 1999 older bullets each; movements493\u2013532/339\u2013597pt; memory56\u219262/72\u219293MB. Original drag and60MB budgets unchanged. .build/results/main-screen-pinning/long-paging-terminal-producer.json"
           ],
-          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
+          "qualification": "Verified by unchanged original two-OS simulator tests on the merged new fixed-title timeline. Prior e6 iOS27 601pt failure is retained, with no cause attribution. Physical120Hz flings and device Instruments remain unperformed."
         }
       ],
       "prior_unverified_followups": [
@@ -1786,17 +1790,25 @@
       ],
       "implementation_closure_is_not_acceptance_proof": true,
       "original_body": "## Summary\nThousands of historical topics must load lazily without scroll jumps.\n\n## Implementation notes\n- `@Query` with fetch limits; load older sections in pages when `onScrollGeometryChange` reports the content offset near the top.\n- iOS 27 regression FB24968838: lazy stacks don't preserve position when prepending. Workarounds in order: load whole sections at once while anchoring with `scrollPosition(id:)`; fall back to adjusting the underlying `UIScrollView` offset (SwiftUIIntrospect) behind `#available(iOS 27, *)`.\n\n## Acceptance criteria\n- [ ] Scroll through 2,000 topics without jumps on iOS 26 and iOS 27\n- [ ] Memory stays bounded\n\n## Depends on\n- [ ] #56 Build the topic timeline: bullets above the fold, swipe down for history, swipe back to the current topic\n\n## References\n- https://developer.apple.com/forums/thread/848608\n\n---\nEpic: #10 \u00b7 Milestone: **M2 Voice ID & Topics** \u00b7 Architecture: #1",
-      "github_state_at_previous_audit": "OPEN"
+      "github_state_at_previous_audit": "OPEN",
+      "current_source_proof": {
+        "merged_head": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+        "tested_head": "a6aa24fb77aac62b1831a8b117dabf4a6b1848a4",
+        "merged_tree_equals_tested_tree": true,
+        "ci_run": "https://github.com/joeblau/voice/actions/runs/38163558249",
+        "all_ten_expected_ci_jobs_passed": true,
+        "original_limits_unchanged": true
+      }
     },
     {
       "issue": 58,
       "title": "Build the topic detail: expand a bullet to read its transcript and summary",
       "url": "https://github.com/joeblau/voice/issues/58",
-      "github_state": "OPEN",
+      "github_state": "CLOSED",
       "criteria": [
         {
           "requirement": "Tap \u2192 expand < 100 ms",
-          "completion": "partially verified",
+          "completion": "verified",
           "evidence": [
             "https://github.com/joeblau/voice/actions/runs/38114217207",
             "/tmp/voice-ci-eeb-latency-attachments: five original samples 65.8, 27.1, 26.0, 26.5, 26.3 ms",
@@ -1804,9 +1816,11 @@
             "Current required CI 38119809945 at 26cd0ba: original five-sample app-ui-performance job completed successfully. No latency assertion or timeout changed.",
             "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit.",
             "Completed original performance job in CI38146960809 at9fddbe9 failed its first expansion sample:109.5/60.2/68.9/59.1/54.1ms against unchanged100ms limit. Full workflow is still live; prior passes are retained. /tmp/voice-ci-9fddbe9-perf-summary.json and original Expand latency attachment.",
-            "Same-source CI38146960809 attempt2 original expansion-only repeatPASS: 31.4/28.5/28.7/28.2/32.7ms, original100ms. First109.5ms failure remains retained; no causal fix or complete/reliable criterion claim. Issue58staysOPEN. /tmp/voice-ci-9fddbe9-attempt2-terminal-report.json"
+            "Same-source CI38146960809 attempt2 original expansion-only repeatPASS: 31.4/28.5/28.7/28.2/32.7ms, original100ms. First109.5ms failure remains retained; no causal fix or complete/reliable criterion claim. Issue58staysOPEN. /tmp/voice-ci-9fddbe9-attempt2-terminal-report.json",
+            "Actualmain e6 CI38150804657 originalfive samples102.5/108.8/70.8/68.2/77.0ms; firsttwoFAIL original100ms. Same-source prior31.4msrepeat and localcontrols do not establish causalfix.",
+            "Merged b1087c7 tree equals tested a6aa24f; original five CI expansion samples69.8/63.3/72.4/99.2/64.1ms allPASSunchanged100ms. Local25.7/22.9/22.2/22.0/22.1ms. Full required CIpassed. .build/results/main-screen-pinning/ci-terminal-report.json"
           ],
-          "qualification": "Original unchanged source has both failing and passing CI measurements; current repeat passes while original failure remains unresolved. Three unchanged native controls pass. Keep original criterion partial andissue58open."
+          "qualification": "Current different-source user-requested layout passes the original benchmark; earlier old-source CI failures and warm repeats retained. No older-failure cause or physical-device latency claim."
         },
         {
           "requirement": "Continue-topic seeds Grok context",
@@ -1814,7 +1828,8 @@
           "evidence": [
             "TopicDetailTests stored-topic seed supplies title/summary/orderedlines; ContinuedTopicTests9PASS and TurnOrchestratorContinueTopicTests6PASS assert seed client events/instructions beforefirstturn andafterrenewal. HermeticGrokconnector, no live APIcallneededforsentcontextcriterion.",
             "/tmp/voice-choff-full-package-score-reuse-swift-testing.xml",
-            "/tmp/voice-choff-model-fixture-native-suite-tests.json"
+            "/tmp/voice-choff-model-fixture-native-suite-tests.json",
+            "Current a6 full package3246P/68originalS, native302P/8originalS and functional UI93P/2original gated longS allgreen. TopicDetail Continue UI casepasses; original long testsseparatelyenabled2PeachOS."
           ]
         }
       ],
@@ -1826,7 +1841,15 @@
       ],
       "implementation_closure_is_not_acceptance_proof": true,
       "original_body": "## Summary\nOlder topics are compressed on the timeline. Tapping one expands it to show what was discussed.\n\n## Implementation notes\n- Tapping a compressed bullet expands it **inline** (no navigation push) to show the summary, duration and the topic's transcript (same chat styling). Tapping it again compresses it. Several topics can be open at once.\n- Actions: rename, merge, split, share as Markdown, \"continue this topic\" (seeds the new session with its summary).\n\n## Acceptance criteria\n- [ ] Tap \u2192 expand < 100 ms\n- [ ] Continue-topic seeds Grok context\n\n## Depends on\n- [ ] #56 Build the topic timeline: bullets above the fold, swipe down for history, swipe back to the current topic\n\n---\nEpic: #10 \u00b7 Milestone: **M2 Voice ID & Topics** \u00b7 Architecture: #1",
-      "github_state_at_previous_audit": "CLOSED"
+      "github_state_at_previous_audit": "CLOSED",
+      "current_source_proof": {
+        "merged_head": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+        "tested_head": "a6aa24fb77aac62b1831a8b117dabf4a6b1848a4",
+        "merged_tree_equals_tested_tree": true,
+        "ci_run": "https://github.com/joeblau/voice/actions/runs/38163558249",
+        "all_ten_expected_ci_jobs_passed": true,
+        "original_limits_unchanged": true
+      }
     },
     {
       "issue": 59,
@@ -2270,12 +2293,17 @@
         {
           "requirement": "Payloads captured on TestFlight builds",
           "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "evidence": [],
+          "qualification": "Owner excluded release work; real TestFlight MetricKit delivery remains unproven, original criterion not waived or checked."
         },
         {
           "requirement": "Export works",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "verified",
+          "evidence": [
+            "Unmodified a6 app ShareLink exports2 stored synthetic payloads; a6 treeequalsmergedb1087c7 andfullrequiredCIgreen. .build/results/diagnostics-export-a6/validation.json",
+            "8decf6a test-navigation correction only; app/packages byteequalmergedmainb1087c7. Original UI case1P/0F/0S on eachOS26.5fresh and27.0populated. Freshnewexportscontainall2/all8storedJSONpayloads andeveryrecordmatchesthestore; com.joeblau.choff context. .build/results/diagnostics-export-merged/validation.json"
+          ],
+          "qualification": "Real application store and ShareLink export path verified with synthetic MetricKit-shaped payloads. Physical share destinations and actual MetricKit/TestFlight delivery remain unperformed. Issue72 remainsopen; testfixPR193 fullrequiredCIpending."
         }
       ],
       "prior_unverified_followups": [
@@ -2286,7 +2314,13 @@
       ],
       "implementation_closure_is_not_acceptance_proof": true,
       "original_body": "## Summary\nCollect hangs, crashes, CPU / disk exceptions and launch metrics from real use.\n\n## Implementation notes\n- `MXMetricManager.shared.add(self)`. Persist `MXMetricPayload` / `MXDiagnosticPayload` JSON locally (not synced). Summarize hangs and memory in the Developer settings. Export via the share sheet.\n- Custom `mxSignpost` for key intervals so they appear in MetricKit.\n\n## Acceptance criteria\n- [ ] Payloads captured on TestFlight builds\n- [ ] Export works\n\n## Depends on\n- [ ] #17 Build the BlauTelemetry foundation: Logger categories and signposts\n\n---\nEpic: #11 \u00b7 Milestone: **M4 Polish & Beta** \u00b7 Architecture: #1",
-      "github_state_at_previous_audit": "OPEN"
+      "github_state_at_previous_audit": "OPEN",
+      "current_source_proof": {
+        "app_main": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+        "test_driver": "8decf6a4e46791162c4e9ddef3cdb0ab52241c48",
+        "source_hash_matches": true,
+        "application_packages_unchanged": true
+      }
     },
     {
       "issue": 73,
@@ -2932,17 +2966,17 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T15:31:29.443326+00:00",
+  "last_evidence_update": "2026-10-11T19:39:02.559574+00:00",
   "criteriaStatusCounts": {
-    "verified": 124,
-    "not yet proven in this acceptance audit": 44,
-    "failed current original acceptance": 1,
-    "partially verified": 17,
+    "verified": 128,
+    "failed current original acceptance": 2,
+    "partially verified": 14,
+    "not yet proven in this acceptance audit": 42,
     "verified on Mac real-model replay": 2,
     "verified on public evaluation set": 1,
     "verified on physical A19 Pro": 2,
     "pending external prerequisites": 1
   },
-  "github_state_source": "/tmp/voice-current-all-issues.json",
-  "github_state_checked_at": "2026-10-11T15:31:29.443326+00:00"
+  "github_state_source": "/tmp/choff-roadmap-issues-after-layout-merge.json",
+  "github_state_checked_at": "2026-10-11T19:39:02.559574+00:00"
 }

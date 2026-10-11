@@ -1,0 +1,34 @@
+{
+  "source": "8decf6a4e46791162c4e9ddef3cdb0ab52241c48",
+  "application_source_matches_merged_main": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+  "selected": 2,
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "source_hash_matches": true,
+  "runs": [
+    {
+      "os": "ios26-fresh",
+      "test_exit": 0,
+      "initial_payloads": 0,
+      "export_payloads": 2,
+      "all_stored_payloads_exported": true,
+      "all_payloads_match": true,
+      "export_file": "Choff-Diagnostics-20261011-193434.json",
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-diagnostics-export-scroll/.build/results/choff-diagnostics-export-merged-ios26-fresh.xcresult",
+      "source_hash_matches": true
+    },
+    {
+      "os": "ios27-populated",
+      "test_exit": 0,
+      "initial_payloads": 6,
+      "export_payloads": 8,
+      "all_stored_payloads_exported": true,
+      "all_payloads_match": true,
+      "export_file": "Choff-Diagnostics-20261011-193543.json",
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-diagnostics-export-scroll/.build/results/choff-diagnostics-export-merged-ios27-populated.xcresult",
+      "source_hash_matches": true
+    }
+  ],
+  "qualification": "Original diagnostics UI case with bounded navigation to the existing offscreen Hangs row; original assertion and five-second timeout unchanged. Application source equals merged main b1087c7. Fresh iOS26 and populated iOS27 owned simulators. Actual ShareLink files inspected and all exported payload JSON compared to the real persisted records. Samples are synthetic; no TestFlight delivery or release acceptance is claimed."
+}

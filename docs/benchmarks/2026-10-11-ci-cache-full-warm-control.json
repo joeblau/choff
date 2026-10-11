@@ -1,0 +1,83 @@
+{
+  "source": "5444171f8fd240d1ed92604d8f4fc8516f1c1f22",
+  "run": 38157084523,
+  "attempt": 2,
+  "status": "completed",
+  "conclusion": "failure",
+  "run_started_at": "2026-10-11T18:52:43Z",
+  "terminal_jobs_completed_at": "2026-10-11T19:43:10+00:00",
+  "end_to_end_seconds": 3027,
+  "original_runtime_target_seconds": 900,
+  "runtime_target_satisfied": false,
+  "native": {
+    "name": "app-unit-tests-xcresult-2",
+    "selected": 310,
+    "passed": 301,
+    "failed": 1,
+    "skipped": 8,
+    "failures": [
+      {
+        "test": "removingOneExportLeavesALaterOne()",
+        "text": "Caught error: Error Domain=NSCocoaErrorDomain Code=260 \"The file \u201cblau-data.json\u201d couldn\u2019t be opened because there is no such file.\" UserInfo={NSURL=file:///Users/runner/Library/Developer/CoreSimulator/Devices/CD85F334-D4C3-44B6-A7B8-EAABB9C6C1B4/data/Containers/Data/Application/7DD08A4A-3CBA-4936-B85E-F99DC7544E04/tmp/DataExport/17F5211B-FF30-4573-989B-80660900091F/staging-C177BB8A-A383-40E9-AC37"
+      }
+    ]
+  },
+  "package": {
+    "selected": 3314,
+    "failed": 0,
+    "skipped": 68,
+    "passed": 3246
+  },
+  "functional": {
+    "selected": 93,
+    "passed": 89,
+    "failed": 2,
+    "skipped": 2
+  },
+  "ui_performance": {
+    "name": "app-ui-performance-xcresult-2",
+    "selected": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "failures": [
+      {
+        "test": "testTappingExpandsWithinAHundredMilliseconds()",
+        "text": "XCTAssertLessThan failed: (\"123.6\") is not less than (\"100.0\") - Expanding took 123.6 ms (123.6 ms, 63.9 ms, 56.1 ms, 70.0 ms, 72.8 ms)"
+      }
+    ]
+  },
+  "original_expansion_ms": [
+    123.6,
+    63.9,
+    56.1,
+    70.0,
+    72.8
+  ],
+  "original_expansion_limit_ms": 100,
+  "exact_product_cache_hits": 10,
+  "failed_jobs": [
+    "app-ui-performance",
+    "app-unit-tests",
+    "app-ui-tests (2/8)",
+    "app-ui-tests (4/8)",
+    "app-tests"
+  ],
+  "all_artifacts": "/tmp/choff-cache544-attempt2-all-artifacts",
+  "artifact_ids": [
+    11713445428,
+    11713290378,
+    11713251505,
+    11713155393,
+    11713051063,
+    11712683878,
+    11712659401,
+    11712626568,
+    11712592839,
+    11712554981,
+    11712403676,
+    11711919229
+  ],
+  "full_log": "/tmp/choff-cache544-attempt2-terminal-full.log",
+  "qualification": "Full unchanged-source warm comparison. All ten app-product caches hit. Original cold attempt1 failure retained. This attempt also fails original native/UI/performance gates and 900-second total runtime. UI timeouts un-attributed. Local reproduction independently demonstrates fake startup deletes shared DataExport files; source correction0734f9d is under separate native validation, not a waiver or a passing CI claim."
+}

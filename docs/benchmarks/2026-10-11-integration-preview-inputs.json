@@ -1,0 +1,180 @@
+{
+  "base": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+  "source_prs": [
+    {
+      "baseRefName": "main",
+      "changedFiles": 3,
+      "headRefName": "dependabot/pip/scripts/embeddings/pip-ec12d2091b",
+      "headRefOid": "317839e2189c19e1556bdd1afee780c07eca81f1",
+      "number": 117,
+      "state": "OPEN",
+      "title": "Update embedding dependencies and load trace references in float32 (#59)",
+      "merge_base": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+      "commits": [
+        "72bec148e7342d0a58c079a8632137df84252061",
+        "f9ff4e9bb84c3c161a1a83d3c435c378c8d98d42",
+        "317839e2189c19e1556bdd1afee780c07eca81f1"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "changedFiles": 3,
+      "headRefName": "fix/voice-final-score-reuse",
+      "headRefOid": "451563796fe1c9b7b150ac8359014dc3ec6bb26a",
+      "number": 188,
+      "state": "OPEN",
+      "title": "Fix duplicate voice verification at segment end",
+      "merge_base": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+      "commits": [
+        "451563796fe1c9b7b150ac8359014dc3ec6bb26a"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "changedFiles": 34,
+      "headRefName": "fix/device-benchmark-host",
+      "headRefOid": "8c86b4062682fe86a89582ff4e19d0de45a47836",
+      "number": 189,
+      "state": "OPEN",
+      "title": "Add a device benchmark host and record qualified acceptance results",
+      "merge_base": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+      "commits": [
+        "56f88202c5e8bf357d7ea3179f3314b6c365d03e",
+        "06dad13af5f4e7daa017d9118cb445727feac425",
+        "c1e40366ab6d807b6525549287de8e7c74b9e472",
+        "42f9b5a30a5368b582c5a25b9605067125870d55",
+        "6b40653aab10621ca26f412820444dd0cbed6a7f",
+        "1dbc2ee9e4854b08001577347ed19922e0ae2f54",
+        "36eccbfce759e1ca735fc58f6746fa63baa40452",
+        "6ac5e1e451a0f91f0052801f3e66d03d81f85779",
+        "3a383abc286924ae2a13a9edaf8a09c5948df718",
+        "88641a980b87d2914b183b88d6bad0f15e35a4bc",
+        "25c62721bbf7275409e0af4287206c6e1c04d11f",
+        "2a8359774194da0fb167859c2c256253a41ae417",
+        "113aa98a6bc705f57932d978a1818d27f93d41b3",
+        "f807857b48f2b99c33503d31618fc22688e80876",
+        "8d201cf9098e05237b86fa3c3e178b15bf3610d0",
+        "41f19dd128ca2aadc507e7908fd4acfb8466a2c8",
+        "c1465a0b827cbc80ae0e63d600ebbb5efcb3b5dd",
+        "45b0b5aaa62211c097d7bccd050409ea4142d0f9",
+        "a766e9d86a678c800e657f58d34fcbdb18133a94",
+        "d1814b7f15ebf162519e53980d0615d5dcbac6fa",
+        "34b64a2bdfce33c1c8bfd9c16b7d19c4e5d59c58",
+        "e03896fa1cdf2930b502a3adde912faed3fbb5c9",
+        "bdad673ecb70c1c9f7e9d77384b2abe5138116ee",
+        "3f75f27732228bf8f25c8fd704b9096c50893d7e",
+        "d5f1c66651509865b10abdfc64aa89050c53afb0",
+        "38ef1abec9d01ee26a31283b072302d8711b1de7",
+        "8a3d2e03bad6398ed74b06996fc5a7aff0fe2b03",
+        "62deeafe5a41b91e0952d66249aaf0453b89eac5",
+        "a796997f43d56aad567451991e37c38e0e0c49ed",
+        "d95ac773ac46d30b15503b475540410bfa199583",
+        "20903ee20e4e6101d7cc683c0136480254b7198d",
+        "265126736d0a80d338c655f49fc7df72386d7658",
+        "bbf8e62ce8b3e68530ffad3df6ac189b90b24d48",
+        "92e20c025b3ee19f0372a09ac3e612b381f25d1c",
+        "1f62d5cc2a9a5ea444ec3329b81f359c8685c9a6",
+        "d43890c026662766c34a607795d49cf288499d88",
+        "052fda6cdde7014343c2c1da6f46a15e5dec1644",
+        "e68323bf9e99da16ebcbb5f1ef55a9ad7e2dc2f5",
+        "bc4c964650e65cbeee14340a451cb8ba64669ec9",
+        "8c86b4062682fe86a89582ff4e19d0de45a47836"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "changedFiles": 13,
+      "headRefName": "fix/ci-runtime-parallel",
+      "headRefOid": "5444171f8fd240d1ed92604d8f4fc8516f1c1f22",
+      "number": 190,
+      "state": "OPEN",
+      "title": "Cache validated Xcode test products and balance UI shards (#15)",
+      "merge_base": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+      "commits": [
+        "06b5c7a2ca71e65b7b99faf4569056cbe0d17bf2",
+        "af908bec627ea7b70c8ea802db4196eaf21b3464",
+        "3f53f47377d4fc4d63ac09f9ddd788c82ad9dc82",
+        "ea8bd1c0d701a2cfc01407225a143ea8b2463e0a",
+        "d72c314340743754c268231a1d04ab5e54ec01a8",
+        "5444171f8fd240d1ed92604d8f4fc8516f1c1f22"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "changedFiles": 4,
+      "headRefName": "fix/ci-xcresult-upload-retry",
+      "headRefOid": "4bab816e2e5b4f0060346d9f1534b41515110364",
+      "number": 191,
+      "state": "OPEN",
+      "title": "Retry failed xcresult uploads once (#15)",
+      "merge_base": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+      "commits": [
+        "4bab816e2e5b4f0060346d9f1534b41515110364"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "changedFiles": 1,
+      "headRefName": "fix/diagnostics-export-scroll",
+      "headRefOid": "8decf6a4e46791162c4e9ddef3cdb0ab52241c48",
+      "number": 193,
+      "state": "OPEN",
+      "title": "Scroll to the diagnostics overview before asserting (#72)",
+      "merge_base": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+      "commits": [
+        "8decf6a4e46791162c4e9ddef3cdb0ab52241c48"
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "changedFiles": 2,
+      "headRefName": "fix/fake-export-cleanup",
+      "headRefOid": "0734f9d3b4a06f5331d42c46ccf3382611ee48dc",
+      "number": 194,
+      "state": "OPEN",
+      "title": "Keep fake startup from deleting shared exports (#15)",
+      "merge_base": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+      "commits": [
+        "0734f9d3b4a06f5331d42c46ccf3382611ee48dc"
+      ]
+    }
+  ],
+  "applied": [
+    {
+      "number": 193,
+      "source_head": "8decf6a4e46791162c4e9ddef3cdb0ab52241c48",
+      "preview_commit": "26449e99cf15d212953e5c09b72ab5b97dfa64d7"
+    },
+    {
+      "number": 194,
+      "source_head": "0734f9d3b4a06f5331d42c46ccf3382611ee48dc",
+      "preview_commit": "cc027b4f8e7f8d2b72b3a957a7f5e6dab62a19fd"
+    },
+    {
+      "number": 188,
+      "source_head": "451563796fe1c9b7b150ac8359014dc3ec6bb26a",
+      "preview_commit": "50de7ddc85f1d19196733c5ba78ea03ea5fa5afc"
+    },
+    {
+      "number": 117,
+      "source_head": "317839e2189c19e1556bdd1afee780c07eca81f1",
+      "preview_commit": "d86ef2220a3c9254c5c828bf3385bf51894636f6"
+    },
+    {
+      "number": 189,
+      "source_head": "8c86b4062682fe86a89582ff4e19d0de45a47836",
+      "preview_commit": "376f1308b9837f084a9d01073e89bde7489b76f8"
+    },
+    {
+      "number": 190,
+      "source_head": "5444171f8fd240d1ed92604d8f4fc8516f1c1f22",
+      "preview_commit": "19cb7921cab5d28f711b4bb4e029fba7c8c51393"
+    },
+    {
+      "number": 191,
+      "source_head": "4bab816e2e5b4f0060346d9f1534b41515110364",
+      "preview_commit": "45d0c77474fb7412ed34cceccd6b502f1f5bd0f8"
+    }
+  ],
+  "qualification": "Private composite integration control. Source PRs are retained. Old-source failed CI remains recorded, and current required checks are still pending. No release or unverified physical/credentials acceptance claimed."
+}
