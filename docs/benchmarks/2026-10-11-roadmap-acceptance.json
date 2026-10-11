@@ -139,10 +139,7 @@
           "evidence": [
             "CI 38114217207 restores Swift package cache, but UI shard 1 runs 1432 seconds against original 900-second target",
             "CI 38123804979 at2acfe8c completed allrequiredPASS but2277seconds end-to-end, exceeding original900seconds warm-cache target. LongestUIjob1501seconds. Original runtime requirement remains failed.",
-            "Two-worker experiment PR190 at d47201b CI 38127622172 completed FAILURE in 2543 seconds (42.4 minutes), exceeding the original 900-second target. All original 93 functional cases executed: 91 PASS, two existing opt-in SKIP, zero functional failures. Native 301 PASS/eight existing SKIP; package 3246 PASS/68 existing SKIP. The separate unchanged expansion check failed at 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No assertions, limits or baselines changed.",
-            "Follow-up PR190 source 6e1b16d balances source-discovered cases across eight independent one-worker jobs. All script suites and actionlint PASS, including 88 CI checks and exact-once coverage. Estimated case durations 342\u2013352 seconds per group are not measured CI runtime. Fresh CI 38131796908 queued; original 900-second acceptance remains failed until measured.",
-            "Local four-group scheduling validation at f24c6bc: 93 selected, 89 PASS, two existing opt-in SKIP, two XCTest accessibility-audit Code -56 timeouts. Same two original audits PASS/zero SKIP on one simulator after concurrent processes completed and other three owned devices shut down. Original failures retained; control does not prove cause or a full eight-group CI pass. Already-built non-coverage Mac binaries differ from Debug coverage CI.",
-            "Completed groups2/4/7 of eight-group CI38131796908 run12 cases each, original case spans579.3/513.3/479.4seconds, versus scheduling estimates342\u2013352seconds. Build132/232/219seconds and simulator warm333/284/391seconds add substantial overhead. Only five jobs observed concurrently; later groups queue. GitHub documents maximum five concurrent macOS jobs for Free/Pro/Team (https://docs.github.com/en/actions/reference/limits) and xcode-27 standard runners with3M1CPU/7GBRAM (https://docs.github.com/en/actions/reference/runners/github-hosted-runners). UserAPI does not expose account plan; matching queue behaviour is an inference, not independently verified plan information. Eight-group runtime acceptance remains failed and the whole-run timing is pending."
+            "Two-worker experiment PR190 at d47201b CI 38127622172 remains inprogress beyond 900 s. Completed UI 1: Build 127 / Warm 208 / Test 693 s; UI 4: Build 121 / Warm 179 / Test 596 s. Separate unchanged expansion job FAIL: 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No limits or assertions changed; remaining UI 2 and whole-run terminal measurements pending."
           ]
         }
       ],
@@ -209,6 +206,51 @@
           "8": "/tmp/voice-ci-balanced-6e1b16d-ui8-summary.json"
         },
         "qualification": "No original assertion, time limit, baseline, skip or executed-count gate was weakened; eight-group candidate is not green and did not achieve 15 minutes."
+      },
+      "latest_integration_terminal_ci": {
+        "run": 38133007062,
+        "source": "f97c3ac2d54d74801774e09bdefde2d275e34f7b",
+        "status": "completed",
+        "conclusion": "failure",
+        "watch_exit": 1,
+        "end_to_end_seconds": 3281.0,
+        "functional_counts": {
+          "selected": 93,
+          "passed": 90,
+          "failed": 1,
+          "skipped": 2
+        },
+        "failure": "OnboardingUITests/testFreshInstallReachesAWorkingConversation: no keyboard focus at original typeText after field.tap",
+        "collection_30_question_case_passed": true,
+        "collection_case_duration_seconds": 55.60733604431152,
+        "original_collection_assertion_seconds": 60,
+        "original_assertions_unchanged": true,
+        "native": {
+          "passed": 301,
+          "failed": 0,
+          "skipped": 8
+        },
+        "package": {
+          "passed": 3246,
+          "failed": 0,
+          "skipped": 68
+        },
+        "original_expansion_samples_ms": [
+          42.1,
+          49.7,
+          49.4,
+          46.5,
+          29.9
+        ],
+        "original_expansion_limit_ms": 100,
+        "unchanged_onboarding_control": {
+          "executions": 5,
+          "passed_executions": 5,
+          "unique_cases": 1,
+          "skipped": 0,
+          "producer": "/tmp/voice-choff-onboarding-focus-control-2e5830a-producer.json",
+          "qualification": "Onboarding/Root/key-entry sources matchf97; HUD correction2e is hidden duringonboarding. Local passes do not clear prior CI failure or establish cause."
+        }
       }
     },
     {
@@ -1667,7 +1709,8 @@
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
             "Exact current app on iOS26.5 at8ee1add (test-only difference from26cd0ba): Now passes, drag paging fails on first page at drag18. Original checks unchanged; producer exit65. /tmp/voice-choff-paging-current-ios26-8ee1add.log",
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
-            "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
+            "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json",
+            "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json"
           ],
           "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         },
@@ -1678,7 +1721,8 @@
             "iOS 27 original paging test passed its unchanged 60 MB footprint growth budget at eeb5ed4",
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
-            "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
+            "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json",
+            "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json"
           ],
           "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         }
@@ -1929,12 +1973,12 @@
       "criteria": [
         {
           "requirement": "Create a YC collection with 30 questions in < 1 min via paste",
-          "completion": "failed current original acceptance",
+          "completion": "verified",
           "evidence": [
             "Original KnowledgeBaseUITests.testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASS on currentintegrationplusquerycandidate:30pastedquestions,orderedcount/savedcollectionchecked,creationassertionunchanged<60s,wholetest26.132s. All3knowledgeUIcasesPASS0skip. Actualsecond-device synccriterionremainspending.",
             "/tmp/voice-choff-knowledge-saved-leaf-query-summary.json",
             "Fresh eight-group CI 38131796908 at 6e1b16d, production source f24c6bc unchanged: original testPastingThirtyQuestionsCreatesACollectionInUnderAMinute fails its unchanged 60-second assertion at 115.7596 seconds. Collection creation and count complete. Preceding local PASS remains retained, but does not clear this current timing failure. Completed group 8: ten PASS, one FAIL, zero SKIP; full workflow remains live.",
-            "Completed failure artifacts localised the delay: original Paste lookup starts46.61seconds, tap starts105.18seconds; create tap120.35seconds and stored collection header is checked125.33seconds. Recording126.20seconds shows visibly enabled native Paste control at video50/60/90seconds, with no permission dialog; initial AX debug attachment contains only the unresolved query chain. This narrows the current timing failure to UI/accessibility discovery rather than a30-question persistence computation. Cause remains unproven; no assertion/budget or import logic changed. Raw source6e1b16d artifacts retained, freshf97c3ac integration CI pending."
+            "Latest exact-head CI38133007062 atf97c3ac: original testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASSES, completecase55.6073seconds, unchanged60-secondcreationassertion. Prior6e/f24 failure115.7596seconds remainsretained; no causeproof claimed. Whole run fails a different onboardingfocus case. /tmp/voice-ci-f97c3ac-ui3-tests.json"
           ]
         },
         {
@@ -2787,7 +2831,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T11:37:41.118567+00:00",
+  "last_evidence_update": "2026-10-11T11:55:20.084940+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2797,7 +2841,9 @@
     "PR187 at f24c6bc has fresh required CI 38129326531 running; its unchanged expansion check PASS at 64.9/46.3/32.2/31.2/36.3 ms. Original a122d7e setup-card overlap CI failure is retained; all 11 original screen/setup/empty-main accessibility cases PASS on each supported OS after fading in place. Preceding both-OS topic/paging results and green 2acfe8c CI remain source-qualified. PR188 retains separately tested 093c20f score-reuse proof. PR190 two-worker experiment completed FAILURE in 2543 seconds; new eight-group duration-balanced source 6e1b16d has fresh CI queued. No PR or whole goal is claimed merged or complete. Integration f24c6bc CI 38129326531 subsequently completed FAILURE: one original DebugMenuUITests perfHUD toggle expectation failed, 90 functional PASS/two existing SKIP/one FAIL. Other required components and expansion PASS. Unchanged local toggle control passes five repetitions; that does not clear the CI failure.",
     "Latest integration f97c3ac isolates model-readiness observation and animation inside the existing setup-card leaf. All 14 original debug-menu/main-screen/setup/empty-main-largest-text accessibility cases PASS on each supported OS, zero failures/skips; Root source hashes match terminal producers. All three original KnowledgeBaseUITests PASS locally with unchanged assertions, including 30-question creation (whole case about26seconds), but this does not clear the prior CI 115.7596-second failure against60seconds. The original debug-toggle failure was not reproduced by five unchanged, five CPU-load, or five 120ms fixture-delay controls at f24c6bc; causal contribution of parent readiness invalidation remains unproven. Fresh required CI38133007062 at f97c3ac queued. Eight-group CI38131796908 at6e1b16d remains live with completed group8 failure retained. Standalone signed benchmark-host launch again denied Locked; physical criteria remain pending.",
     "Eight-group run38131796908 at6e1b16d completed FAILURE:93selected/89PASS/2FAIL/2existingSKIP;2950seconds against900. Original collection115.7596seconds against60 and HUD live-values expectation10seconds both failed. All component checkout logs confirm original6e/f24event merge. Expansion47.7/79.3/71.2/62.0/33.4ms PASSoriginal100. No runtime improvement or current integration acceptance claimed. Diagnostic controls at f97 show original HUD prefix query selects label-only static text on both supported OS versions, making local old-query passes insufficient live-reading proof. Explicit row label/value candidate is under validation; original CI failures remain retained.",
-    "Latest actualAir launch succeeds; signed minimal-host15case run terminates12PASS/2existingembeddingSKIP/1FoundationModelsratelimitFAIL. Full secondphysical reportcommittedwithallmetrics; A19notA17 orsecondphone/background. Currentf97CIUI3completed22PASS/1fresh-onboardingkeyboard-focusFAIL/0SKIP. Originalfieldtaprecordingandfailure retained; currentrunremainingUI2live. AlloriginalDebugMenuchecks inthatshardPASS; nowhole-run greenclaim."
+    "Latest actualAir launch succeeds; signed minimal-host15case run terminates12PASS/2existingembeddingSKIP/1FoundationModelsratelimitFAIL. Full secondphysical reportcommittedwithallmetrics; A19notA17 orsecondphone/background. Currentf97CIUI3completed22PASS/1fresh-onboardingkeyboard-focusFAIL/0SKIP. Originalfieldtaprecordingandfailure retained; currentrunremainingUI2live. AlloriginalDebugMenuchecks inthatshardPASS; nowhole-run greenclaim.",
+    "Integrationf97CI38133007062 isterminalFAILURE:90PASS/1onboardingfocusFAIL/2existingSKIP. Original30-questioncreation PASSES wholecase55.6073s withunchanged60sassertion, so#65creationcriterionverified; earlierfailurepreserved. AllotherrequiredcomponentjobsPASS; no integrationmergeorwholegoalcompletion claimed.",
+    "Integrationa1e33b9addsproduction44-pointkeyentrytapregion/explicitfocus;all12originalcasesPASSbothOS,fullCI38137282198pending. HUD2efollow-uporiginal27longscrollingfailure retained; isolatedprobe pending."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
@@ -2807,9 +2853,9 @@
     "certificateIdentifier": "84M7UGLL47"
   },
   "criteriaStatusCounts": {
-    "verified": 124,
+    "verified": 125,
     "not yet proven in this acceptance audit": 46,
-    "failed current original acceptance": 2,
+    "failed current original acceptance": 1,
     "partially verified": 16,
     "verified on Mac real-model replay": 1,
     "verified on public evaluation set": 1,
@@ -2817,7 +2863,7 @@
     "pending external prerequisites": 1
   },
   "currentReviewSources": {
-    "integration": "f97c3ac2d54d74801774e09bdefde2d275e34f7b",
+    "integration": "a1e33b92310e9b685769e312542a2097505966c4",
     "voice_score_reuse": "093c20fe638bcfd6c0761f758271946c08152696",
     "two_hour_soak": "13556587e3e8d89ed39609d8f5f6b81da2db42c7",
     "ci_runtime_balanced": "6e1b16dca4c9a94b56a84a47eaa89288ae409d1d"

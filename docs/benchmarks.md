@@ -8,8 +8,8 @@ Engine work when the screen is locked. This document describes the harness
 that measures them, the results so far, and the decisions that hang on them.
 
 **Status (2026-10-11):** the harness now runs on physical iPhones through a
-dedicated host, alongside the earlier Mac reference measurements. The first
-iPhone Air results are recorded below. Additional physical iPhones and the
+dedicated host, alongside the earlier Mac reference measurements. Two complete
+iPhone Air runs are recorded below. Additional physical iPhones and the
 background probe are still needed for acceptance. The two decisions below
 remain provisional until their required measurements are available.
 
@@ -1116,3 +1116,21 @@ server; the weekly physical-phone run with real models remains pending.
 ## Original roadmap acceptance audit
 
 [The acceptance ledger](benchmarks/2026-10-11-roadmap-acceptance.json) preserves all 79 original concrete task bodies and their 192 acceptance or regression criteria, with evidence and qualifications for each. It distinguishes passing source, unit, simulator, Mac real-model and physical-device checks from remaining work. Two-device sync, live xAI/audio/background timing, gated model access and TestFlight still need acceptance evidence; the integration PR is awaiting its current required CI.
+
+### Public Qwen conversion candidate (2026-10-11)
+
+The complete [Mac conversion report](benchmarks/2026-10-11-qwen-coreml-mac.json)
+uses the cached, pinned Qwen3-Embedding-0.6B checkpoint. Loading its reference
+weights explicitly as float32 fixes the earlier bfloat16-to-NumPy failure;
+the regression failed before the fix and all 12 offline converter checks pass
+after it. The full evaluation contains 200 retrieval queries and 216 documents.
+Both CPU and CPU/Neural Engine predictions are finite. Recall@5 is 0.8092
+for the reference, 0.7992 on CPU and 0.7967 with CPU/Neural Engine; the report
+retains those quantization differences.
+
+The compiled hosting folder is 609,331,156 bytes, above the original 400 MB
+model budget. It is a candidate, with no change to the selected model or
+hosting destination. EmbeddingGemma access remains unavailable. A signed
+benchmark host containing this candidate is prepared; its original on-phone
+batch-of-32 measurement is waiting for the Air to be unlocked. A passing
+XCTest case alone will not establish the unchanged 1,600 ms latency budget.
