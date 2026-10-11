@@ -1,0 +1,43 @@
+name: Upload xcresult with one retry
+description: Preserve app test results through a transient artifact upload failure.
+inputs:
+  name:
+    description: Artifact name, including the workflow run attempt.
+    required: true
+  path:
+    description: Result bundle to upload.
+    required: true
+  if-no-files-found:
+    description: Preserve the caller's handling of an absent result bundle.
+    default: warn
+  retention-days:
+    description: Artifact retention in days.
+    default: '14'
+runs:
+  using: composite
+  steps:
+    - name: Upload result bundle
+      id: upload
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: ${{ inputs.name }}
+        path: ${{ inputs.path }}
+        if-no-files-found: ${{ inputs.if-no-files-found }}
+        retention-days: ${{ inputs.retention-days }}
+    - name: Wait before retrying the upload
+      if: ${{ !cancelled() && steps.upload.outcome == 'failure' }}
+      shell: bash
+      run: sleep 10
+    - name: Retry result bundle upload
+      if: ${{ !cancelled() && steps.upload.outcome == 'failure' }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: ${{ inputs.name }}
+        path: ${{ inputs.path }}
+        if-no-files-found: ${{ inputs.if-no-files-found }}
+        retention-days: ${{ inputs.retention-days }}
+        # A failed first upload can leave an incomplete artifact with this
+        # job's attempt-specific name. Replace only that artifact on retry.
+        overwrite: true
