@@ -1,0 +1,82 @@
+{
+  "source": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+  "run": 38150804657,
+  "attempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "watch_session": 82358,
+  "watch_exit": 1,
+  "created_at": "2026-10-11T15:19:38Z",
+  "updated_at": "2026-10-11T16:14:59Z",
+  "end_to_end_seconds": 3321,
+  "original_runtime_target_seconds": 900,
+  "native": {
+    "selected": 310,
+    "passed": 302,
+    "failed": 0,
+    "skipped": 8
+  },
+  "functional_shards": {
+    "1": {
+      "selected": 24,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 1
+    },
+    "2": {
+      "selected": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "3": {
+      "selected": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "4": {
+      "selected": 23,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 1,
+      "evidence": "Completed job log says23executed/oneexisting skip/zero failures; original selection-count guard passed. No xcresult artifact was delivered: upload failed with ENOTFOUND.",
+      "log": "/tmp/voice-main-e6a7fa8-ui4.log"
+    }
+  },
+  "functional": {
+    "selected": 93,
+    "passed": 91,
+    "failed": 0,
+    "skipped": 2,
+    "qualification": "Shards1/2/3 use completed xcresult summaries; shard4 uses completed test log and passed execution-count guard because upload failed."
+  },
+  "package": {
+    "selected": 3314,
+    "failed": 0,
+    "skipped": 68,
+    "passed": 3246
+  },
+  "ui_performance": {
+    "selected": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "original_expansion_ms": [
+    102.5,
+    108.8,
+    70.8,
+    68.2,
+    77.0
+  ],
+  "original_expansion_limit_ms": 100,
+  "latency_attachment": "/tmp/voice-main-e6a7fa8-perf-attachments/3149CEDF-CC85-4A70-8A42-35AFBC0DF1BC.txt",
+  "terminal_jobs": "/tmp/voice-main-e6a7fa8-terminal-jobs.json",
+  "full_log": "/tmp/voice-main-e6a7fa8-full.log",
+  "failures": [
+    "UI4artifact upload: Failed to CreateArtifact: Unable to make request: ENOTFOUND",
+    "Original expansion test first two samples exceed100ms; aggregateapp-tests correctly fails"
+  ],
+  "scope": "Actual squash main e6 full tree equals previously tested9fdd. All original functional assertions and accessibility audits pass; no new skips. Green-main and original900-second full-run criteria fail. This report does not reinterpret budget, waive failures, or claim upload recovery or local layout candidate performance."
+}

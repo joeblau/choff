@@ -1,0 +1,151 @@
+{
+  "status": "completed_local_verification",
+  "parent_main": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+  "recorded_at": "2026-10-11T16:48:35.210751+00:00",
+  "compiled_sources_equal_main": true,
+  "cache_helper_sha256": "4eb6d848d953093bb998f94c2a6dd915a719728f79685efadb4547fb5d619293",
+  "script_checks": {
+    "cache_fault_cases": 14,
+    "ci_checks": 88,
+    "all_other_script_suites": "pass",
+    "actionlint": "pass",
+    "swift_format": "1100Swiftfiles clean"
+  },
+  "builds": {
+    "debug_coverage": {
+      "session": 46966,
+      "exit_code": 0,
+      "log": "/tmp/voice-choff-test-product-cache-debug-build.log",
+      "coverage_metadata_present": true
+    },
+    "optimized": {
+      "session": 26916,
+      "exit_code": 0,
+      "log": "/tmp/voice-choff-test-product-cache-optimized-build.log",
+      "settings": "SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverageNO",
+      "coverage_metadata_absent": true
+    }
+  },
+  "native": {
+    "session": 32868,
+    "exit_code": 0,
+    "producer": {
+      "status": "completed",
+      "command": [
+        "make",
+        "test-built-unit",
+        "DERIVED_DATA=.build/DerivedDataDebugCoverage",
+        "DESTINATION=id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "TEST_PRODUCT_VARIANT=debug-coverage",
+        "XCODEBUILD_FLAGS=-resultBundlePath /Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-test-product-cache-final-native.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never -enableCodeCoverage YES"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-test-product-cache-final-native.xcresult",
+      "started_at": "2026-10-11T16:40:18.585391+00:00",
+      "variant": "debug-coverage",
+      "manifest": {
+        "source_fingerprint": "19e27a630112b16d3cb5544df39c0e5c148a4b02c3dd3d468283fbe2dc6e81a0",
+        "variant": "debug-coverage",
+        "products_digest": "92c80256b01571336b1aa6f9d1d369285bfecb0847b4fae38caf69a485629f6f"
+      },
+      "script_sha256": "94f723e078bf0b513cbbf03223a57cfcfef621de4fa7cb14c9f453db85aa9498",
+      "qualification": "Local complete cached product execution with final resolved-dependency and coverage-mode validation. This does not establish CI-runner expansion causality, all93 functional cases for this wrapper, or the original900-second complete-run requirement.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T16:41:27.108917+00:00",
+      "script_hash_matches": true,
+      "manifest_unchanged": true
+    },
+    "summary": {
+      "totalTestCount": 310,
+      "passedTests": 302,
+      "failedTests": 0,
+      "skippedTests": 8
+    },
+    "products_validation_after_test_exit": 0,
+    "coverage": {
+      "target": "Choff.app",
+      "covered_lines": 6766,
+      "executable_lines": 21307,
+      "report": "/tmp/voice-choff-test-product-cache-native-debug-coverage.json"
+    },
+    "qualification": "Executed with resolved-dependency and coverage-mode validation. A subsequent documentation-exclusion fix also hashes Markdown assets; it does not change compiled source or selection."
+  },
+  "functional_ui_shard1": {
+    "session": 1752,
+    "exit_code": 0,
+    "producer": {
+      "status": "completed",
+      "command": [
+        "make",
+        "test-built-ui",
+        "DERIVED_DATA=.build/DerivedDataDebugCoverage",
+        "DESTINATION=id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "UI_TEST_SUITE=functional",
+        "UI_SHARD=1/8",
+        "TEST_PRODUCT_VARIANT=debug-coverage",
+        "XCODEBUILD_FLAGS=-resultBundlePath /Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-test-product-cache-ui-functional-shard1.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never -enableCodeCoverage YES"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-test-product-cache-ui-functional-shard1.xcresult",
+      "started_at": "2026-10-11T16:32:43.281372+00:00",
+      "source_fingerprint": "308b148a97f27b86b897580ef78484ee4cdfb27c1488f1e6302b85ede3d84836",
+      "qualification": "Local cached complete-products execution, Debug coverage enabled. All tests in this original balanced functional shard remain selected. Other seven shards and optimized performance variant remain unverified for this cache implementation; no full CI runtime claim.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T16:37:09.027658+00:00",
+      "source_fingerprint_matches": true
+    },
+    "summary": {
+      "totalTestCount": 12,
+      "passedTests": 12,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "qualification": "All12cases in shard1/8 passed with coverage enabled. This execution precedes the added resolved-dependency fingerprint; that fingerprint is verified by the hermetic cache tests and later native/performance executions. It is not execution of all93functional UIcases with this wrapper."
+  },
+  "performance": {
+    "session": 14137,
+    "exit_code": 0,
+    "producer": {
+      "status": "completed",
+      "command": [
+        "make",
+        "test-built-ui",
+        "DERIVED_DATA=.build/DerivedDataOptimizedCache",
+        "DESTINATION=id=1530FF3E-EAB2-48A1-8CDC-D2D27D765F67",
+        "TEST_PRODUCT_VARIANT=optimized",
+        "UI_TEST_SUITE=performance",
+        "UI_SHARD=1/1",
+        "XCODEBUILD_FLAGS=-resultBundlePath /Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-test-product-cache-final-performance.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
+      ],
+      "result_bundle": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-ci-runtime-experiment/.build/results/codex-test-product-cache-final-performance.xcresult",
+      "started_at": "2026-10-11T16:42:24.706683+00:00",
+      "variant": "optimized",
+      "manifest": {
+        "source_fingerprint": "05cd2c33f67d6735c0b5c6b3907e7dadfec61d12fcbee4f07824cb597ceb6001",
+        "variant": "optimized",
+        "products_digest": "eae2fe975d17b2df4306cf98031534f43c9329bcf0ebebf9d67c61f0775860aa"
+      },
+      "script_sha256": "4eb6d848d953093bb998f94c2a6dd915a719728f79685efadb4547fb5d619293",
+      "qualification": "Local complete cached product execution with final resolved-dependency and coverage-mode validation. This does not establish CI-runner expansion causality, all93 functional cases for this wrapper, or the original900-second complete-run requirement.",
+      "exit_code": 0,
+      "finished_at": "2026-10-11T16:43:23.607679+00:00",
+      "script_hash_matches": true,
+      "manifest_unchanged": true
+    },
+    "summary": {
+      "totalTestCount": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "original_latency_ms": [
+      22.1,
+      20.2,
+      20.3,
+      18.8,
+      20.4
+    ],
+    "original_limit_ms": 100,
+    "attachment": "/tmp/voice-choff-test-product-cache-final-performance-attachments/BD76EC2B-64E8-419C-8C75-EB700DD2422A.txt",
+    "products_validation_after_test_exit": 0
+  },
+  "scope": "Production app, widget, test, project and BlauKit source bytes are unchanged from actualmain e6. Exact input cache fingerprints cover tracked build inputs, actual resolved app revisions and binary artifact checksums; manifests verify both targets, portable existing paths, coverage mode and all product file hashes. Debugcoverage and optimizednocoverage remain separate. Tests and outcomes are never cached. Later restore/save workflow wiring is actionlint-checked, not locally executed on GitHub. Fresh requiredCI and a complete900-second warm-cache run remain pending. Existing UI count guards,100ms expansion assertions, functionalcoverage, performanceoptimization and skips are retained. Local successful timings do not resolve the preserved CI failures."
+}
