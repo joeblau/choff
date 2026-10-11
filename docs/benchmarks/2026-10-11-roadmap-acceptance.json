@@ -1981,12 +1981,13 @@
       "criteria": [
         {
           "requirement": "Create a YC collection with 30 questions in < 1 min via paste",
-          "completion": "verified",
+          "completion": "failed current original acceptance",
           "evidence": [
             "Original KnowledgeBaseUITests.testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASS on currentintegrationplusquerycandidate:30pastedquestions,orderedcount/savedcollectionchecked,creationassertionunchanged<60s,wholetest26.132s. All3knowledgeUIcasesPASS0skip. Actualsecond-device synccriterionremainspending.",
             "/tmp/voice-choff-knowledge-saved-leaf-query-summary.json",
             "Fresh eight-group CI 38131796908 at 6e1b16d, production source f24c6bc unchanged: original testPastingThirtyQuestionsCreatesACollectionInUnderAMinute fails its unchanged 60-second assertion at 115.7596 seconds. Collection creation and count complete. Preceding local PASS remains retained, but does not clear this current timing failure. Completed group 8: ten PASS, one FAIL, zero SKIP; full workflow remains live.",
-            "Latest exact-head CI38133007062 atf97c3ac: original testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASSES, completecase55.6073seconds, unchanged60-secondcreationassertion. Prior6e/f24 failure115.7596seconds remainsretained; no causeproof claimed. Whole run fails a different onboardingfocus case. /tmp/voice-ci-f97c3ac-ui3-tests.json"
+            "Latest exact-head CI38133007062 atf97c3ac: original testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASSES, completecase55.6073seconds, unchanged60-secondcreationassertion. Prior6e/f24 failure115.7596seconds remainsretained; no causeproof claimed. Whole run fails a different onboardingfocus case. /tmp/voice-ci-f97c3ac-ui3-tests.json",
+            "LatestexactheadA1CI38137282198 originalcreationFAIL86.44666898s>=unchanged60s. Earlierf97PASS55.6073wholecase retained. Direct-IDV1all3KnowledgecasesPASSbothOS; remote60scriterionresolutionpending. /tmp/voice-ci-a1e33b9-ui3-summary.json"
           ]
         },
         {
@@ -2839,7 +2840,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T12:42:40.157915+00:00",
+  "last_evidence_update": "2026-10-11T12:43:14.490650+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2862,9 +2863,9 @@
     "certificateIdentifier": "84M7UGLL47"
   },
   "criteriaStatusCounts": {
-    "verified": 125,
+    "verified": 124,
     "not yet proven in this acceptance audit": 44,
-    "failed current original acceptance": 1,
+    "failed current original acceptance": 2,
     "partially verified": 16,
     "verified on Mac real-model replay": 2,
     "verified on public evaluation set": 1,
