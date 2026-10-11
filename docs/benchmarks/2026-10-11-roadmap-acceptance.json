@@ -463,7 +463,17 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nSeveral key numbers are unpublished for iPhone. Measure them early so the architecture decisions stand on real data.\n\n## Implementation notes\nBuild a DEBUG-only `BenchmarkView` plus an XCTest target that measures on A17/A18/A19 devices:\n- Parakeet EOU 120M at 160 / 320 / 1280 ms: RTFx, per-chunk latency, memory.\n- Parakeet TDT v3: cold compile and warm load time, RTFx.\n- WeSpeaker ResNet34-LM: embedding latency for 1.5 s and 3 s windows.\n- EmbeddingGemma-300M (Core ML) at 256-d: per-chunk latency, memory.\n- Foundation Models: topic-label latency.\n- **iOS 27 background Neural Engine behaviour**: run ASR with the screen locked in the `audio` background mode. Does Core ML error, silently fall back to CPU, or work? Is the `com.apple.developer.background-tasks.continued-processing.inference` entitlement needed?\nWrite the findings to `docs/benchmarks.md` and update the architecture issue.\n\n## Acceptance criteria\n- [ ] Results table for \u22652 devices committed\n- [ ] Clear go/no-go on EOU-320 as the default\n- [ ] Background-ANE behaviour documented with a mitigation decision\n\n## Depends on\n- [ ] #13 Create the BlauKit local Swift package with one module per subsystem\n- [ ] #17 Build the BlauTelemetry foundation: Logger categories and signposts\n\n---\nEpic: #11 \u00b7 Milestone: **M0 Foundation** \u00b7 Architecture: #1\n\n## Acceptance re-audit \u2014 2026-10-11\n\nThe implementation PR is merged, but the original acceptance criteria are not met. `docs/benchmarks.md` still has no physical-iPhone results and leaves the EOU-320 decision and background-ANE empirical result pending. On the connected iPhone Air, `make bench DEVICE=00008150-001214683447801C` fails with: \u201cTool-hosted testing is unavailable on device destinations. Select a host application for the test target.\u201d A dedicated benchmark host is being implemented in `fix/device-benchmark-host`. Results on at least two physical iPhones and the background probe remain required.\n"
+      "original_body": "## Summary\nSeveral key numbers are unpublished for iPhone. Measure them early so the architecture decisions stand on real data.\n\n## Implementation notes\nBuild a DEBUG-only `BenchmarkView` plus an XCTest target that measures on A17/A18/A19 devices:\n- Parakeet EOU 120M at 160 / 320 / 1280 ms: RTFx, per-chunk latency, memory.\n- Parakeet TDT v3: cold compile and warm load time, RTFx.\n- WeSpeaker ResNet34-LM: embedding latency for 1.5 s and 3 s windows.\n- EmbeddingGemma-300M (Core ML) at 256-d: per-chunk latency, memory.\n- Foundation Models: topic-label latency.\n- **iOS 27 background Neural Engine behaviour**: run ASR with the screen locked in the `audio` background mode. Does Core ML error, silently fall back to CPU, or work? Is the `com.apple.developer.background-tasks.continued-processing.inference` entitlement needed?\nWrite the findings to `docs/benchmarks.md` and update the architecture issue.\n\n## Acceptance criteria\n- [ ] Results table for \u22652 devices committed\n- [ ] Clear go/no-go on EOU-320 as the default\n- [ ] Background-ANE behaviour documented with a mitigation decision\n\n## Depends on\n- [ ] #13 Create the BlauKit local Swift package with one module per subsystem\n- [ ] #17 Build the BlauTelemetry foundation: Logger categories and signposts\n\n---\nEpic: #11 \u00b7 Milestone: **M0 Foundation** \u00b7 Architecture: #1\n\n## Acceptance re-audit \u2014 2026-10-11\n\nThe implementation PR is merged, but the original acceptance criteria are not met. `docs/benchmarks.md` still has no physical-iPhone results and leaves the EOU-320 decision and background-ANE empirical result pending. On the connected iPhone Air, `make bench DEVICE=00008150-001214683447801C` fails with: \u201cTool-hosted testing is unavailable on device destinations. Select a host application for the test target.\u201d A dedicated benchmark host is being implemented in `fix/device-benchmark-host`. Results on at least two physical iPhones and the background probe remain required.\n",
+      "additional_physical_benchmark_report": {
+        "report": "docs/benchmarks/2026-10-11-iPhone18-4-minimal-host.json",
+        "signed_source": "be0c1a776eaca281c7853482849670fc43e95cf0",
+        "device": "iPhone18,4 A19Pro",
+        "selected": 15,
+        "passed": 12,
+        "failed": 1,
+        "skipped": 2,
+        "qualification": "Original EmbeddingGemma/shared-bundle skips and FoundationModels session-rate-limit failure retained. Both DeepFilterNet modes now measured. A17, secondphone andbackground criteria remain pending."
+      }
     },
     {
       "issue": 23,
@@ -1202,7 +1212,16 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nGet the user from first launch to a working conversation.\n\n## Implementation notes\n- Steps: welcome \u2192 xAI API key (paste, validated with a test call) \u2192 mic permission \u2192 model download (progress, Wi-Fi notice) \u2192 iCloud status \u2192 voice enrollment (from M2; skippable before M2 lands) \u2192 optional \"tell Blau about you\" (seed the knowledge base, M3).\n- Resumable if interrupted. Shown again if prerequisites are later missing.\n\n## Acceptance criteria\n- [ ] Fresh install reaches a working conversation through onboarding\n- [ ] Denied mic permission shows a recovery path to Settings.app\n\n## Depends on\n- [ ] #43 Build the settings sheet presented from the bottom-left button\n- [ ] #27 Integrate FluidAudio and build a model download manager\n\n---\nEpic: #10 \u00b7 Milestone: **M1 Voice Loop MVP** \u00b7 Architecture: #1"
+      "original_body": "## Summary\nGet the user from first launch to a working conversation.\n\n## Implementation notes\n- Steps: welcome \u2192 xAI API key (paste, validated with a test call) \u2192 mic permission \u2192 model download (progress, Wi-Fi notice) \u2192 iCloud status \u2192 voice enrollment (from M2; skippable before M2 lands) \u2192 optional \"tell Blau about you\" (seed the knowledge base, M3).\n- Resumable if interrupted. Shown again if prerequisites are later missing.\n\n## Acceptance criteria\n- [ ] Fresh install reaches a working conversation through onboarding\n- [ ] Denied mic permission shows a recovery path to Settings.app\n\n## Depends on\n- [ ] #43 Build the settings sheet presented from the bottom-left button\n- [ ] #27 Integrate FluidAudio and build a model download manager\n\n---\nEpic: #10 \u00b7 Milestone: **M1 Voice Loop MVP** \u00b7 Architecture: #1",
+      "current_onboarding_ci_failure": {
+        "run": 38133007062,
+        "source": "f97c3ac2d54d74801774e09bdefde2d275e34f7b",
+        "completed_shard": 3,
+        "test": "OnboardingUITests/testFreshInstallReachesAWorkingConversation",
+        "failure": "Original secure field tap briefly shows caret; after14s XCTest quiescence keyboard is absent and typeText fails with no keyboard focus. No timeout/assertion weakened.",
+        "failure_summary": "/tmp/voice-ci-f97c3ac-ui3-summary.json",
+        "qualification": "The whole run is still live; other completed UI3cases including previous DebugMenu failure pass. Cause under investigation, control live."
+      }
     },
     {
       "issue": 45,
@@ -1232,7 +1251,17 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nCompute 256-d speaker embeddings from 16 kHz speech segments on the Neural Engine.\n\n## Implementation notes\n- Use FluidAudio's diarization embedding model (`FluidInference/speaker-diarization-coreml`) or `aufklarer/WeSpeaker-ResNet34-LM-CoreML`. Wrap it in `SpeakerEmbedder` (protocol, to allow a CAM++ challenger).\n- Input windows 1.5 s and 3 s; output L2-normalized `[Float]` (256).\n- Benchmark latency (target < 15 ms on ANE). Signpost `voiceid.embed`.\n\n## Acceptance criteria\n- [ ] Same-speaker cosine > different-speaker cosine on the fixture set\n- [ ] Latency recorded in benchmarks.md\n\n## Depends on\n- [ ] #24 Build the mic capture engine: 16 kHz mono ring buffer and multi-consumer fan-out\n- [ ] #27 Integrate FluidAudio and build a model download manager\n\n## References\n- https://github.com/FluidInference/FluidAudio\n- https://huggingface.co/aufklarer/WeSpeaker-ResNet34-LM-CoreML\n\n---\nEpic: #5 \u00b7 Milestone: **M2 Voice ID & Topics** \u00b7 Architecture: #1"
+      "original_body": "## Summary\nCompute 256-d speaker embeddings from 16 kHz speech segments on the Neural Engine.\n\n## Implementation notes\n- Use FluidAudio's diarization embedding model (`FluidInference/speaker-diarization-coreml`) or `aufklarer/WeSpeaker-ResNet34-LM-CoreML`. Wrap it in `SpeakerEmbedder` (protocol, to allow a CAM++ challenger).\n- Input windows 1.5 s and 3 s; output L2-normalized `[Float]` (256).\n- Benchmark latency (target < 15 ms on ANE). Signpost `voiceid.embed`.\n\n## Acceptance criteria\n- [ ] Same-speaker cosine > different-speaker cosine on the fixture set\n- [ ] Latency recorded in benchmarks.md\n\n## Depends on\n- [ ] #24 Build the mic capture engine: 16 kHz mono ring buffer and multi-consumer fan-out\n- [ ] #27 Integrate FluidAudio and build a model download manager\n\n## References\n- https://github.com/FluidInference/FluidAudio\n- https://huggingface.co/aufklarer/WeSpeaker-ResNet34-LM-CoreML\n\n---\nEpic: #5 \u00b7 Milestone: **M2 Voice ID & Topics** \u00b7 Architecture: #1",
+      "additional_physical_benchmark_report": {
+        "report": "docs/benchmarks/2026-10-11-iPhone18-4-minimal-host.json",
+        "signed_source": "be0c1a776eaca281c7853482849670fc43e95cf0",
+        "device": "iPhone18,4 A19Pro",
+        "selected": 15,
+        "passed": 12,
+        "failed": 1,
+        "skipped": 2,
+        "qualification": "Original EmbeddingGemma/shared-bundle skips and FoundationModels session-rate-limit failure retained. Both DeepFilterNet modes now measured. A17, secondphone andbackground criteria remain pending."
+      }
     },
     {
       "issue": 46,
@@ -1416,7 +1445,17 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nDecide whether to add DeepFilterNet3 (CoreML, 4 MB, ~40 ms) on top of voice processing IO.\n\n## Implementation notes\n- A/B on the ASR WER and voice ID EER harnesses: VPIO only vs VPIO + DeepFilterNet3 on the ASR path vs both paths.\n- Measure CPU/ANE cost and latency. Consider the Voice Isolation mic mode hint (`AVCaptureDevice.showSystemUserInterface(.microphoneModes)`).\n\n## Acceptance criteria\n- [ ] Decision recorded in the architecture issue with data\n\n## Depends on\n- [ ] #32 Build an ASR evaluation harness (WER, latency, RTF on fixtures)\n- [ ] #48 Build the voice ID evaluation harness and threshold calibration\n\n## References\n- https://huggingface.co/iky1e/DeepFilterNet3-Streaming-CoreML\n\n---\nEpic: #5 \u00b7 Milestone: **M2 Voice ID & Topics** \u00b7 Architecture: #1"
+      "original_body": "## Summary\nDecide whether to add DeepFilterNet3 (CoreML, 4 MB, ~40 ms) on top of voice processing IO.\n\n## Implementation notes\n- A/B on the ASR WER and voice ID EER harnesses: VPIO only vs VPIO + DeepFilterNet3 on the ASR path vs both paths.\n- Measure CPU/ANE cost and latency. Consider the Voice Isolation mic mode hint (`AVCaptureDevice.showSystemUserInterface(.microphoneModes)`).\n\n## Acceptance criteria\n- [ ] Decision recorded in the architecture issue with data\n\n## Depends on\n- [ ] #32 Build an ASR evaluation harness (WER, latency, RTF on fixtures)\n- [ ] #48 Build the voice ID evaluation harness and threshold calibration\n\n## References\n- https://huggingface.co/iky1e/DeepFilterNet3-Streaming-CoreML\n\n---\nEpic: #5 \u00b7 Milestone: **M2 Voice ID & Topics** \u00b7 Architecture: #1",
+      "additional_physical_benchmark_report": {
+        "report": "docs/benchmarks/2026-10-11-iPhone18-4-minimal-host.json",
+        "signed_source": "be0c1a776eaca281c7853482849670fc43e95cf0",
+        "device": "iPhone18,4 A19Pro",
+        "selected": 15,
+        "passed": 12,
+        "failed": 1,
+        "skipped": 2,
+        "qualification": "Original EmbeddingGemma/shared-bundle skips and FoundationModels session-rate-limit failure retained. Both DeepFilterNet modes now measured. A17, secondphone andbackground criteria remain pending."
+      }
     },
     {
       "issue": 52,
@@ -1802,7 +1841,17 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nA local-only, rebuildable index. Never synced.\n\n## Implementation notes\n- SQLite (GRDB) file in Application Support / Caches: `chunk(id, sourceID, sourceKind, ordinal, text, keyText, contentHash, modelVersion, createdAt, topicID?, conversationID?)` + `chunk_fts` (FTS5, porter tokenizer) + `vector BLOB` (int8 \u00d7 256).\n- Load all vectors into one contiguous `[Int8]` matrix on launch. Brute-force dot product with Accelerate (`vDSP` / BNNS) \u2192 top-K. Switch to USearch HNSW only past ~200k chunks.\n- Chunking:\n  - Transcripts: one exchange per chunk, 1-exchange overlap; the key text is prefixed `[date] [topic] facts:` (LongMemEval fact-augmented keys).\n  - Documents: 200\u2013400 tokens split by heading / paragraph.\n  - Collection items: one chunk each.\n\n## Acceptance criteria\n- [ ] Search over 50k chunks < 20 ms p95 on A17\n- [ ] Index fully rebuildable from SwiftData\n\n## Depends on\n- [ ] #60 Build the shared text embedding service (Core ML, Matryoshka 256-d, int8)\n\n## References\n- https://github.com/groue/GRDB.swift\n- https://simonwillison.net/2024/Oct/4/hybrid-full-text-search-and-vector-search-with-sqlite/\n\n---\nEpic: #9 \u00b7 Milestone: **M3 Semantic Memory** \u00b7 Architecture: #1"
+      "original_body": "## Summary\nA local-only, rebuildable index. Never synced.\n\n## Implementation notes\n- SQLite (GRDB) file in Application Support / Caches: `chunk(id, sourceID, sourceKind, ordinal, text, keyText, contentHash, modelVersion, createdAt, topicID?, conversationID?)` + `chunk_fts` (FTS5, porter tokenizer) + `vector BLOB` (int8 \u00d7 256).\n- Load all vectors into one contiguous `[Int8]` matrix on launch. Brute-force dot product with Accelerate (`vDSP` / BNNS) \u2192 top-K. Switch to USearch HNSW only past ~200k chunks.\n- Chunking:\n  - Transcripts: one exchange per chunk, 1-exchange overlap; the key text is prefixed `[date] [topic] facts:` (LongMemEval fact-augmented keys).\n  - Documents: 200\u2013400 tokens split by heading / paragraph.\n  - Collection items: one chunk each.\n\n## Acceptance criteria\n- [ ] Search over 50k chunks < 20 ms p95 on A17\n- [ ] Index fully rebuildable from SwiftData\n\n## Depends on\n- [ ] #60 Build the shared text embedding service (Core ML, Matryoshka 256-d, int8)\n\n## References\n- https://github.com/groue/GRDB.swift\n- https://simonwillison.net/2024/Oct/4/hybrid-full-text-search-and-vector-search-with-sqlite/\n\n---\nEpic: #9 \u00b7 Milestone: **M3 Semantic Memory** \u00b7 Architecture: #1",
+      "additional_physical_benchmark_report": {
+        "report": "docs/benchmarks/2026-10-11-iPhone18-4-minimal-host.json",
+        "signed_source": "be0c1a776eaca281c7853482849670fc43e95cf0",
+        "device": "iPhone18,4 A19Pro",
+        "selected": 15,
+        "passed": 12,
+        "failed": 1,
+        "skipped": 2,
+        "qualification": "Original EmbeddingGemma/shared-bundle skips and FoundationModels session-rate-limit failure retained. Both DeepFilterNet modes now measured. A17, secondphone andbackground criteria remain pending."
+      }
     },
     {
       "issue": 63,
@@ -1860,7 +1909,17 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nHigh-recall search that handles names and jargon (BM25) and paraphrases (vectors).\n\n## Implementation notes\n- `MemorySearch.search(query, after?, before?, kinds?, limit)`: FTS5 top-50 + vector top-50 \u2192 reciprocal rank fusion (k = 60) \u2192 1-hop expansion via linked entities / valid facts \u2192 dedupe \u2192 top-K with snippets, source and date.\n- Time-aware queries: parse relative dates (\"last week\", \"yesterday\") on device with `NSDataDetector` into ranges.\n- Optional reranker hook (Qwen3-Reranker-0.6B), off by default.\n\n## Acceptance criteria\n- [ ] Recall@5 \u2265 target from the eval harness\n- [ ] p95 search latency < 50 ms\n\n## Depends on\n- [ ] #62 Build the local search index: chunks, FTS5 BM25 and an int8 vector matrix\n\n---\nEpic: #9 \u00b7 Milestone: **M3 Semantic Memory** \u00b7 Architecture: #1"
+      "original_body": "## Summary\nHigh-recall search that handles names and jargon (BM25) and paraphrases (vectors).\n\n## Implementation notes\n- `MemorySearch.search(query, after?, before?, kinds?, limit)`: FTS5 top-50 + vector top-50 \u2192 reciprocal rank fusion (k = 60) \u2192 1-hop expansion via linked entities / valid facts \u2192 dedupe \u2192 top-K with snippets, source and date.\n- Time-aware queries: parse relative dates (\"last week\", \"yesterday\") on device with `NSDataDetector` into ranges.\n- Optional reranker hook (Qwen3-Reranker-0.6B), off by default.\n\n## Acceptance criteria\n- [ ] Recall@5 \u2265 target from the eval harness\n- [ ] p95 search latency < 50 ms\n\n## Depends on\n- [ ] #62 Build the local search index: chunks, FTS5 BM25 and an int8 vector matrix\n\n---\nEpic: #9 \u00b7 Milestone: **M3 Semantic Memory** \u00b7 Architecture: #1",
+      "additional_physical_benchmark_report": {
+        "report": "docs/benchmarks/2026-10-11-iPhone18-4-minimal-host.json",
+        "signed_source": "be0c1a776eaca281c7853482849670fc43e95cf0",
+        "device": "iPhone18,4 A19Pro",
+        "selected": 15,
+        "passed": 12,
+        "failed": 1,
+        "skipped": 2,
+        "qualification": "Original EmbeddingGemma/shared-bundle skips and FoundationModels session-rate-limit failure retained. Both DeepFilterNet modes now measured. A17, secondphone andbackground criteria remain pending."
+      }
     },
     {
       "issue": 65,
@@ -2728,7 +2787,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T11:17:19.730673+00:00",
+  "last_evidence_update": "2026-10-11T11:37:41.118567+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2737,7 +2796,8 @@
     "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
     "PR187 at f24c6bc has fresh required CI 38129326531 running; its unchanged expansion check PASS at 64.9/46.3/32.2/31.2/36.3 ms. Original a122d7e setup-card overlap CI failure is retained; all 11 original screen/setup/empty-main accessibility cases PASS on each supported OS after fading in place. Preceding both-OS topic/paging results and green 2acfe8c CI remain source-qualified. PR188 retains separately tested 093c20f score-reuse proof. PR190 two-worker experiment completed FAILURE in 2543 seconds; new eight-group duration-balanced source 6e1b16d has fresh CI queued. No PR or whole goal is claimed merged or complete. Integration f24c6bc CI 38129326531 subsequently completed FAILURE: one original DebugMenuUITests perfHUD toggle expectation failed, 90 functional PASS/two existing SKIP/one FAIL. Other required components and expansion PASS. Unchanged local toggle control passes five repetitions; that does not clear the CI failure.",
     "Latest integration f97c3ac isolates model-readiness observation and animation inside the existing setup-card leaf. All 14 original debug-menu/main-screen/setup/empty-main-largest-text accessibility cases PASS on each supported OS, zero failures/skips; Root source hashes match terminal producers. All three original KnowledgeBaseUITests PASS locally with unchanged assertions, including 30-question creation (whole case about26seconds), but this does not clear the prior CI 115.7596-second failure against60seconds. The original debug-toggle failure was not reproduced by five unchanged, five CPU-load, or five 120ms fixture-delay controls at f24c6bc; causal contribution of parent readiness invalidation remains unproven. Fresh required CI38133007062 at f97c3ac queued. Eight-group CI38131796908 at6e1b16d remains live with completed group8 failure retained. Standalone signed benchmark-host launch again denied Locked; physical criteria remain pending.",
-    "Eight-group run38131796908 at6e1b16d completed FAILURE:93selected/89PASS/2FAIL/2existingSKIP;2950seconds against900. Original collection115.7596seconds against60 and HUD live-values expectation10seconds both failed. All component checkout logs confirm original6e/f24event merge. Expansion47.7/79.3/71.2/62.0/33.4ms PASSoriginal100. No runtime improvement or current integration acceptance claimed. Diagnostic controls at f97 show original HUD prefix query selects label-only static text on both supported OS versions, making local old-query passes insufficient live-reading proof. Explicit row label/value candidate is under validation; original CI failures remain retained."
+    "Eight-group run38131796908 at6e1b16d completed FAILURE:93selected/89PASS/2FAIL/2existingSKIP;2950seconds against900. Original collection115.7596seconds against60 and HUD live-values expectation10seconds both failed. All component checkout logs confirm original6e/f24event merge. Expansion47.7/79.3/71.2/62.0/33.4ms PASSoriginal100. No runtime improvement or current integration acceptance claimed. Diagnostic controls at f97 show original HUD prefix query selects label-only static text on both supported OS versions, making local old-query passes insufficient live-reading proof. Explicit row label/value candidate is under validation; original CI failures remain retained.",
+    "Latest actualAir launch succeeds; signed minimal-host15case run terminates12PASS/2existingembeddingSKIP/1FoundationModelsratelimitFAIL. Full secondphysical reportcommittedwithallmetrics; A19notA17 orsecondphone/background. Currentf97CIUI3completed22PASS/1fresh-onboardingkeyboard-focusFAIL/0SKIP. Originalfieldtaprecordingandfailure retained; currentrunremainingUI2live. AlloriginalDebugMenuchecks inthatshardPASS; nowhole-run greenclaim."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",

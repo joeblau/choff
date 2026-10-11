@@ -266,6 +266,38 @@ These measurements do not establish the A17 budget. The EOU-320 decision still
 requires at least two physical iPhones and the background-ANE probe; neither
 has been substituted with simulator or Mac measurements.
 
+### iPhone Air with the minimal benchmark host, 2026-10-11
+
+The signed Release host at `be0c1a7` keeps the device awake while its
+foreground benchmarks run. Its host, benchmark, package and XcodeGen
+sources are byte-identical to the prepared `c1d918e` branch. The complete
+[second physical report](benchmarks/2026-10-11-iPhone18-4-minimal-host.json)
+retains all 15 results: **12 passed, two skipped, one failed**. Both
+DeepFilterNet3 configurations now run with the pinned bundled model;
+EmbeddingGemma and the shared embedding bundle remain unavailable, and
+Foundation Models again reports its session rate limit. Speech is
+synthesized en-US; this is not a microphone or background probe.
+
+| Case | Metric | iPhone Air |
+| --- | --- | ---: |
+| EOU 320 ms | window p50 / p95 | 24.80 / 31.76 ms |
+| | window p95 / hop | 9.93% |
+| | RTFx | 28.83× |
+| | finish p95 | 12.71 ms |
+| | footprint growth | 216.88 MB |
+| DeepFilterNet3, CPU | frame p95 / delay | 1.322 / 30.0 ms |
+| DeepFilterNet3, CPU + Neural Engine | frame p95 / delay | 1.319 / 30.0 ms |
+| Apple voice isolation | frame p95 / delay | 0.333 / 58.31 ms |
+| Apple high-quality voice isolation | frame p95 / delay | 0.600 / 94.44 ms |
+| Index, 50k chunks | hybrid search p95 | 2.47 ms |
+| Retrieval, 50k chunks | whole search p95 | 18.50 ms |
+
+The configured compute units do not by themselves prove which processor
+ran every model operation. These A19 measurements do not establish the
+A17 budget, the second-device EOU decision or locked/background behavior.
+The preceding report and its missing-model and rate-limit outcomes remain
+preserved.
+
 ### Other iPhones (pending)
 
 Fill this table from the reports (`BenchmarkReport.comparisonTable` renders
