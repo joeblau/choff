@@ -291,7 +291,10 @@ jobs:
         id: test
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-tests.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never"
+          # Two isolated simulator workers execute the same shard. The
+          # executed-count check below still requires every selected test;
+          # the expansion benchmark keeps its single-worker configuration.
+          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-tests.xcresult -parallel-testing-enabled YES -parallel-testing-worker-count 2 -collect-test-diagnostics never"
         run: make test-ui UI_SHARD="$UI_SHARD"
 
       # A selection that matched no test would otherwise pass with nothing
