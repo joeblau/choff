@@ -46,15 +46,7 @@ struct SnapshotAssertion {
         filePath: String = #filePath,
         sourceLocation: SourceLocation = #_sourceLocation
     ) {
-        let renderer = ImageRenderer(
-            content:
-                view
-                .frame(width: size.width, height: size.height)
-                .environment(\.colorScheme, .light)
-        )
-        renderer.scale = scale
-        renderer.isOpaque = false
-        guard let image = renderer.uiImage, let png = image.pngData() else {
+        guard let png = png(view, size: size) else {
             Issue.record("Couldn't render \(name)", sourceLocation: sourceLocation)
             return
         }
@@ -105,6 +97,29 @@ struct SnapshotAssertion {
     enum Comparison: Equatable {
         case match
         case mismatch(String)
+    }
+
+    /// Draws into a CPU bitmap before encoding. An ImageRenderer UIImage
+    /// can retain a lazy image provider that times out during PNG
+    /// encoding on a newly booted simulator.
+    static func png(_ view: some View, size: CGSize) -> Data? {
+        let renderer = ImageRenderer(
+            content: view.frame(width: size.width, height: size.height).environment(\.colorScheme, .light))
+        renderer.scale = scale
+        renderer.isOpaque = false
+        var image: CGImage?
+        renderer.render(rasterizationScale: scale) { renderedSize, draw in
+            guard
+                let context = CGContext(
+                    data: nil, width: Int(renderedSize.width * scale), height: Int(renderedSize.height * scale),
+                    bitsPerComponent: 8, bytesPerRow: 0, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+            else { return }
+            context.scaleBy(x: scale, y: scale)
+            draw(context)
+            image = context.makeImage()
+        }
+        return image.flatMap { UIImage(cgImage: $0).pngData() }
     }
 
     /// Compares two PNGs pixel by pixel within the tolerances.

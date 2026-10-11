@@ -41,7 +41,17 @@ final class SettingsUITests: XCTestCase {
 
     /// Taps a Form switch itself (tapping the row's label doesn't toggle it).
     private func flip(_ toggle: XCUIElement) {
+        let previous = toggle.value as? String
         toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        guard let previous, previous == "0" || previous == "1" else {
+            XCTFail("The switch didn't expose its on/off value")
+            return
+        }
+        let changed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", previous == "0" ? "1" : "0"), object: toggle)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [changed], timeout: 10), .completed,
+            "The switch didn't change from \(previous): \(String(describing: toggle.value))")
     }
 
     /// Taps the back button of the pane titled `title`. (The main screen's

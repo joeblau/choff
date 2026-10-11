@@ -151,33 +151,65 @@
         "name": "CPU Time (blau)",
         "unit": "s",
         "polarity": "prefers smaller",
-        "baseline": 0.070601,
+        "baseline": 0.1093656345,
         "samples": [
-          0.070601,
-          0.069044,
-          0.07443,
-          0.054105,
-          0.075995,
-          0.079841,
-          0.107261,
-          0.094076,
-          0.108077,
-          0.058499,
-          0.079279,
-          0.069154,
-          0.055702,
-          0.063294,
-          0.065039
+          1.527857743,
+          0.16105000900000002,
+          0.15207228,
+          0.16336392600000002,
+          0.138411941,
+          0.059713753,
+          0.059794236,
+          0.055466932000000004,
+          0.057807663,
+          0.08031932800000001
         ],
         "runs": [
-          0.070601,
-          0.094076,
-          0.065039
+          0.16105000900000002,
+          0.059713753
         ],
-        "spreadPercent": 33.3,
+        "spreadPercent": 47.3,
         "tolerancePercent": 50.0,
-        "calibrated": true,
-        "note": "Calibrated: run medians strayed up to 33% from the pooled baseline across 3 runs on this machine type, so the tolerance is 1.5 times that."
+        "calibrated": false,
+        "note": "Only this CPU reference is refreshed after identical baseline code varies between the two reference phases on one CI host. Existing 50% tolerance retained without recalibration. All other baseline metrics remain unchanged; earlier samples are preserved in previousRecording.",
+        "previousRecording": {
+          "baseline": 0.070601,
+          "samples": [
+            0.070601,
+            0.069044,
+            0.07443,
+            0.054105,
+            0.075995,
+            0.079841,
+            0.107261,
+            0.094076,
+            0.108077,
+            0.058499,
+            0.079279,
+            0.069154,
+            0.055702,
+            0.063294,
+            0.065039
+          ],
+          "runs": [
+            0.070601,
+            0.094076,
+            0.065039
+          ],
+          "spreadPercent": 33.3,
+          "note": "Calibrated: run medians strayed up to 33% from the pooled baseline across 3 runs on this machine type, so the tolerance is 1.5 times that."
+        },
+        "reRecorded": {
+          "date": "2026-10-10",
+          "commit": "c7f247244e71a31a70041769d59b45053ca27979",
+          "runs": 2,
+          "ciRun": 38096034044,
+          "phases": [
+            "reference-first",
+            "reference-last"
+          ],
+          "note": "All five samples from each baseline-source phase, pooled by median; candidate samples excluded. Same VirtualMac2,1 host (3 CPUs), simulator, Xcode 27.1 and Release build settings. See docs/performance.md."
+        }
       }
     },
     "ReplaySessionPerformanceTests/testScriptedSession()": {
@@ -185,32 +217,64 @@
         "name": "CPU Time (blau)",
         "unit": "s",
         "polarity": "prefers smaller",
-        "baseline": 3.19906,
+        "baseline": 3.8085688635000006,
         "samples": [
-          2.946852,
-          3.31888,
-          3.263205,
-          3.138645,
-          3.097953,
-          3.345956,
-          3.493679,
-          3.855824,
-          4.356545,
-          3.982644,
-          3.030608,
-          3.19906,
-          3.122483,
-          3.173144,
-          3.145564
+          4.862799465,
+          5.239156218000001,
+          4.9075123430000005,
+          5.079526818000001,
+          4.563563466000001,
+          3.053574261,
+          2.950347331,
+          2.936725614,
+          3.0495718820000004,
+          2.855722037
         ],
         "runs": [
-          3.138645,
-          3.855824,
-          3.145564
+          4.9075123430000005,
+          2.950347331
         ],
-        "spreadPercent": 20.5,
+        "spreadPercent": 28.9,
         "tolerancePercent": 50,
-        "note": "Hand-set: CPU time of identical code moves with the CI host, by 23% between these three runs and 33% between two earlier ones (3.23 s and 4.31 s, runs 37674414639 and 37691777269). The VM has no instruction counter, so a 10% CPU gate needs a Mac or device baseline; in CI the micro-benchmarks gate CPU-heavy code paths on every pull request."
+        "note": "Only this CPU reference is refreshed after identical baseline code varies between the two reference phases on one CI host. Existing 50% tolerance retained without recalibration. All other baseline metrics remain unchanged; earlier samples are preserved in previousRecording.",
+        "previousRecording": {
+          "baseline": 3.19906,
+          "samples": [
+            2.946852,
+            3.31888,
+            3.263205,
+            3.138645,
+            3.097953,
+            3.345956,
+            3.493679,
+            3.855824,
+            4.356545,
+            3.982644,
+            3.030608,
+            3.19906,
+            3.122483,
+            3.173144,
+            3.145564
+          ],
+          "runs": [
+            3.138645,
+            3.855824,
+            3.145564
+          ],
+          "spreadPercent": 20.5,
+          "note": "Hand-set: CPU time of identical code moves with the CI host, by 23% between these three runs and 33% between two earlier ones (3.23 s and 4.31 s, runs 37674414639 and 37691777269). The VM has no instruction counter, so a 10% CPU gate needs a Mac or device baseline; in CI the micro-benchmarks gate CPU-heavy code paths on every pull request."
+        },
+        "reRecorded": {
+          "date": "2026-10-10",
+          "commit": "c7f247244e71a31a70041769d59b45053ca27979",
+          "runs": 2,
+          "ciRun": 38096034044,
+          "phases": [
+            "reference-first",
+            "reference-last"
+          ],
+          "note": "All five samples from each baseline-source phase, pooled by median; candidate samples excluded. Same VirtualMac2,1 host (3 CPUs), simulator, Xcode 27.1 and Release build settings. See docs/performance.md."
+        }
       },
       "com.apple.dt.XCTMetric_Clock.time.monotonic": {
         "name": "Clock Monotonic Time",
