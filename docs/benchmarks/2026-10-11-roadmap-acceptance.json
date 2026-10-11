@@ -126,7 +126,8 @@
           "requirement": "CI green on main",
           "completion": "not yet proven in this acceptance audit",
           "evidence": [
-            "Latest main 504e307 CI run 38059919347 completed with failure. Integration #187 is not yet merged; no green-main claim."
+            "Latest main 504e307 CI run 38059919347 completed with failure. Integration #187 is not yet merged; no green-main claim.",
+            "Integration187squash-merged15:19:36UTC into actualmain e6a7fa8; fulltree matches tested9fddbe9, whose allrequiredchecks pass onqualifiedattempt2. Current mainCI38150804657 is queued; no green-main execution claim."
           ]
         },
         {
@@ -2532,7 +2533,7 @@
       "issue": 81,
       "title": "Accessibility pass: VoiceOver, Dynamic Type, Reduce Motion, captions",
       "url": "https://github.com/joeblau/voice/issues/81",
-      "github_state": "OPEN",
+      "github_state": "CLOSED",
       "criteria": [
         {
           "requirement": "Accessibility Inspector audit clean",
@@ -2549,7 +2550,8 @@
             "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit.",
             "Exacthead8220638 CI38140894068 testTimelineAtTheLatestLineFAIL: Contrast failed, StaticText48 Continue frame(28,477,114,44) invisibleinactualscreenshot, collapsedmountedtopic. Priorpassing localhistory/AX5audit retained; newleafvisibilitycandidatepending. /tmp/voice-ci-8220638-ui2-latest-audit-activities.json",
             "Exact36943d3 CI38144326888 all93functional cases executed,91PASS/twoexistingSKIP; alloriginalaccessibilityauditsPASS, includingpreviousghostContinuecontrastcase. All11 originalaudits/topic actionsPASSbothOSlocally, source-qualified report2026-10-11-collapsed-action-accessibility.json. WholeCI failed separate nativeprofileconditionwait; no green-mainclaim.",
-            "Exact9fddbe9 CI38146960809 firstattempt selectsall93originalfunctionalUIcases:91PASS/twoexistinglongcasesSKIP. All original automated normal/AX5 accessibility audit cases pass, with no audit exclusion changes. Sole required failure is the separate expansion100ms assertion; wholeCI failed. /tmp/voice-ci-9fddbe9-attempt1-terminal-report.json"
+            "Exact9fddbe9 CI38146960809 firstattempt selectsall93originalfunctionalUIcases:91PASS/twoexistinglongcasesSKIP. All original automated normal/AX5 accessibility audit cases pass, with no audit exclusion changes. Sole required failure is the separate expansion100ms assertion; wholeCI failed. /tmp/voice-ci-9fddbe9-attempt1-terminal-report.json",
+            "Actual main e6a7fa8 is the full byte-identical tree of tested9fddbe9 after PR187squash. Original93functional selection has91PASS/two existinglongtestskips andall originalnormal/AX5auditsPASS. Issue81closed after source/tree verification; no claim about current mainCI execution status."
           ],
           "qualification": "Current original automated accessibility equivalent audits and AX5 UI cases pass; earlier failures remain recorded above."
         },
@@ -2564,7 +2566,8 @@
             "/tmp/voice-ci-242-ui4-tests.json",
             "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved.",
             "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit.",
-            "Exact9fddbe9 CI38146960809 firstattempt selectsall93originalfunctionalUIcases:91PASS/twoexistinglongcasesSKIP. All original automated normal/AX5 accessibility audit cases pass, with no audit exclusion changes. Sole required failure is the separate expansion100ms assertion; wholeCI failed. /tmp/voice-ci-9fddbe9-attempt1-terminal-report.json"
+            "Exact9fddbe9 CI38146960809 firstattempt selectsall93originalfunctionalUIcases:91PASS/twoexistinglongcasesSKIP. All original automated normal/AX5 accessibility audit cases pass, with no audit exclusion changes. Sole required failure is the separate expansion100ms assertion; wholeCI failed. /tmp/voice-ci-9fddbe9-attempt1-terminal-report.json",
+            "Actual main e6a7fa8 is the full byte-identical tree of tested9fddbe9 after PR187squash. Original93functional selection has91PASS/two existinglongtestskips andall originalnormal/AX5auditsPASS. Issue81closed after source/tree verification; no claim about current mainCI execution status."
           ],
           "qualification": "Current original automated accessibility equivalent audits and AX5 UI cases pass; earlier failures remain recorded above."
         }
@@ -2770,7 +2773,7 @@
       "issue": 179,
       "title": "CI: app-tests job times out at 40 minutes",
       "url": "https://github.com/joeblau/voice/issues/179",
-      "github_state": "OPEN",
+      "github_state": "CLOSED",
       "criteria": [
         {
           "requirement": "Split unit and UI tests into separate jobs (or shard the UI tests), or otherwise get each job well under its limit, with a sensible timeout",
@@ -2812,7 +2815,7 @@
       "issue": 180,
       "title": "Make CI-flaky timing tests deterministic",
       "url": "https://github.com/joeblau/voice/issues/180",
-      "github_state": "OPEN",
+      "github_state": "CLOSED",
       "criteria": [
         {
           "requirement": "Find the wall-clock or scheduling dependence in each and make it deterministic (injected ManualClock, explicit synchronization). Don't loosen timeouts or skip",
@@ -2851,7 +2854,7 @@
       "issue": 182,
       "title": "Fix performance-suite regressions vs the ci-simulator baseline",
       "url": "https://github.com/joeblau/voice/issues/182",
-      "github_state": "OPEN",
+      "github_state": "CLOSED",
       "criteria": [
         {
           "requirement": "Measure locally on main vs the commit the baseline was recorded at, to separate real regressions from runner noise",
@@ -2891,7 +2894,7 @@
       "issue": 183,
       "title": "Fix the soak-test memory growth (memory.slope over 2 MB/h)",
       "url": "https://github.com/joeblau/voice/issues/183",
-      "github_state": "OPEN",
+      "github_state": "CLOSED",
       "criteria": [
         {
           "requirement": "Reproduce with `make soak` locally and find what grows (Allocations, leaks, memgraph diff between early and late)",
@@ -2929,7 +2932,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T15:18:22.796970+00:00",
+  "last_evidence_update": "2026-10-11T15:31:29.443326+00:00",
   "criteriaStatusCounts": {
     "verified": 124,
     "not yet proven in this acceptance audit": 44,
@@ -2941,5 +2944,5 @@
     "pending external prerequisites": 1
   },
   "github_state_source": "/tmp/voice-current-all-issues.json",
-  "github_state_checked_at": "2026-10-11T14:48:25.897995+00:00"
+  "github_state_checked_at": "2026-10-11T15:31:29.443326+00:00"
 }

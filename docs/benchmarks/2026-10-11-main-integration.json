@@ -1,0 +1,43 @@
+{
+  "pr": 187,
+  "state": "MERGED",
+  "merged_at": "2026-10-11T15:19:36Z",
+  "actual_main": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+  "tested_head": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+  "full_tree_identical": true,
+  "closed_original_tasks": [
+    179,
+    180,
+    182,
+    183,
+    81
+  ],
+  "incorporated_closed_prs": [
+    181,
+    185,
+    186
+  ],
+  "required_ci_attempt1": "failure",
+  "required_ci_attempt2": "success",
+  "original58_complete": false,
+  "original15_runtime_complete": false,
+  "qualification": "Exact actual-main fulltree matches tested integration. AX audit equivalence is source-matched; current-main CI itself is queued and no green-main completion is claimed. Original109.5ms firstfailure/2409s runtime and partial58 remain preserved.",
+  "recorded_at": "2026-10-11T15:31:29.443326+00:00",
+  "current_main_ci": {
+    "id": 38150804657,
+    "head": "e6a7fa8b92c7d69688840816c930afa03b49d8e8",
+    "status": "queued"
+  },
+  "original_criteria_counts": {
+    "verified": 124,
+    "not yet proven in this acceptance audit": 44,
+    "failed current original acceptance": 1,
+    "partially verified": 17,
+    "verified on Mac real-model replay": 2,
+    "verified on public evaluation set": 1,
+    "verified on physical A19 Pro": 2,
+    "pending external prerequisites": 1
+  },
+  "inventory_issue_count": 90,
+  "open_issue_count": 52
+}

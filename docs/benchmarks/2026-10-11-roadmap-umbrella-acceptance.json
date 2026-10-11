@@ -1230,7 +1230,7 @@
         {
           "issue": 81,
           "title": "Accessibility pass: VoiceOver, Dynamic Type, Reduce Motion, captions",
-          "current_github_state": "OPEN",
+          "current_github_state": "CLOSED",
           "original_parent_checkbox_checked": false,
           "all_original_criteria_verified": true,
           "criteria_statuses": [
@@ -1432,6 +1432,6 @@
       "completion": "incomplete: one or more original child criteria unverified"
     }
   ],
-  "child_acceptance_refreshed_at": "2026-10-11T15:18:22.796970+00:00",
+  "child_acceptance_refreshed_at": "2026-10-11T15:31:29.443326+00:00",
   "github_body_inventory_captured_at": "2026-10-11T14:01:00.933442+00:00"
 }
