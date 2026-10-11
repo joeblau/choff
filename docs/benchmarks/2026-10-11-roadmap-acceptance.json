@@ -139,7 +139,9 @@
           "evidence": [
             "CI 38114217207 restores Swift package cache, but UI shard 1 runs 1432 seconds against original 900-second target",
             "CI 38123804979 at2acfe8c completed allrequiredPASS but2277seconds end-to-end, exceeding original900seconds warm-cache target. LongestUIjob1501seconds. Original runtime requirement remains failed.",
-            "Two-worker experiment PR190 at d47201b CI 38127622172 remains inprogress beyond 900 s. Completed UI 1: Build 127 / Warm 208 / Test 693 s; UI 4: Build 121 / Warm 179 / Test 596 s. Separate unchanged expansion job FAIL: 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No limits or assertions changed; remaining UI 2 and whole-run terminal measurements pending."
+            "Two-worker experiment PR190 at d47201b CI 38127622172 completed FAILURE in 2543 seconds (42.4 minutes), exceeding the original 900-second target. All original 93 functional cases executed: 91 PASS, two existing opt-in SKIP, zero functional failures. Native 301 PASS/eight existing SKIP; package 3246 PASS/68 existing SKIP. The separate unchanged expansion check failed at 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No assertions, limits or baselines changed.",
+            "Follow-up PR190 source 6e1b16d balances source-discovered cases across eight independent one-worker jobs. All script suites and actionlint PASS, including 88 CI checks and exact-once coverage. Estimated case durations 342\u2013352 seconds per group are not measured CI runtime. Fresh CI 38131796908 queued; original 900-second acceptance remains failed until measured.",
+            "Local four-group scheduling validation at f24c6bc: 93 selected, 89 PASS, two existing opt-in SKIP, two XCTest accessibility-audit Code -56 timeouts. Same two original audits PASS/zero SKIP on one simulator after concurrent processes completed and other three owned devices shut down. Original failures retained; control does not prove cause or a full eight-group CI pass. Already-built non-coverage Mac binaries differ from Debug coverage CI."
           ]
         }
       ],
@@ -2649,14 +2651,14 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T09:44:16.638034+00:00",
+  "last_evidence_update": "2026-10-11T10:24:34.746156+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
     "Verified criteria cite actual source, tests, reports or historical measured controls. Historical-author evidence is explicitly labelled; it is not represented as a fresh execution.",
     "Not-yet-proven criteria are unverified, not automatically failing. Partial results do not establish real hardware, model access, multi-device or release acceptance.",
     "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
-    "PR187 at f24c6bc has fresh requiredCI 38129326531 running. Original a122d7e CI 38126102076 failed one portrait setup-card overlap check; unchanged local old-code repetitions passed and the failure is retained. The setup card now fades in place; all 11 original screen/setup/empty-main accessibility cases PASS on each of iOS 26/27 with unchanged assertions. Original both-OS topic/AX5/latency checks at a122d7e and complete green 2acfe8c CI 38123804979 remain qualified preceding evidence. PR188 retains separately tested 093c20f score-reuse proof. PR190 parallel-CI experiment exceeds 900 seconds and failed the separate unchanged 100 ms expansion check; final whole-run result pending. No PR or whole goal is claimed merged or complete."
+    "PR187 at f24c6bc has fresh required CI 38129326531 running; its unchanged expansion check PASS at 64.9/46.3/32.2/31.2/36.3 ms. Original a122d7e setup-card overlap CI failure is retained; all 11 original screen/setup/empty-main accessibility cases PASS on each supported OS after fading in place. Preceding both-OS topic/paging results and green 2acfe8c CI remain source-qualified. PR188 retains separately tested 093c20f score-reuse proof. PR190 two-worker experiment completed FAILURE in 2543 seconds; new eight-group duration-balanced source 6e1b16d has fresh CI queued. No PR or whole goal is claimed merged or complete."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
@@ -2678,6 +2680,7 @@
   "currentReviewSources": {
     "integration": "f24c6bc456fec4ce992f30c702b557b13eedf96e",
     "voice_score_reuse": "093c20fe638bcfd6c0761f758271946c08152696",
-    "two_hour_soak": "13556587e3e8d89ed39609d8f5f6b81da2db42c7"
+    "two_hour_soak": "13556587e3e8d89ed39609d8f5f6b81da2db42c7",
+    "ci_runtime_balanced": "6e1b16dca4c9a94b56a84a47eaa89288ae409d1d"
   }
 }
