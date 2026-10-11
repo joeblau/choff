@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-11",
+  "production_source_commit": "eeb5ed420f06d0bb8d4c3bc434f83e41873716b7",
+  "host": {
+    "cpu": "Apple M3 Max",
+    "memory_bytes": 137438953472,
+    "macos": "27.2"
+  },
+  "installation_test": {
+    "suite": "ModelDownloadSmokeTests",
+    "selected": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "first_launch_seconds": 179.47295583300001,
+    "test_seconds": 204.564,
+    "total_disk_bytes": 1003491328,
+    "checks": [
+      "Every selected descriptor is ready after real pinned download and Core ML warm-up",
+      "Every selected model loads through its production loading path",
+      "Every selected descriptor is ready after offline relaunch",
+      "Model store is excluded from backup"
+    ],
+    "models": [
+      {
+        "model_id": "sileroVAD",
+        "pinned_revision": "b419383c55c110e2c9271fa6ee0ea83d03c70d96",
+        "bytes": 1063425,
+        "warm_up_seconds": 0.241146459
+      },
+      {
+        "model_id": "speakerEmbedding",
+        "pinned_revision": "df2625ac79a7ac6b65ad868fee6d80f320da4232",
+        "bytes": 7954144,
+        "warm_up_seconds": 7.091627916999999
+      },
+      {
+        "model_id": "parakeetRealtimeEOU",
+        "pinned_revision": "40a23f4c0b333aa17ad8c0f2ea47ec2347f2f355",
+        "bytes": 224238270,
+        "warm_up_seconds": 31.826612291999997
+      },
+      {
+        "model_id": "parakeetTDTv3",
+        "pinned_revision": "7dd20fe6b1797d35f5e3307e8b1732d9a178edfe",
+        "bytes": 483105645,
+        "warm_up_seconds": 16.608496375
+      },
+      {
+        "model_id": "parakeetRealtimeEOU1280",
+        "pinned_revision": "40a23f4c0b333aa17ad8c0f2ea47ec2347f2f355",
+        "bytes": 224525706,
+        "warm_up_seconds": 63.654768167
+      },
+      {
+        "model_id": "languageID",
+        "pinned_revision": "2aa4d715a79e410d5f9aa32bd7a4fc9225bf9eb0",
+        "bytes": 42760312,
+        "warm_up_seconds": 0.085067416
+      }
+    ]
+  },
+  "second_pass_tests": {
+    "suite": "SecondPassLiveTests",
+    "selected": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "test_seconds": 24.702,
+    "sentence_test": {
+      "sentences": 11,
+      "word_error_rate": 0.008928571428571428,
+      "audio_seconds": 33.36,
+      "inference_seconds": 0.62509179,
+      "real_time_factor": 0.018737763489208633,
+      "every_sentence_capitalized_and_punctuated": true
+    },
+    "end_to_end": {
+      "streaming_word_error_rate": 0.05357142857142857,
+      "refined_word_error_rate": 0.026785714285714284,
+      "real_EOU_and_TDT_models": true
+    }
+  },
+  "scope": "Mac synthetic/recorded fixture acceptance. Does not prove physical-iPhone microphone, background, latency, thermal or cross-device criteria."
+}

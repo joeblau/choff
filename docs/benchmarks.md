@@ -1009,3 +1009,17 @@ machine; `BLAU_INDEX_BENCHMARK=1 swift test -Xswiftc -O --scratch-path
    verdict.
 3. Update the ASR, Voice ID and Perf rows of "Key decisions" in #1, and the
    Parakeet research brief's background note, with the verdicts.
+
+## Mac installation and second-pass acceptance (2026-10-11)
+
+The real pinned-model download smoke test passed with Silero, WeSpeaker,
+EOU-320, EOU-1280, TDT v3 and language ID on an M3 Max (128 GB, macOS 27.2).
+It verifies ready states, production model loading, offline relaunch, and
+backup exclusion. First launch took 179.47 s; the store occupied 1.003 GB.
+
+Both real-model second-pass fixture tests also passed. All 11 isolated
+sentences were capitalized and punctuated (WER 0.89%). In the streaming
+refinement fixture, WER fell from 5.36% to 2.68%. These are Mac results;
+the physical-device and live conversation acceptance criteria remain open.
+The pinned revisions, timings, assertions and scope are recorded in
+[the installation report](benchmarks/2026-10-11-model-installation-mac.json).
