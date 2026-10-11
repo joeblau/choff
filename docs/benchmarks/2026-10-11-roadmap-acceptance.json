@@ -1564,9 +1564,10 @@
             "/tmp/voice-choff-retained-header-ios26-summary.json: two iOS 26 failures at eeb5ed4",
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
             "Exact current app on iOS26.5 at8ee1add (test-only difference from26cd0ba): Now passes, drag paging fails on first page at drag18. Original checks unchanged; producer exit65. /tmp/voice-choff-paging-current-ios26-8ee1add.log",
-            "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running."
+            "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
+            "Source2acfe8c full original iOS27 suite:12PASS0FAIL0SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
           ],
-          "qualification": "The prior original iOS26 failure is retained above. Corrective source2acfe8c has passed both original iOS26 paging cases; full iOS27 verification and physical-device checks remain pending."
+          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at corrective source2acfe8c. Physical-device120Hz flings and Instruments memory verification remain pending. Separate iOS26 AX5 topic expansion failure blocks integration."
         },
         {
           "requirement": "Memory stays bounded",
@@ -1574,9 +1575,10 @@
           "evidence": [
             "iOS 27 original paging test passed its unchanged 60 MB footprint growth budget at eeb5ed4",
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
-            "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running."
+            "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
+            "Source2acfe8c full original iOS27 suite:12PASS0FAIL0SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json"
           ],
-          "qualification": "The prior original iOS26 failure is retained above. Corrective source2acfe8c has passed both original iOS26 paging cases; full iOS27 verification and physical-device checks remain pending."
+          "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at corrective source2acfe8c. Physical-device120Hz flings and Instruments memory verification remain pending. Separate iOS26 AX5 topic expansion failure blocks integration."
         }
       ],
       "prior_unverified_followups": [
@@ -1601,9 +1603,10 @@
             "https://github.com/joeblau/voice/actions/runs/38114217207",
             "/tmp/voice-ci-eeb-latency-attachments: five original samples 65.8, 27.1, 26.0, 26.5, 26.3 ms",
             "Current 2420008 original five-sample benchmark: iOS 26 39.3/10.2/11.3/10.3/9.9 ms; iOS 27 34.2/19.4/20.9/18.9/26.6 ms. Fresh required CI still running; unchanged 100 ms limit.",
-            "Current required CI 38119809945 at 26cd0ba: original five-sample app-ui-performance job completed successfully. No latency assertion or timeout changed."
+            "Current required CI 38119809945 at 26cd0ba: original five-sample app-ui-performance job completed successfully. No latency assertion or timeout changed.",
+            "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit."
           ],
-          "qualification": "Current corrective candidate still needs its own unchanged 100 ms check and complete UI validation."
+          "qualification": "Current local original five-sample cases pass on both supported OS versions; fresh required CI for a122d7e remains pending."
         },
         {
           "requirement": "Continue-topic seeds Grok context",
@@ -2263,7 +2266,7 @@
       "criteria": [
         {
           "requirement": "Accessibility Inspector audit clean",
-          "completion": "partially verified",
+          "completion": "verified",
           "evidence": [
             "CI 38114217207 fails its original history audit at eeb5ed4",
             "Native corrective candidate passes both history audits on iOS 27 with original audit rules",
@@ -2272,9 +2275,10 @@
             "/tmp/voice-ci-242-ui2-tests.json",
             "/tmp/voice-ci-242-ui3-tests.json",
             "/tmp/voice-ci-242-ui4-tests.json",
-            "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved."
+            "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved.",
+            "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit."
           ],
-          "qualification": "Automated history audits passed with original exclusions unchanged; AX5 topic-detail interaction failed in latest run."
+          "qualification": "Current original automated accessibility equivalent audits and AX5 UI cases pass; earlier failures remain recorded above."
         },
         {
           "requirement": "UI tests run with AX5 text size",
@@ -2285,8 +2289,10 @@
             "/tmp/voice-ci-242-ui2-tests.json",
             "/tmp/voice-ci-242-ui3-tests.json",
             "/tmp/voice-ci-242-ui4-tests.json",
-            "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved."
-          ]
+            "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved.",
+            "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit."
+          ],
+          "qualification": "Current original automated accessibility equivalent audits and AX5 UI cases pass; earlier failures remain recorded above."
         }
       ],
       "prior_unverified_followups": [
@@ -2636,14 +2642,14 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T08:29:24.225224+00:00",
+  "last_evidence_update": "2026-10-11T08:42:29.209223+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
     "Verified criteria cite actual source, tests, reports or historical measured controls. Historical-author evidence is explicitly labelled; it is not represented as a fresh execution.",
     "Not-yet-proven criteria are unverified, not automatically failing. Partial results do not establish real hardware, model access, multi-device or release acceptance.",
     "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
-    "PR187 at26cd0ba is awaiting required CI; PR188 at093c20f contains a separate voice score-reuse fix. This report does not claim either merged or the whole goal complete."
+    "PR187 local sourcea122d7e passes original both-OS topic/AX5/latency checks; its fresh required CI is pending the preceding2acfe8c run. PR188 retains the separately tested093c20f score-reuse proof and is locally rebased ontoa122d7e. Neither PR nor the whole goal is claimed merged or complete."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
@@ -2663,7 +2669,7 @@
     "pending external prerequisites": 1
   },
   "currentReviewSources": {
-    "integration": "2acfe8cde2361b988527dffe4fd3332902ac1361",
+    "integration": "a122d7e887db88c2dd5c05978037d1f0b323fefd",
     "voice_score_reuse": "093c20fe638bcfd6c0761f758271946c08152696",
     "two_hour_soak": "13556587e3e8d89ed39609d8f5f6b81da2db42c7"
   }
