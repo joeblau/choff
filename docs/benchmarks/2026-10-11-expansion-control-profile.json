@@ -61,7 +61,8 @@
       "topInsights": [],
       "totalTestCount": 1
     },
-    "whole_workflow_status": "in_progress"
+    "whole_workflow_status": "completed",
+    "whole_workflow_conclusion": "failure"
   },
   "unchanged_control": {
     "producer": {
