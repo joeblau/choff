@@ -72,19 +72,21 @@ def hashes(root):
     }
 
 
-def stop_recorder(recorder, record):
+def stop_recorder(recorder, record, save=None):
     """Stop only our recorder; the original test is never interrupted."""
     if recorder.poll() is None:
         recorder.send_signal(2)  # xctrace finalizes its trace on SIGINT.
-        try:
-            return recorder.wait(timeout=30)
-        except subprocess.TimeoutExpired:
-            record["profile_error"] = "Recorder did not finish after SIGINT; original test result retained."
-            recorder.terminate()
+        while True:
             try:
                 return recorder.wait(timeout=10)
             except subprocess.TimeoutExpired:
-                recorder.kill()
+                # Saving deferred samples may outlast a short observation.
+                # SIGTERM here destroys the trace before its template and
+                # tables are written. Keep observing the same owned recorder.
+                record["trace_status"] = "finalizing"
+                record["trace_last_observed_alive_at"] = now()
+                if save is not None:
+                    save()
     return recorder.wait()
 
 
@@ -165,7 +167,7 @@ def profile(root, udid, output, observe_seconds=600, test_command=None, trace_co
             before = set()
             record["profile_error"] = str(error)
             if recorder is not None:
-                record["trace_exit_code"] = stop_recorder(recorder, record)
+                record["trace_exit_code"] = stop_recorder(recorder, record, save)
         finally:
             if notification is not None:
                 notification.close()
@@ -196,7 +198,10 @@ def profile(root, udid, output, observe_seconds=600, test_command=None, trace_co
         record["test_finished_at"] = now()
         if recorder is not None:
             record["recorder_was_running_at_test_end"] = recorder.poll() is None
-            record["trace_exit_code"] = stop_recorder(recorder, record)
+            record["trace_status"] = "finalizing"
+            save()
+            record["trace_exit_code"] = stop_recorder(recorder, record, save)
+            record["trace_status"] = "completed"
     record["source_hash_matches"] = record["source_hashes"] == hashes(root)
     record["status"] = "completed"
     record["finished_at"] = now()

@@ -5,9 +5,10 @@ import importlib.util
 import json
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -97,6 +98,21 @@ class ProducerTests(unittest.TestCase):
         self.assertEqual(command[command.index("--device") + 1], "owned-simulator")
         self.assertEqual(command[command.index("--notify-tracing-started") + 1], "ready-name")
         self.assertNotIn("--attach", command)
+
+    def test_slow_finalization_is_observed_without_terminating_the_recorder(self):
+        recorder = Mock()
+        recorder.poll.return_value = None
+        recorder.wait.side_effect = [subprocess.TimeoutExpired("xctrace", 10), 0]
+        record = {"test_exit_code": 65}
+        save = Mock()
+        self.assertEqual(PROFILE.stop_recorder(recorder, record, save), 0)
+        recorder.send_signal.assert_called_once_with(2)
+        recorder.terminate.assert_not_called()
+        recorder.kill.assert_not_called()
+        self.assertEqual(record["trace_status"], "finalizing")
+        self.assertIn("trace_last_observed_alive_at", record)
+        self.assertEqual(record["test_exit_code"], 65)
+        save.assert_called_once_with()
 
 
 if __name__ == "__main__":
