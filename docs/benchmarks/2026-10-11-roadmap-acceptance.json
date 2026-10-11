@@ -1710,7 +1710,8 @@
             "Exact current app on iOS26.5 at8ee1add (test-only difference from26cd0ba): Now passes, drag paging fails on first page at drag18. Original checks unchanged; producer exit65. /tmp/voice-choff-paging-current-ios26-8ee1add.log",
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
             "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json",
-            "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json"
+            "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json",
+            "Same2e source/OS27/iPhone17model originalscrollingcase PASS alone on differentownedinstance:209drags349pt,shifts339\u2013583,1999bullets,footprint83\u219279MB. Originalconcurrentdrag140FAILretained/causeunproven. /tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-summary.json"
           ],
           "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         },
@@ -1722,7 +1723,8 @@
             "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
             "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running.",
             "Source2acfe8c full original iOS27 suite:12PASS0 FAIL / 0 SKIP, including both original2000-topic cases,7detail,2historyAXaudits andcollapse. Drag207,1999bullets,foot83\u219267MB,rowmovement339\u2013588pt. /tmp/voice-choff-paging-ios27-stale-bounds-candidate-summary.json",
-            "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json"
+            "HUD follow-up2e5830a original long paging: iOS26bothcasesPASS; iOS27NowPASS, scrollingFAILdrag140with1pt/349pt. Failure retained,causeunproven,same-source isolationprobe live. /tmp/voice-choff-hud-row-values-long-paging-ios27-summary.json",
+            "Same2e source/OS27/iPhone17model originalscrollingcase PASS alone on differentownedinstance:209drags349pt,shifts339\u2013583,1999bullets,footprint83\u219279MB. Originalconcurrentdrag140FAILretained/causeunproven. /tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-summary.json"
           ],
           "qualification": "Both original simulator paging cases pass on iOS26 and iOS27 at2acfe8c. The separate AX5 topic-expansion jump is corrected ata122d7e, with all ten original short topic/AX/collapse cases passing on each OS; its fresh required CI is pending. Physical120Hz flings and device Instruments memory verification remain pending."
         }
@@ -1815,8 +1817,11 @@
         },
         {
           "requirement": "Topic engine tests still pass with the new embedder",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "verified on Mac real-model replay",
+          "evidence": [
+            "OriginalRealModelTopicSegmentationTests with actualpublicQwen8-bitcandidate:onefunctionalexecution, fiveoriginalscriptedtranscripts,allboundariesmatchincludingdigressionand resegmentation;meanPk0.000<=unchanged.25,defaultminimumDepth.5,no overrides. Selectedmodel/A17/liveconversationpending.",
+            "docs/benchmarks/2026-10-11-qwen-topics-mac.json"
+          ]
         }
       ],
       "prior_unverified_followups": [
@@ -2834,7 +2839,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T12:05:14.894690+00:00",
+  "last_evidence_update": "2026-10-11T12:16:10.313339+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2857,10 +2862,10 @@
   },
   "criteriaStatusCounts": {
     "verified": 125,
-    "not yet proven in this acceptance audit": 45,
+    "not yet proven in this acceptance audit": 44,
     "failed current original acceptance": 1,
     "partially verified": 16,
-    "verified on Mac real-model replay": 1,
+    "verified on Mac real-model replay": 2,
     "verified on public evaluation set": 1,
     "verified on physical A19 Pro": 2,
     "pending external prerequisites": 1

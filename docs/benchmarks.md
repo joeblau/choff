@@ -1143,3 +1143,10 @@ is4,180ms,warm p50/p95 is1,989/2,476ms,and prewarmed p50/p95 is1,997/2,218ms.
 Both preceding full-suite rate-limit failures remain recorded. This result
 qualifies the standalone A19 Pro measurement; it does not establish rate-limit
 recovery in a conversation or A17,two-device or background acceptance.
+
+The original real-model Swift topic suite also passes on the int8 Qwen
+candidate on Mac. Allfive scripted transcripts retain their labelled
+boundaries, including the brief digression and re-segmentation. Mean Pk is
+0.000 against the unchanged0.25limit at the default0.5depth. The
+[complete original output](benchmarks/2026-10-11-qwen-topics-mac.json) is
+retained; selected-model,A17and live-conversation acceptance remain pending.
