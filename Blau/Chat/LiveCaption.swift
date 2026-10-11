@@ -99,7 +99,8 @@ enum LiveCaptionSizing {
         let body = UIFont.preferredFont(forTextStyle: .body, compatibleWith: traits)
         let heading = UIFont.preferredFont(forTextStyle: .footnote, compatibleWith: traits)
         // Match the card's horizontal margins and padding, and its heading,
-        // spacing and vertical padding. The card uses at most 60% of history.
+        // spacing and vertical padding. Budget 60% of history, retaining at least
+        // the final whole word when even that word exceeds the budget.
         let width = max(1, availableSize.width - 60)
         let height = max(body.lineHeight, availableSize.height * 0.6 - heading.lineHeight - 22)
         let limit = ChatCaption.maxCharacters(isAccessibilitySize: size.isAccessibilitySize)

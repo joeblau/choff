@@ -233,6 +233,9 @@ private struct TopicTimelineScrollView: View {
     /// tapped bullet stays put.
     @State private var topAnchorHolds = 0
     @State private var position = ScrollPosition(idType: TopicTimeline.ItemID.self)
+    /// Measure the viewport without giving the floating controls a full-size
+    /// hit-testing surface over the history on iOS 26.
+    @State private var historySize: CGSize = .zero
     @Namespace private var rotor
 
     var body: some View {
@@ -274,6 +277,11 @@ private struct TopicTimelineScrollView: View {
         // On the scroll view itself, not on this view: an identifier set
         // outside the overlay would also replace the Now pill's.
         .accessibilityIdentifier(MainScreenAccessibility.content)
+        .onGeometryChange(for: CGSize.self) { geometry in
+            geometry.size
+        } action: { _, size in
+            historySize = size
+        }
         .scrollPosition($position)
         .defaultScrollAnchor(.bottom, for: .initialOffset)
         .defaultScrollAnchor(.bottom, for: .alignment)
@@ -318,25 +326,22 @@ private struct TopicTimelineScrollView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            GeometryReader { geometry in
-                ZStack(alignment: .bottom) {
-                    if !isAtBottom {
-                        VStack(spacing: 8) {
-                            // Fit the caption below the pinned title without
-                            // covering all the history at large text sizes.
-                            LiveCaption(
-                                model: environment.chat, conversationID: timeline.current?.conversationID,
-                                availableSize: geometry.size)
-                            NowButton(action: returnToNow)
-                        }
-                        .padding(.bottom, 12)
-                        .transition(Motion.slide(from: .bottom, reduceMotion: reduceMotion))
+            ZStack {
+                if !isAtBottom {
+                    VStack(spacing: 8) {
+                        // Fit the caption below the pinned title without
+                        // covering all the history at large text sizes.
+                        LiveCaption(
+                            model: environment.chat, conversationID: timeline.current?.conversationID,
+                            availableSize: historySize)
+                        NowButton(action: returnToNow)
                     }
+                    .padding(.bottom, 12)
+                    .transition(Motion.slide(from: .bottom, reduceMotion: reduceMotion))
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                // Only floating controls animate when `isAtBottom` flips.
-                .animation(reduceMotion ? nil : .snappy, value: isAtBottom)
             }
+            // Only floating controls animate when `isAtBottom` flips.
+            .animation(reduceMotion ? nil : .snappy, value: isAtBottom)
         }
         // VoiceOver hears when a new topic opens or its title is refined.
         .announcesTopicChanges(current: timeline.current, renamedByUser: editor.renamedTopicIDs)
