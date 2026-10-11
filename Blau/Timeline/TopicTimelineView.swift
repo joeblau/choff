@@ -318,21 +318,25 @@ private struct TopicTimelineScrollView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            ZStack {
-                if !isAtBottom {
-                    VStack(spacing: 8) {
-                        // Grok's words stay on screen while its row is out
-                        // of view (#81).
-                        LiveCaption(model: environment.chat, conversationID: timeline.current?.conversationID)
-                        NowButton(action: returnToNow)
+            GeometryReader { geometry in
+                ZStack(alignment: .bottom) {
+                    if !isAtBottom {
+                        VStack(spacing: 8) {
+                            // Fit the caption below the pinned title without
+                            // covering all the history at large text sizes.
+                            LiveCaption(
+                                model: environment.chat, conversationID: timeline.current?.conversationID,
+                                availableSize: geometry.size)
+                            NowButton(action: returnToNow)
+                        }
+                        .padding(.bottom, 12)
+                        .transition(Motion.slide(from: .bottom, reduceMotion: reduceMotion))
                     }
-                    .padding(.bottom, 12)
-                    .transition(Motion.slide(from: .bottom, reduceMotion: reduceMotion))
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                // Only floating controls animate when `isAtBottom` flips.
+                .animation(reduceMotion ? nil : .snappy, value: isAtBottom)
             }
-            // Only the floating controls animate, not the timeline's own
-            // layout when `isAtBottom` flips.
-            .animation(reduceMotion ? nil : .snappy, value: isAtBottom)
         }
         // VoiceOver hears when a new topic opens or its title is refined.
         .announcesTopicChanges(current: timeline.current, renamedByUser: editor.renamedTopicIDs)
