@@ -114,7 +114,9 @@ final class ChatTranscriptUITests: XCTestCase {
         let app = launch(rows: 10)
         let row = rows(Identifier.agent, in: app).last
         XCTAssertNotNil(row)
-        row?.press(forDuration: 1.2)
+        // The words have native text selection. The blank trailing margin
+        // opens the row menu, which also offers the timestamp and Share.
+        row?.coordinate(withNormalizedOffset: CGVector(dx: 0.99, dy: 0.5)).press(forDuration: 1.2)
         XCTAssertTrue(app.buttons["Copy"].waitForExistence(timeout: 5), "No Copy in the menu")
         XCTAssertTrue(app.buttons["Share…"].exists || app.buttons["Share"].exists, "No Share in the menu")
         attachScreenshot(app, "Row menu")

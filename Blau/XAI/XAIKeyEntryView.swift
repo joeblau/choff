@@ -9,6 +9,7 @@ enum XAIKeyIdentifiers {
     static let problemTitle = "xai.apiKey.problem.title"
     static let saveAnyway = "xai.apiKey.saveAnyway"
     static let status = "xai.account.status"
+    static let keyName = "xai.account.keyName"
     static let replace = "xai.account.replace"
     static let remove = "xai.account.remove"
     static let openOnboarding = "xai.onboarding.open"

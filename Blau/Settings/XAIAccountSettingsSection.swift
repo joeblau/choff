@@ -72,6 +72,7 @@ struct XAIAccountSettingsSection: View {
         .accessibilityIdentifier(XAIKeyIdentifiers.status)
         if let name = key.name {
             LabeledContent("Name", value: name)
+                .accessibilityIdentifier(XAIKeyIdentifiers.keyName)
         }
 
         if isReplacing {
