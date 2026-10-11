@@ -180,16 +180,20 @@ enum LiveCaptionFixture {
 }
 
 #Preview("Caption") {
-    VStack {
-        Spacer()
-        LiveCaptionCard(text: LiveCaptionFixture.reply)
+    GeometryReader { geometry in
+        VStack {
+            Spacer()
+            LiveCaptionCard(text: LiveCaptionFixture.reply, availableSize: geometry.size)
+        }
     }
 }
 
 #Preview("Caption, largest text") {
-    VStack {
-        Spacer()
-        LiveCaptionCard(text: LiveCaptionFixture.reply)
+    GeometryReader { geometry in
+        VStack {
+            Spacer()
+            LiveCaptionCard(text: LiveCaptionFixture.reply, availableSize: geometry.size)
+        }
     }
     .dynamicTypeSize(.accessibility5)
 }
