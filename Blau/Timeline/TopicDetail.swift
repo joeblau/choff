@@ -41,6 +41,9 @@ struct TopicDetailHeader: View {
     var body: some View {
         if #available(iOS 27, *) {
             content
+                // Retain the prepared layout, but do not draw collapsed
+                // text beneath the zero-height clipping frame.
+                .opacity(isExpanded ? 1 : 0)
                 .frame(height: isExpanded ? nil : 0)
                 .clipped()
                 .allowsHitTesting(isExpanded)
