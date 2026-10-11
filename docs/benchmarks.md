@@ -1038,3 +1038,26 @@ vectors, rather than live EmbeddingGemma inference. It does not establish
 physical-phone latency, live Grok tool calls or cross-device indexing.
 [The complete report](benchmarks/2026-10-11-memory-eval-mac.json) retains
 all 115 rankings, answers and judge decisions, including incorrect answers.
+
+## Mac ASR and topic acceptance (2026-10-11)
+
+At source `093c20f`, the full ASR evaluation passed all 25 existing gates
+on both the default backend and CPU-only execution, without changing the
+baseline or thresholds. EOU-320 streaming WER was 9.8% and audio-time EOU
+p95 was 1,495 ms on both backends; TDT v3 WER was 1.7%. The complete
+[default report](benchmarks/2026-10-11-asr-eval-mac-default.json) and
+[CPU report](benchmarks/2026-10-11-asr-eval-mac-cpu.json) preserve every
+fixture result, including the one unended streaming utterance.
+
+The existing real-model hour replay also passed: 704 utterances across
+7,808 chunks in 148.02 s, settled chunk mean 18.74→18.56 ms and zero
+rounded-MB footprint growth. This replays an hour of audio using scripted
+VAD and a manual clock; it does not establish locked/background phone
+behavior or two hours of physical-device leak acceptance.
+
+All three real Foundation Models topic tests passed. Every one of 22
+fixture labels stayed within five words; p50/p90 latency was 1.66/1.87 s.
+The model confirmed all eight true boundaries but vetoed zero of one brief
+digression. The separate streaming hysteresis tests cover that digression.
+[The hour/topic report](benchmarks/2026-10-11-asr-hour-topic-labels-mac.json)
+records all minute samples and these limitations.
