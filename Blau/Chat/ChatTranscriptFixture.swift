@@ -104,7 +104,7 @@ enum ChatTranscriptFixture {
             + " what do they do every day? Third, what would make them stop using it? For each, lead with the"
             + " number, then the story behind it, and say what you don't know yet.",
         "Because the beta testers asked for offline mode first, and it touches everything else.",
-        "The second one is about retention. Look at the cohort from August: most of them still talk to Blau every"
+        "The second one is about retention. Look at the cohort from August: most of them still talk to Choff every"
             + " day, which is the strongest signal you have.",
         "About a week for a first version, if you keep the scope to text only.",
     ]

@@ -6,7 +6,7 @@ import Testing
 @testable import Blau
 
 /// Guards how the built app configures persistence. The unit-test bundle is
-/// hosted in the app, so `Bundle.main` is the built Blau.app.
+/// hosted in the app, so `Bundle.main` is the built Choff.app.
 @Suite("Persistence wiring")
 struct PersistenceWiringTests {
     private let info = Bundle.main.infoDictionary ?? [:]
@@ -20,7 +20,7 @@ struct PersistenceWiringTests {
         let options = PersistenceOptions.resolve(
             infoDictionary: info, arguments: [], environment: [:], allowsSchemaInitialization: AppConfig.isDebugBuild)
         #expect(options.cloudKitEntitled == (info[PersistenceOptions.cloudKitEnabledInfoKey] as? String == "YES"))
-        #expect(options.containerIdentifier == "iCloud.com.joeblau.blau")
+        #expect(options.containerIdentifier == "iCloud.com.joeblau.choff")
         #expect(options.schemaInitialization == (AppConfig.isDebugBuild ? .whenSchemaChanges : .never))
     }
 

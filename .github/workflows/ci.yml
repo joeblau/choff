@@ -1,7 +1,34 @@
-# Final-source validation only: these two job definitions are copied unchanged.
+# CI for Blau: lint, BlauKit package tests, app tests and the BlauKit
+# micro-benchmark gate on every pull request and every push to main, plus the
+# nightly XCTest performance suite, long-session soak test, ASR evaluation and
+# memory evaluation.
+# See docs/ci.md.
+#
+# Secrets: none. Tests are hermetic and never call xAI, and this workflow
+# uploads .xcresult bundles, inside which GitHub does not mask secrets. Never
+# map secrets.XAI_DEV_API_KEY (or any other secret) into a job here; see
+# docs/configuration.md#ci. scripts/tests/test-ci-scripts.sh enforces it.
+#
+# Repository variables (Settings > Secrets and variables > Actions > Variables)
+# override the defaults without a code change:
+#   BLAU_CI_RUNNER         runner label (default xcode-27)
+#   BLAU_CI_XCODE_VERSION  pin an Xcode, e.g. "27.2" (default: newest release on the image)
+#   BLAU_CI_SIMULATOR      simulator model for app and perf tests (default "iPhone 17")
+#   BLAU_CI_MEMORY_EVAL_READER          memory-eval answer reader (default auto)
+#   BLAU_CI_MEMORY_EVAL_REQUIRE_ANSWERS 1 fails memory-eval when no reader can run
+#   BLAU_CI_SOAK_MINUTES   nightly soak length in minutes of audio (default 20)
+#   BLAU_CI_SOAK_LEAKS     0 skips the soak's leak readings (default 1)
+
 name: CI
 
 on:
+  pull_request:
+  push:
+    branches: [main]
+  merge_group:
+  schedule:
+    # Nightly on main: the full suite against the current runner image, plus perf.
+    - cron: "23 8 * * *"
   workflow_dispatch:
     inputs:
       perf:
@@ -31,6 +58,13 @@ on:
 
 permissions:
   contents: read
+
+# A new push to a pull request cancels its in-flight run. Runs on main are not
+# cancelled, so every merged commit gets a result; GitHub still drops a queued
+# main run when a newer one arrives.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   XCODE_VERSION: ${{ vars.BLAU_CI_XCODE_VERSION }}
@@ -90,7 +124,7 @@ jobs:
       - name: Warm up performance simulator
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Choff.app
 
       # One retry: the runner's simulator sometimes crashes the test runner
       # before any test starts ("never finished bootstrapping"), which would
@@ -197,7 +231,7 @@ jobs:
       - name: Warm up soak simulator
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Blau.app
+        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Release-iphonesimulator/Choff.app
 
       # Quantitative acceptance is measured without an external heap scanner.
       # All eight checks and the original limits remain required.
@@ -261,173 +295,3 @@ jobs:
   # history) and shown on the run's summary page. The pinned models (~700 MB,
   # public on Hugging Face, no token) are cached by manifest. See
   # docs/asr-eval.md.
-
-# Diagnostic only: profiling adds overhead and is not acceptance.
-  cold-expansion-profile:
-    name: cold-expansion-profile
-    runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
-    timeout-minutes: 30
-    env:
-      UI_TEST_SUITE: performance
-      UI_SHARD: 1/1
-    steps:
-      - name: Check out
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Select Xcode
-        id: xcode
-        run: scripts/ci/select-xcode.sh
-
-      - name: Install XcodeGen
-        run: |
-          command -v xcodegen >/dev/null || brew install xcodegen
-          xcodegen --version
-
-      - name: Generate project
-        run: make generate
-
-      - name: Cache Swift packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .build/DerivedData/SourcePackages
-          key: spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-${{ hashFiles('Packages/BlauKit/Package.swift', 'Packages/BlauKit/Package.resolved') }}
-          restore-keys: |
-            spm-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-
-
-      - name: Pick simulator
-        id: simulator
-        run: scripts/ci/simulator-destination.sh
-
-      # Build first, then boot the simulator and launch the app once. On a
-      # cold simulator the app's first launch outlasted XCUITest's launch
-      # timeout and failed each shard's first test; in one job the unit tests
-      # used to warm it up. Booting only after the build keeps the boot from
-      # starving the build.
-      - name: Build
-        env:
-          DESTINATION: ${{ steps.simulator.outputs.destination }}
-          XCODEBUILD_FLAGS: "SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
-        run: make build-tests
-
-      - name: Build profiler symbols
-        run: |
-          mkdir -p .build/results/expansion-profile
-          xcrun dsymutil .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app/Blau -o .build/results/expansion-profile/Blau.dSYM
-
-      # Three to eight minutes on the runner.
-      - name: Warm up simulator
-        timeout-minutes: 15
-        continue-on-error: true
-        env:
-          UDID: ${{ steps.simulator.outputs.udid }}
-        run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Blau.app
-
-      - name: Test
-        id: test
-        env:
-          UDID: ${{ steps.simulator.outputs.udid }}
-          DESTINATION: ${{ steps.simulator.outputs.destination }}
-          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-performance.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
-        run: |
-          python3 - <<'PY_PROFILE'
-          import ctypes, json, os, select, signal, subprocess, time, uuid
-          from pathlib import Path
-          root = Path('.build/results/expansion-profile')
-          root.mkdir(parents=True, exist_ok=True)
-          udid = os.environ['UDID']
-          options = json.loads(subprocess.check_output(['xcrun', 'xctrace', 'record', '--template', 'Time Profiler', '--instrument', 'os_signpost', '--show-recording-options'], text=True))
-          options['Time Profiler']['highFrequencySampling'] = False
-          options['Time Profiler']['recordWaitingThreads'] = False
-          options['os_signpost']['dynamicTracingEnabledSubsystems'] = ['com.joeblau.blau']
-          settings = root / 'recording-options.json'
-          settings.write_text(json.dumps(options, indent=2) + '\n')
-          notify = ctypes.CDLL('/usr/lib/system/libsystem_notify.dylib')
-          notify.notify_register_file_descriptor.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_int), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
-          notify.notify_register_file_descriptor.restype = ctypes.c_uint32
-          notify.notify_cancel.argtypes = [ctypes.c_int]
-          notify.notify_cancel.restype = ctypes.c_uint32
-          name = 'com.joeblau.blau.profile.started.' + str(uuid.uuid4())
-          fd = ctypes.c_int(-1)
-          token = ctypes.c_int(-1)
-          registration = notify.notify_register_file_descriptor(name.encode(), ctypes.byref(fd), 0, ctypes.byref(token))
-          if registration != 0:
-              raise RuntimeError(f'Profiler notification registration failed: {registration}')
-          runner = None
-          trace = None
-          trace_status = None
-          test_status = None
-          trace_log = (root / 'recording.log').open('w')
-          try:
-              trace = subprocess.Popen(['xcrun', 'xctrace', 'record', '--no-prompt', '--template', 'Time Profiler', '--instrument', 'os_signpost', '--recording-options', str(settings), '--device', udid, '--all-processes', '--notify-tracing-started', name, '--time-limit', '240s', '--output', str(root / 'expansion.trace')], stdout=trace_log, stderr=subprocess.STDOUT)
-              ready = select.select([fd.value], [], [], 120)[0]
-              if not ready:
-                  raise RuntimeError('Profiler did not announce that recording started')
-              os.read(fd.value, 4)
-              if trace.poll() is not None:
-                  raise RuntimeError(f'Profiler exited before the test: {trace.returncode}')
-              print('Profiler announced recording started; launching the original benchmark', flush=True)
-              runner = subprocess.Popen(['make', 'test-ui', f'UI_SHARD={os.environ["UI_SHARD"]}'])
-              test_status = runner.wait(timeout=600)
-              if trace.poll() is None:
-                  trace.send_signal(signal.SIGINT)
-              trace_status = trace.wait(timeout=300)
-              (root / 'statuses.json').write_text(json.dumps({'test_exit': test_status, 'trace_exit': trace_status, 'source': '03954c4322af6f6dcdef05a29763ec27619758ae', 'profiling_only': True, 'capture_started_before_test': True, 'sampling': 'standard', 'waiting_threads': False}, indent=2) + '\n')
-          finally:
-              if runner is not None and runner.poll() is None:
-                  runner.terminate()
-                  runner.wait(timeout=30)
-              if trace is not None and trace.poll() is None:
-                  trace.send_signal(signal.SIGINT)
-                  try:
-                      trace.wait(timeout=30)
-                  except subprocess.TimeoutExpired:
-                      trace.kill()
-                      trace.wait()
-              trace_log.close()
-              notify.notify_cancel(token.value)
-          raise SystemExit(test_status if test_status else (trace_status if trace_status is not None else 1))
-          PY_PROFILE
-
-      # A selection that matched no test would otherwise pass with nothing
-      # run. Also after failing tests, which count, so every run shows the
-      # shard ran its whole slice.
-      - name: Check the performance suite ran its test
-        if: ${{ !cancelled() && steps.test.outcome != 'skipped' }}
-        run: scripts/ci/ui-test-shard.sh --check "$UI_SHARD" .build/results/app-ui-performance.xcresult
-
-      - name: Export expansion profile
-        if: ${{ !cancelled() }}
-        run: |
-          root=.build/results/expansion-profile
-          if [ -f "$root/expansion.trace/form.template" ]; then
-            xcrun xctrace symbolicate --input "$root/expansion.trace" --dsym "$root/Blau.dSYM" > "$root/symbolication.log" 2>&1 || true
-            xcrun xctrace export --input "$root/expansion.trace" --toc --output "$root/toc.xml"
-            xcrun xctrace export --input "$root/expansion.trace" --xpath '/trace-toc/run[@number="1"]/data/table[@schema="time-profile"]' --output "$root/cpu.xml"
-            xcrun xctrace export --input "$root/expansion.trace" --xpath '/trace-toc/run[@number="1"]/data/table[@schema="os-signpost" and @dynamic-tracing-enabled-subsystems]' --output "$root/signposts.xml"
-          fi
-
-      - name: Upload expansion profile
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: cold-expansion-profile-${{ github.run_attempt }}
-          path: .build/results/expansion-profile
-          if-no-files-found: warn
-          retention-days: 90
-
-      - name: Shut down simulator
-        if: ${{ always() && steps.simulator.outputs.udid != '' }}
-        env:
-          UDID: ${{ steps.simulator.outputs.udid }}
-        run: xcrun simctl shutdown "$UDID" || true
-
-      - name: Upload xcresult
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: app-ui-performance-xcresult-${{ github.run_attempt }}
-          path: .build/results/app-ui-performance.xcresult
-          if-no-files-found: warn
-          retention-days: 14

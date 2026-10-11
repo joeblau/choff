@@ -3,7 +3,7 @@
 Blau keeps all text (conversations, topics, utterances, and the long-term
 memory: knowledge-base documents, entities, facts and the profile block) and
 the user's voiceprint in SwiftData. The store is mirrored to the user's private CloudKit
-database in `iCloud.com.joeblau.blau`, so it follows CloudKit's schema rules.
+database in `iCloud.com.joeblau.choff`, so it follows CloudKit's schema rules.
 Derived data such as embeddings and search indexes stays local and is
 rebuilt from these models (issue #7).
 

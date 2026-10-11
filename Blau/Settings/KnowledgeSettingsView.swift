@@ -94,7 +94,7 @@ struct KnowledgeSettingsView: View {
                 Text("Knowledge Base")
             } footer: {
                 Text(
-                    "What you'd like Blau to know. It syncs through iCloud, and Grok looks things up in it when it "
+                    "What you'd like Choff to know. It syncs through iCloud, and Grok looks things up in it when it "
                         + "helps. In a conversation, say “Remember that…” to add a fact."
                 )
             }
@@ -105,7 +105,7 @@ struct KnowledgeSettingsView: View {
             } header: {
                 Text("Learned From Conversations")
             } footer: {
-                Text("You can delete everything Blau knows in Privacy & Data.")
+                Text("You can delete everything Choff knows in Privacy & Data.")
             }
 
             Section {
@@ -115,7 +115,7 @@ struct KnowledgeSettingsView: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityIdentifier(KnowledgeSettingsIdentifiers.memoryTools)
             } footer: {
-                Text("Grok looks things up in what Blau knows when it helps answer you.")
+                Text("Grok looks things up in what Choff knows when it helps answer you.")
             }
 
             MemorySettingsSection()

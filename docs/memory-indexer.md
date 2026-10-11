@@ -183,7 +183,7 @@ lost: the work resumes where it was.
   runs, so a rebuild makes progress while the app is open.
 - **Background.** When the app leaves the foreground with a rebuild or an
   embedding backlog left, it submits a `BGProcessingTaskRequest`
-  (`com.joeblau.blau.memory-index`, no network, external power not
+  (`com.joeblau.choff.memory-index`, no network, external power not
   required since the gate already backs off on battery). The handler opens
   the stores if the app was launched for it, waits until the indexer is
   idle, and completes; on expiration it stops waiting, the process is
@@ -242,6 +242,6 @@ kill:**
 | - | ---- | -------- | ------ |
 | 1 | Install on a device with ~10k chunks of data (or sign in to an account that has it), or delete the index (`Application Support/Blau/Derived/MemoryIndex.sqlite`) and relaunch. | Settings → Knowledge → Search Index: "Rebuilding…" with a progress bar. | pending |
 | 2 | Kill the app from the app switcher at about 30%. Relaunch. | Progress continues from where it was, not from 0. | pending |
-| 3 | Background the app; in Xcode, pause and run `e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.joeblau.blau.memory-index"]`, resume. | Console: "Memory index background task started", then "finished" once done. | pending |
+| 3 | Background the app; in Xcode, pause and run `e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.joeblau.choff.memory-index"]`, resume. | Console: "Memory index background task started", then "finished" once done. | pending |
 | 4 | Or leave the device idle overnight. | Next morning, "Up to date"; `needsRebuild` false. | pending |
 | 5 | Warm the device (or turn on Low Power Mode) during a rebuild. | "Waiting" or "Paused"; it continues when conditions recover. | pending |

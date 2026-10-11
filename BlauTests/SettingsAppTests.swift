@@ -62,7 +62,7 @@ struct SettingsAppTests {
     }
 
     @Test func versionSummaryReadsTheBundle() {
-        #expect(SettingsSummary.version().hasPrefix("Blau "))
+        #expect(SettingsSummary.version().hasPrefix("Choff "))
     }
 
     // MARK: Voice ID

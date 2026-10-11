@@ -91,7 +91,7 @@ public struct ConversationExporter: Sendable {
 
     /// The Markdown for `conversations`, exported at `date`.
     public func markdown(for conversations: [Snapshot], exportedAt date: Date) -> String {
-        var output = "# Blau conversations\n\n"
+        var output = "# Choff conversations\n\n"
         let count = conversations.count == 1 ? "1 conversation" : "\(conversations.count) conversations"
         output += "Exported \(format(date, time: true)) · \(count)\n"
         for conversation in conversations {
@@ -121,7 +121,7 @@ public struct ConversationExporter: Sendable {
         calendar.timeZone = timeZone
         let parts = calendar.dateComponents([.year, .month, .day], from: date)
         let name = String(
-            format: "Blau Conversations %04d-%02d-%02d.md", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
+            format: "Choff Conversations %04d-%02d-%02d.md", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
         let url = directory.appending(path: name)
         try Data(markdown(for: conversations, exportedAt: date).utf8).write(to: url, options: .atomic)
         return url
@@ -133,7 +133,7 @@ public struct ConversationExporter: Sendable {
         switch role {
         case .user: "You"
         case .agent: "Grok"
-        case .system: "Blau"
+        case .system: "Choff"
         }
     }
 

@@ -85,7 +85,7 @@ public struct LogExporter: Sendable {
         let since = now.addingTimeInterval(-Double(window.components.seconds))
         let entries = try source.entries(since: since)
         let text = Self.format(entries, header: header, since: since, now: now)
-        let url = directory.appending(path: "Blau Logs \(Self.fileStamp(now)).txt")
+        let url = directory.appending(path: "Choff Logs \(Self.fileStamp(now)).txt")
         try Data(text.utf8).write(to: url, options: .atomic)
         Log.ui.notice("Exported \(entries.count, privacy: .public) log messages")
         return url
@@ -95,7 +95,7 @@ public struct LogExporter: Sendable {
     /// `2026-10-08T09:41:00.123Z [realtime] notice: Connected`.
     public static func format(_ entries: [LogExportEntry], header: String, since: Date, now: Date) -> String {
         let timestamp = Date.ISO8601FormatStyle(includingFractionalSeconds: true)
-        var lines = ["Blau logs, \(since.formatted(timestamp)) to \(now.formatted(timestamp))"]
+        var lines = ["Choff logs, \(since.formatted(timestamp)) to \(now.formatted(timestamp))"]
         if !header.isEmpty {
             lines.append(header)
         }

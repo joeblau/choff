@@ -17,7 +17,7 @@ import os
 /// and the `processing` background mode is declared in `project.yml`. See
 /// docs/memory-profile.md.
 enum ProfileConsolidationBackgroundTask {
-    static let identifier = "com.joeblau.blau.memory-profile"
+    static let identifier = "com.joeblau.choff.memory-profile"
 
     #if canImport(BackgroundTasks) && os(iOS)
         /// Registers the launch handler. Call once, before the app finishes

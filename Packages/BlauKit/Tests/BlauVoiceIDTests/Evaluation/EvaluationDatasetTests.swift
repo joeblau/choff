@@ -42,7 +42,7 @@ struct EvaluationDatasetTests {
         let json = """
             {
               "name": "Owner set",
-              "consent": "Recorded by the owner for Blau, 2026-10-07",
+              "consent": "Recorded by the owner for Choff, 2026-10-07",
               "recordings": [
                 {"path": "owner/kitchen-1.m4a", "speaker": "owner", "role": "enrollment"},
                 {"path": "tv/news.wav", "speaker": "tv-news-1", "role": "probe", "source": "tv",

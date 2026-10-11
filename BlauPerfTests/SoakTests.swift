@@ -61,7 +61,7 @@ final class SoakTests: XCTestCase {
             guard XCTWaiter.wait(for: [enabled], timeout: 180) == .completed else {
                 let missing = app.staticTexts["blau.soak.models"]
                 XCTFail(
-                    "SOAK_ASR=parakeet needs the speech models installed on the device (open Blau and finish "
+                    "SOAK_ASR=parakeet needs the speech models installed on the device (open Choff and finish "
                         + "onboarding first). \(missing.exists ? missing.label : "")")
                 return
             }

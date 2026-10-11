@@ -157,13 +157,13 @@ expect_error "the unused category is mentioned" \
 
 # --- bundle -----------------------------------------------------------------
 
-app="$work/Blau.xcarchive/Products/Applications/Blau.app"
-mkdir -p "$app/PlugIns/BlauWidgets.appex" "$app/GRDB_GRDB.bundle" "$app/Other.bundle"
+app="$work/Blau.xcarchive/Products/Applications/Choff.app"
+mkdir -p "$app/PlugIns/ChoffWidgets.appex" "$app/GRDB_GRDB.bundle" "$app/Other.bundle"
 cp "$work/good.xcprivacy" "$app/PrivacyInfo.xcprivacy"
 cp "$work/good.xcprivacy" "$app/GRDB_GRDB.bundle/PrivacyInfo.xcprivacy"
 expect "an extension without a manifest fails" 1 python3 -I "$check" bundle "$work/Blau.xcarchive"
-expect_error "the extension is named" "BlauWidgets.appex: no PrivacyInfo.xcprivacy"
-cp "$work/good.xcprivacy" "$app/PlugIns/BlauWidgets.appex/PrivacyInfo.xcprivacy"
+expect_error "the extension is named" "ChoffWidgets.appex: no PrivacyInfo.xcprivacy"
+cp "$work/good.xcprivacy" "$app/PlugIns/ChoffWidgets.appex/PrivacyInfo.xcprivacy"
 expect "an archive whose app and extension have manifests passes" 0 \
     python3 -I "$check" bundle "$work/Blau.xcarchive"
 expect "a built app passes too" 0 python3 -I "$check" bundle "$app"

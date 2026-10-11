@@ -52,7 +52,7 @@ struct SyncStatusPresentation: Equatable {
                 detail: storeFailed
                     ? String(
                         localized:
-                            "Blau couldn't open its database. New conversations won't be kept until it restarts. Your existing data is untouched."
+                            "Choff couldn't open its database. New conversations won't be kept until it restarts. Your existing data is untouched."
                     )
                     : String(localized: "This session uses temporary storage; nothing is saved."),
                 systemImage: "exclamationmark.triangle", lastSync: nil, isWarning: storeFailed)
@@ -81,19 +81,19 @@ struct SyncStatusPresentation: Equatable {
     private static func detail(for reason: SyncOffReason) -> String {
         switch reason {
         case .signedOut:
-            String(localized: "You're not signed in to iCloud, or iCloud is off for Blau.") + " " + keptOnDevice
+            String(localized: "You're not signed in to iCloud, or iCloud is off for Choff.") + " " + keptOnDevice
         case .restricted:
             String(localized: "iCloud is restricted on this iPhone.") + " " + keptOnDevice
         case .temporarilyUnavailable:
             String(localized: "Your iCloud account needs attention in Settings.") + " " + keptOnDevice
         case .unknown:
-            String(localized: "Blau couldn't reach your iCloud account and will try again.") + " " + keptOnDevice
+            String(localized: "Choff couldn't reach your iCloud account and will try again.") + " " + keptOnDevice
         case .notAvailableInThisBuild:
-            String(localized: "This build of Blau isn't signed for iCloud.") + " " + keptOnDevice
+            String(localized: "This build of Choff isn't signed for iCloud.") + " " + keptOnDevice
         case .disabledForDevelopment:
             String(localized: "iCloud sync is turned off for development.") + " " + keptOnDevice
         case .storeError:
-            String(localized: "iCloud sync couldn't start; Blau will try again next launch.") + " " + keptOnDevice
+            String(localized: "iCloud sync couldn't start; Choff will try again next launch.") + " " + keptOnDevice
         }
     }
 

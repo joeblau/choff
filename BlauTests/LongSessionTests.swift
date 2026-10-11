@@ -22,10 +22,10 @@ struct LongSessionAppTests {
 
     @Test func theLiveActivityExtensionIsEmbedded() throws {
         let plugIns = try #require(Bundle.main.builtInPlugInsURL)
-        let widgets = try #require(Bundle(url: plugIns.appending(path: "BlauWidgets.appex")))
+        let widgets = try #require(Bundle(url: plugIns.appending(path: "ChoffWidgets.appex")))
         let point = (widgets.infoDictionary?["NSExtension"] as? [String: Any])?["NSExtensionPointIdentifier"]
         #expect(point as? String == "com.apple.widgetkit-extension")
-        #expect(widgets.bundleIdentifier == "com.joeblau.blau.widgets")
+        #expect(widgets.bundleIdentifier == "com.joeblau.choff.widgets")
     }
 
     @Test(arguments: RecordingIndicatorState.Status.allCases)
@@ -73,7 +73,7 @@ struct LongSessionAppTests {
 /// The live conversation audio on the real voice-processing engine: it
 /// comes up, audio flows, the watchdog sees it, and it stops. Needs
 /// microphone permission (on a simulator: `xcrun simctl privacy <udid>
-/// grant microphone com.joeblau.blau`), so it only runs with
+/// grant microphone com.joeblau.choff`), so it only runs with
 /// `BLAU_DEVICE_TESTS=1`. Locking the screen can't be automated; the
 /// 30-minute locked run is the manual procedure in docs/background.md.
 @Suite(

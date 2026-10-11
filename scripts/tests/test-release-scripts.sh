@@ -197,7 +197,7 @@ notes() { (cd "$git_repo" && "$release" notes "$@"); }
 expect "notes: writes Markdown and What to Test text" \
     0 notes --to v0.2.0 --repo joeblau/voice --version 0.2.0 --build 12 \
     --markdown "$work/notes.md" --text "$work/notes.txt"
-expect_text "notes: Markdown heading has the version and build" "$work/notes.md" "## Blau 0.2.0 (12)"
+expect_text "notes: Markdown heading has the version and build" "$work/notes.md" "## Choff 0.2.0 (12)"
 expect_text "notes: starts at the previous tag" "$work/notes.md" "Changes since v0.1.0:"
 expect_text "notes: lists a squash-merged pull request with a link" "$work/notes.md" \
     "- Build the record button ([#10](https://github.com/joeblau/voice/pull/10))"
@@ -265,7 +265,7 @@ expect_option "--internal-only" testFlightInternalTestingOnly true
 
 # --- release.py verify-ipa -------------------------------------------------------------
 
-# ipa <name> [overrides...]: an IPA of a fake Blau.app at $work/ipa/<name>.ipa
+# ipa <name> [overrides...]: an IPA of a fake Choff.app at $work/ipa/<name>.ipa
 ipa() {
     name=$1
     shift
@@ -306,14 +306,14 @@ broken() {
 broken "aps-environment development fails" "aps-environment is production" aps=development
 broken "a Development iCloud environment fails" "iCloud container environment is Production" \
     container_environment=Development
-broken "a development signature (get-task-allow) fails" "Blau.app: get-task-allow is off" get_task_allow=true
-broken "a widget with another build number fails" "BlauWidgets.appex: versions match the app" widget_build=41
+broken "a development signature (get-task-allow) fails" "Choff.app: get-task-allow is off" get_task_allow=true
+broken "a widget with another build number fails" "ChoffWidgets.appex: versions match the app" widget_build=41
 broken "a Debug build fails" "built with the Release configuration" environment=debug
 broken "an unsigned archive (CloudKit off) fails" "CloudKit sync is on" cloudkit=NO
 broken "an embedded developer key fails" "no developer xAI key" dev_key=xai-0123456789
 broken "missing export compliance fails" "export compliance is declared" encryption=true
-broken "a development or ad hoc profile fails" "Blau.app: the provisioning profile is an App Store profile" provisioned_devices=true
-broken "another bundle identifier fails" "bundle identifier is com.joeblau.blau" bundle_id=com.example.other
+broken "a development or ad hoc profile fails" "Choff.app: the provisioning profile is an App Store profile" provisioned_devices=true
+broken "another bundle identifier fails" "bundle identifier is com.joeblau.choff" bundle_id=com.example.other
 broken "a missing widget extension fails" "embeds the app extensions" no_widget=true
 
 echo "not a zip" >"$work/not.ipa"
@@ -322,10 +322,10 @@ expect "verify-ipa: a file that isn't an IPA fails" 1 verify "$work/not.ipa"
 # An archive built with CODE_SIGNING_ALLOWED=NO, checked as an .app.
 mkdir -p "$work/unsigned"
 "$make_app" "$work/unsigned" >/dev/null
-codesign --remove-signature "$work/unsigned/Blau.app"
-expect "verify-ipa: an unsigned app fails (--app)" 1 "$release" verify-ipa --app "$work/unsigned/Blau.app" \
+codesign --remove-signature "$work/unsigned/Choff.app"
+expect "verify-ipa: an unsigned app fails (--app)" 1 "$release" verify-ipa --app "$work/unsigned/Choff.app" \
     --version 0.1.0 --build 42 --allow-ad-hoc-signature
-expect_text "verify-ipa: says the signature is missing" "$work/out" "FAIL - Blau.app: code signature is valid"
+expect_text "verify-ipa: says the signature is missing" "$work/out" "FAIL - Choff.app: code signature is valid"
 expect_text "verify-ipa: and the entitlements" "$work/out" "FAIL - aps-environment is production"
 
 # --- testflight.sh ------------------------------------------------------------------
@@ -363,7 +363,7 @@ case "\$mode" in
         ;;
     export)
         mkdir -p "\$export_path/Payload"
-        cp -R "\$archive/Products/Applications/Blau.app" "\$export_path/Payload/"
+        cp -R "\$archive/Products/Applications/Choff.app" "\$export_path/Payload/"
         (cd "\$export_path" && zip -qry Blau.ipa Payload && rm -rf Payload)
         ;;
 esac

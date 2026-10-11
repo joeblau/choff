@@ -49,7 +49,7 @@ struct AppDiagnosticsTests {
         let url = try file.write()
         defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
 
-        #expect(url.lastPathComponent.hasPrefix("Blau-Diagnostics-"))
+        #expect(url.lastPathComponent.hasPrefix("Choff-Diagnostics-"))
         #expect(url.pathExtension == "json")
         let document = try #require(try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
         #expect((document["payloads"] as? [Any])?.count == 2)
@@ -85,7 +85,7 @@ struct AppDiagnosticsTests {
 
     @Test func exportContextDescribesTheApp() {
         let context = AppDiagnostics.exportContext()
-        #expect(context.bundleIdentifier == "com.joeblau.blau")
+        #expect(context.bundleIdentifier == "com.joeblau.choff")
         #expect(context.appVersion?.isEmpty == false)
         #expect(context.appBuild?.isEmpty == false)
         #expect(context.osVersion?.isEmpty == false)

@@ -49,7 +49,7 @@ struct NotesListView: View {
             if notes.isEmpty {
                 ContentUnavailableView(
                     "No Notes", systemImage: "note.text",
-                    description: Text("Write, paste or import what you'd like Blau to know."))
+                    description: Text("Write, paste or import what you'd like Choff to know."))
             } else {
                 Section {
                     ForEach(notes) { note in
@@ -241,7 +241,7 @@ private struct NoteEditor: View {
                 Task { await delete() }
             }
         } message: {
-            Text("It is removed from Blau's memory on all your devices.")
+            Text("It is removed from Choff's memory on all your devices.")
         }
         .onAppear {
             if stored == nil { focus = .title }

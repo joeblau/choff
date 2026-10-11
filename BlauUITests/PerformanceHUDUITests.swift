@@ -90,13 +90,13 @@ final class PerformanceHUDUITests: XCTestCase {
     func testTripleTapTogglesTheHUDInDebugBuilds() {
         let app = launch()
         XCTAssertFalse(hud(app).exists)
-        // The "Blau" title is plain text in the main screen's content, away
+        // The "Choff" title is plain text in the main screen's content, away
         // from every button (the content's centre can be the onboarding
         // button). The brand lockup combines its children, and the iOS 26
-        // accessibility tree can list the combined element and its "Blau"
+        // accessibility tree can list the combined element and its "Choff"
         // text both as static texts. Take the first (the lockup): it is just
         // as far from every button.
-        let title = app.descendants(matching: .any)["blau.mainScreen.empty"].staticTexts["Blau"].firstMatch
+        let title = app.descendants(matching: .any)["blau.mainScreen.empty"].staticTexts["Choff"].firstMatch
         XCTAssertTrue(title.waitForExistence(timeout: 5))
         // The speech-model setup card re-centres the empty state when it goes
         // away, which moves the onboarding button to where the title was. Let

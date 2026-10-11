@@ -25,7 +25,7 @@ struct MemorySettingsSection: View {
             NavigationLink {
                 LearnedFactsView()
             } label: {
-                Label("What Blau Learned", systemImage: "brain")
+                Label("What Choff Learned", systemImage: "brain")
             }
             .accessibilityIdentifier(MemorySettingsIdentifiers.openLearned)
             // #67: the pinned profile and the diff of each consolidation.
@@ -39,15 +39,15 @@ struct MemorySettingsSection: View {
             Text("Memory")
         } footer: {
             Text(
-                "After each topic, Blau sends its transcript to xAI to pick out facts worth remembering, like "
-                    + "where you work or who you mention. Turn this off to stop learning; what Blau already "
+                "After each topic, Choff sends its transcript to xAI to pick out facts worth remembering, like "
+                    + "where you work or who you mention. Turn this off to stop learning; what Choff already "
                     + "learned stays until you delete it."
             )
         }
     }
 }
 
-/// "What Blau Learned": every fact memory holds, current ones first, with
+/// "What Choff Learned": every fact memory holds, current ones first, with
 /// swipe to delete. Facts that stopped being true stay listed (memory is
 /// add-only and keeps their history) until the user deletes them.
 ///
@@ -66,7 +66,7 @@ struct LearnedFactsView: View {
                 ContentUnavailableView(
                     "Nothing Learned Yet",
                     systemImage: "brain",
-                    description: Text("Facts Blau picks up from your conversations show up here.")
+                    description: Text("Facts Choff picks up from your conversations show up here.")
                 )
                 .accessibilityIdentifier(MemorySettingsIdentifiers.emptyState)
             }
@@ -86,7 +86,7 @@ struct LearnedFactsView: View {
             }
         }
         .accessibilityIdentifier(MemorySettingsIdentifiers.learnedList)
-        .navigationTitle("What Blau Learned")
+        .navigationTitle("What Choff Learned")
         .alert(
             "Couldn't Delete",
             isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } }),
@@ -166,7 +166,7 @@ private struct LearnedFactRow: View {
 
     private var detail: String {
         let since = fact.validFrom.formatted(date: .abbreviated, time: .omitted)
-        let source = fact.origin == .user ? String(localized: "You told Blau") : String(localized: "Learned")
+        let source = fact.origin == .user ? String(localized: "You told Choff") : String(localized: "Learned")
         if let until = fact.invalidatedAt {
             let end = until.formatted(date: .abbreviated, time: .omitted)
             return "\(source) · \(since) – \(end)"

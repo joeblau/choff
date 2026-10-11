@@ -151,7 +151,7 @@ final class KnowledgeBaseUITests: XCTestCase {
         myName.typeText("Joe")
         let text = element("knowledge.aboutMe.text", in: app)
         text.tap()
-        text.typeText("I'm building Blau, a voice app.")
+        text.typeText("I'm building Choff, a voice app.")
         let status = element("knowledge.saveStatus", in: app)
         let saved = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label BEGINSWITH %@", "Saved"), object: status)

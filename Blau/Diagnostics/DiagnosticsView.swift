@@ -192,7 +192,7 @@ struct DiagnosticsView: View {
             } header: {
                 Text("Signposts")
             } footer: {
-                Text("Pipeline intervals Blau reports to MetricKit. See docs/performance.md.")
+                Text("Pipeline intervals Choff reports to MetricKit. See docs/performance.md.")
             }
         }
     }
@@ -216,7 +216,7 @@ struct DiagnosticsView: View {
             if let file = diagnostics.exportFile {
                 ShareLink(
                     item: file,
-                    preview: SharePreview("Blau diagnostics", image: Image(systemName: "waveform.path.ecg"))
+                    preview: SharePreview("Choff diagnostics", image: Image(systemName: "waveform.path.ecg"))
                 ) {
                     Label("Export Diagnostics", systemImage: "square.and.arrow.up")
                 }

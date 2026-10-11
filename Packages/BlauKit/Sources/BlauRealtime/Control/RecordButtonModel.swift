@@ -357,7 +357,7 @@ public final class RecordButtonModel {
     static func message(for error: any Error) -> String {
         if error is ServiceUnavailableError {
             return String(
-                localized: "Conversations aren't available in this build of Blau yet.")
+                localized: "Conversations aren't available in this build of Choff yet.")
         }
         return error.localizedDescription
     }

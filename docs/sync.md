@@ -2,7 +2,7 @@
 
 Blau keeps all text (conversations, topics, utterances, memory) and the voiceprint in
 SwiftData and mirrors it to the **private database** of the CloudKit container
-`iCloud.com.joeblau.blau` (issue #20). There is no Blau server: the data
+`iCloud.com.joeblau.choff` (issue #20). There is no Blau server: the data
 lives on the user's devices and in their own iCloud account. The model and
 CloudKit's schema rules are in [data-model.md](data-model.md); shipping a
 schema to production is in [release.md](release.md). The same container's
@@ -13,7 +13,7 @@ iCloud Drive folder holds the optional Markdown copy of every conversation
 
 | Store | File | `cloudKitDatabase` | Contents |
 | ----- | ---- | ------------------ | -------- |
-| Synced | `Application Support/Blau/Blau.store` | `.private("iCloud.com.joeblau.blau")`, or `.none` when iCloud is unavailable | `BlauModelContainer.schema` (`CurrentSchema`, migrated by `BlauMigrationPlan`) |
+| Synced | `Application Support/Blau/Blau.store` | `.private("iCloud.com.joeblau.choff")`, or `.none` when iCloud is unavailable | `BlauModelContainer.schema` (`CurrentSchema`, migrated by `BlauMigrationPlan`) |
 | Derived | `Application Support/Blau/Derived/BlauDerived.store` | always `.none` | `DerivedSchemaV1`: `HistoryCursor` and future rebuildable caches |
 
 - The derived store is a **separate `ModelContainer`**, not a second
@@ -119,11 +119,11 @@ opening the store. Release builds never run it.
 
 ## Logs
 
-Everything logs to subsystem `com.joeblau.blau`, category `data` (the
+Everything logs to subsystem `com.joeblau.choff`, category `data` (the
 `BlauTelemetry` logger `Log.data`):
 
 ```sh
-log stream --predicate 'subsystem == "com.joeblau.blau" && category == "data"'
+log stream --predicate 'subsystem == "com.joeblau.choff" && category == "data"'
 ```
 
 Core Data's own CloudKit logging is louder still: add
@@ -159,14 +159,14 @@ account; follow the manual test plan below.
 Prerequisites: two iPhones (or an iPhone and a simulator signed in to an Apple
 Account) on iOS 26 or later, **signed in to the same iCloud account** with
 iCloud Drive on; a Debug build signed with the team that owns
-`iCloud.com.joeblau.blau` installed on both (or the same TestFlight build on
+`iCloud.com.joeblau.choff` installed on both (or the same TestFlight build on
 both, which uses the Production environment). Debug builds use the CloudKit
 Development environment; never mix a Debug device with a TestFlight device.
 
 | # | Step | Expected | Result |
 | - | ---- | -------- | ------ |
 | 1 | Fresh install on A and B. Open Settings → iCloud on both. | "iCloud Sync: On", "iCloud Account: Signed in". | pending |
-| 2 | In the CloudKit Console (Development), check `iCloud.com.joeblau.blau` → Schema. | Record types `CD_Conversation`, `CD_Topic`, `CD_Utterance`, `CD_VoiceProfile`, `CD_VoiceEnrollmentSet`, `CD_Document`, `CD_CollectionItem`, `CD_MemoryEntity`, `CD_Fact`, `CD_ProfileBlock` exist (DEBUG schema initialization). | pending |
+| 2 | In the CloudKit Console (Development), check `iCloud.com.joeblau.choff` → Schema. | Record types `CD_Conversation`, `CD_Topic`, `CD_Utterance`, `CD_VoiceProfile`, `CD_VoiceEnrollmentSet`, `CD_Document`, `CD_CollectionItem`, `CD_MemoryEntity`, `CD_Fact`, `CD_ProfileBlock` exist (DEBUG schema initialization). | pending |
 | 3 | On A, record a short conversation (until the conversation UI exists, use a DEBUG build that inserts a `Conversation` with a topic and two utterances). | A's Settings shows "Syncing…", then "On" with "Last Synced: now". | pending |
 | 4 | Keep B in the foreground and wait up to 1 minute. | The conversation, its topic and utterances appear on B with the same text, order and topic title. | pending |
 | 5 | Background B, edit the topic title on A, then bring B to the foreground. | B shows the new title (silent push or the foreground refresh). | pending |

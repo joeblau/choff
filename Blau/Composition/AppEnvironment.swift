@@ -65,7 +65,7 @@ final class AppEnvironment {
 
     /// Learning from conversations (#66): each topic the lifecycle closes is
     /// sent for fact and entity extraction, and Settings → Knowledge binds to
-    /// its toggle and "What Blau Learned". Only the live app calls xAI;
+    /// its toggle and "What Choff Learned". Only the live app calls xAI;
     /// every other kind runs on a text model that is never available.
     let memoryLearning: MemoryLearning
 
@@ -650,7 +650,7 @@ extension AppEnvironment {
 
     /// What the preview `FakeMemoryService` knows.
     static let sampleMemories = [
-        "Joe is building Blau, a long-form voice app for talking with Grok",
+        "Joe is building Choff, a long-form voice app for talking with Grok",
         "The YC interview practice set has 20 questions",
         "Joe prefers short answers when practicing interview questions",
     ]

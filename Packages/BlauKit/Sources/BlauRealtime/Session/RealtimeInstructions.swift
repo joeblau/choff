@@ -35,7 +35,7 @@ public struct RealtimeInstructions: Sendable, Hashable {
     public var assistantName: String
     public var limits: Limits
 
-    public init(assistantName: String = "Blau", limits: Limits = .standard) {
+    public init(assistantName: String = "Choff", limits: Limits = .standard) {
         self.assistantName = assistantName
         self.limits = limits
     }

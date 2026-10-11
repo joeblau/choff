@@ -33,7 +33,7 @@ struct TranscriptionSettingsView: View {
                 Text("Second Pass")
             } footer: {
                 Text(
-                    "After each sentence, Blau transcribes it again with a larger model to add punctuation and fix "
+                    "After each sentence, Choff transcribes it again with a larger model to add punctuation and fix "
                         + "words. It uses the extra speech models and pauses while your iPhone is hot or low on power."
                 )
             }

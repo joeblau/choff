@@ -142,7 +142,7 @@ struct VoiceLoopTests {
             performance: FixedPerformanceLevel())
         await loop.start()
 
-        pipeline.verdictFeed.yield(verdict("Hi Blau", .accepted))
+        pipeline.verdictFeed.yield(verdict("Hi Choff", .accepted))
         pipeline.verdictFeed.yield(verdict("And now the weather", .rejected))
         pipeline.verdictFeed.yield(verdict("Hm", .uncertainDiscarded))
         pipeline.verdictFeed.yield(verdict("Y ahora el tiempo", .otherLanguage))

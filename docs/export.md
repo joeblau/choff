@@ -1,6 +1,6 @@
 # Markdown export
 
-Blau can save every conversation as a Markdown file in the user's own iCloud
+Choff can save every conversation as a Markdown file in the user's own iCloud
 Drive, so they always have a readable copy of what they said, outside the app
 (issue #78, epic #7). The synced SwiftData store stays the source of truth
 ([sync.md](sync.md)); the files are a copy that is regenerated from it.
@@ -8,15 +8,15 @@ Drive, so they always have a readable copy of what they said, outside the app
 ## Where the files go
 
 The files live in the `Documents` folder of the ubiquity container
-`iCloud.com.joeblau.blau` (the same container as the CloudKit database), which
-Files shows as **iCloud Drive → Blau** and Finder as **iCloud Drive → Blau**.
+`iCloud.com.joeblau.choff` (the same container as the CloudKit database), which
+Files shows as **iCloud Drive → Choff** and Finder as **iCloud Drive → Choff**.
 `project.yml` sets this up:
 
 | Setting | Value | Why |
 | ------- | ----- | --- |
 | Entitlement `com.apple.developer.icloud-services` | adds `CloudDocuments` to `CloudKit` | iCloud Drive (documents) for the container |
-| Entitlement `com.apple.developer.ubiquity-container-identifiers` | `iCloud.com.joeblau.blau` | The container `FileManager.url(forUbiquityContainerIdentifier:)` opens |
-| Info.plist `NSUbiquitousContainers` → `iCloud.com.joeblau.blau` | `NSUbiquitousContainerIsDocumentScopePublic: true`, `NSUbiquitousContainerName: Blau`, `NSUbiquitousContainerSupportedFolderLevels: Any` | Publishes `Documents` to iCloud Drive under the name **Blau** |
+| Entitlement `com.apple.developer.ubiquity-container-identifiers` | `iCloud.com.joeblau.choff` | The container `FileManager.url(forUbiquityContainerIdentifier:)` opens |
+| Info.plist `NSUbiquitousContainers` → `iCloud.com.joeblau.choff` | `NSUbiquitousContainerIsDocumentScopePublic: true`, `NSUbiquitousContainerName: Blau`, `NSUbiquitousContainerSupportedFolderLevels: Any` | Publishes `Documents` to iCloud Drive under the name **Choff** |
 
 Things to know (Apple's "Configuring iCloud services"):
 
@@ -27,10 +27,10 @@ Things to know (Apple's "Configuring iCloud services"):
   the container. A manually managed App ID needs **iCloud Documents** turned
   on in the developer portal (the container already exists for CloudKit).
 - Unsigned builds (`CODE_SIGNING_ALLOWED=NO`: CI, `make test`) have no iCloud
-  entitlement. Blau knows from the `BlauCloudKitEnabled` Info.plist key and
+  entitlement. Choff knows from the `BlauCloudKitEnabled` Info.plist key and
   never asks for the container; Settings says the build can't export.
-- The folder appears in Files once Blau has created it, i.e. after the first
-  export. iCloud Drive must be on for Blau (Settings → Apple Account → iCloud
+- The folder appears in Files once Choff has created it, i.e. after the first
+  export. iCloud Drive must be on for Choff (Settings → Apple Account → iCloud
   → iCloud Drive → Apps Using iCloud Drive).
 
 ## Format
@@ -83,7 +83,7 @@ generator: Blau Markdown export 1
   `## No topic`. A topic the conversation came back to is headed again with
   "(continued)".
 - **Utterances**: only final ones with text (partials are never stored).
-  Speakers are You, Grok and Blau (system notes). Each utterance is one line:
+  Speakers are You, Grok and Choff (system notes). Each utterance is one line:
   whitespace is folded and Markdown syntax characters are escaped, so a
   transcript never turns into formatting.
 - **Interrupted replies**: a reply the user cut short (barge-in, a new
@@ -98,7 +98,7 @@ generator: Blau Markdown export 1
 - **Times** are shown in one time zone, recorded in the front matter. A time
   on a different day than the conversation's start shows its date.
 - **The front matter** is YAML, so tools like Obsidian read it. `generator`
-  marks Blau's files; `conversation` identifies the conversation.
+  marks Choff's files; `conversation` identifies the conversation.
 
 ## Idempotency
 
@@ -114,8 +114,8 @@ the id in its name and confirms it with the front matter, then:
 | Title changed | Renames the file (one coordinated move), then rewrites it if the content changed |
 | Several files for one conversation (two devices renamed it at once) | Keeps one, removes the others |
 | Another file already has the name | Uses the full id in the name instead |
-| A file that isn't a Blau export, or can't be read | Never touched |
-| A conversation was deleted in Blau | Its file stays (it is the user's copy); delete it in Files |
+| A file that isn't a Choff export, or can't be read | Never touched |
+| A conversation was deleted in Choff | Its file stays (it is the user's copy); delete it in Files |
 
 **Two devices.** iCloud Drive syncs the folder, so every device sees every
 export. A device exporting a conversation that already has a file reuses the
@@ -143,14 +143,14 @@ Settings → iCloud → **Markdown Export** (`MarkdownExportSettingsSection`, ba
     after the last change, exports the conversations whose conversation,
     topic or utterance rows changed. It reads them from SwiftData history
     with its own cursor (consumer `markdown-export`, kept in the derived
-    store), so changes made while Blau wasn't running are exported at the
+    store), so changes made while Choff wasn't running are exported at the
     next launch.
   - Conversations still being recorded are skipped until they end, so a long
     session isn't re-uploaded every few seconds; ending one triggers its
     export.
   - Leaving the foreground runs a pending export at once, under a background
     task assertion.
-  - If an automatic export fails (iCloud Drive off, say), or Blau is
+  - If an automatic export fails (iCloud Drive off, say), or Choff is
     terminated before it finishes (suspended during the background flush,
     say), the next one exports everything, so the changes it had read are
     not lost. The "owes a full export" flag (`needsFullExport`) is set
@@ -194,19 +194,19 @@ and duration, and errors per conversation. Titles and text are never logged.
 - `BlauUITests/MarkdownExportUITests`: Export Now on a simulator without
   iCloud Drive explains why.
 
-## Manual test plan: Files → iCloud Drive → Blau
+## Manual test plan: Files → iCloud Drive → Choff
 
-Needs a build signed with the team that owns `iCloud.com.joeblau.blau`, on an
+Needs a build signed with the team that owns `iCloud.com.joeblau.choff`, on an
 iPhone signed in to iCloud with iCloud Drive on (and a Mac on the same
 account for step 7).
 
 | # | Step | Expected | Result |
 | - | ---- | -------- | ------ |
 | 1 | Record a short conversation with at least two topics, stop it. Settings → iCloud → Markdown Export → Export Now. | Status: "N conversations exported: N new, 0 updated." | pending |
-| 2 | Open Files → iCloud Drive. | A **Blau** folder with one `.md` per conversation, named `<date> <time> <title> (<id>).md`. | pending |
+| 2 | Open Files → iCloud Drive. | A **Choff** folder with one `.md` per conversation, named `<date> <time> <title> (<id>).md`. | pending |
 | 3 | Open a file (Quick Look) or in a Markdown app. | Front matter, `# title`, a `##` heading per topic with its span and summary, utterances with `HH:mm:ss · You/Grok`. | pending |
 | 4 | Export Now again. Check the files' modification dates in Files (Get Info). | Status: "all up to date"; dates unchanged; no new files. | pending |
-| 5 | Rename a topic (or the conversation) in Blau, Export Now. | The file is renamed (still one file per conversation) and shows the new title. | pending |
+| 5 | Rename a topic (or the conversation) in Choff, Export Now. | The file is renamed (still one file per conversation) and shows the new title. | pending |
 | 6 | Turn on Export Automatically, record and stop a new conversation, wait ~10 s. | Its file appears without tapping Export Now. | pending |
-| 7 | On a Mac signed in to the same account, open Finder → iCloud Drive → Blau. | The same files. | pending |
-| 8 | Turn off iCloud Drive for Blau, Export Now. | "iCloud Drive isn't available…"; nothing crashes. Turn it back on. | pending |
+| 7 | On a Mac signed in to the same account, open Finder → iCloud Drive → Choff. | The same files. | pending |
+| 8 | Turn off iCloud Drive for Choff, Export Now. | "iCloud Drive isn't available…"; nothing crashes. Turn it back on. | pending |

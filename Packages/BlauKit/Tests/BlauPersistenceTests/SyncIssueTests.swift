@@ -23,7 +23,7 @@ struct SyncIssueTests {
         #expect(SyncState.failing(Self.cloudKit(3), lastSync: nil).issue == nil)
         #expect(SyncState.failing(Self.cloudKit(4), lastSync: nil).issue == nil)
         #expect(
-            SyncState.failing(CloudSyncError(domain: "Blau", code: 0, message: "x"), lastSync: nil).issue?.code
+            SyncState.failing(CloudSyncError(domain: "Choff", code: 0, message: "x"), lastSync: nil).issue?.code
                 == .iCloudSyncPaused)
     }
 

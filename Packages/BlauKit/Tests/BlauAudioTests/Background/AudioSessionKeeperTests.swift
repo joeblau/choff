@@ -213,7 +213,7 @@ struct AudioSessionKeeperTests {
         #expect(harness.engine.starts == 3)
         #expect(await harness.keeper.status == .paused)
         #expect(await harness.indicatorState()?.status == .needsAttention)
-        #expect(harness.session.deactivations == 0, "the session stays active, so Blau isn't suspended")
+        #expect(harness.session.deactivations == 0, "the session stays active, so Choff isn't suspended")
 
         // Still paused however long it waits off screen.
         await harness.tick(30, audioFlowing: false)

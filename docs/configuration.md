@@ -1,6 +1,6 @@
 # Configuration and secrets
 
-Blau has no backend. The user's own xAI API key lives in the Keychain and the
+Choff has no backend. The user's own xAI API key lives in the Keychain and the
 app mints short-lived realtime tokens on device (issue #33,
 [xai-auth.md](xai-auth.md)). So **no API key is
 ever committed to git or shipped in a release binary**. Build-time
@@ -69,7 +69,7 @@ The API:
   passes `AppConfig.isDebugBuild`, and its `AppConfig(infoDictionary:)`
   convenience does exactly that. Tests use both directly.
 - `AppConfig.load(from:)` (app) never fails. If the Info.plist is unusable it
-  logs a fault (subsystem `com.joeblau.blau`, category `config`) and returns
+  logs a fault (subsystem `com.joeblau.choff`, category `config`) and returns
   `AppConfig.fallback`, which is `AppConfig.defaults(environment:)` (BlauCore,
   the `Base.xcconfig` defaults) for this build, so the app still launches.
 - `developmentAPIKey` is `nil` unless the app binary was compiled with
@@ -107,7 +107,7 @@ copies it, in clear text, into:
 - DerivedData, including the build manifests under `XCBuildData/`;
 - the build log and `.xcresult` bundle of any run script phase that logs its
   environment. Xcode exports every build setting to every script phase and,
-  by default, prints each `export` line. Blau's own **Check for embedded
+  by default, prints each `export` line. Choff's own **Check for embedded
   secrets** phase turns that off (`showEnvVars: false` in `project.yml`), but
   a script phase added later, or one from a package plugin, may not.
 

@@ -40,7 +40,7 @@ struct DataExportTests {
         }
 
         context.insert(MemoryDocument(kind: .profile, title: "About me", body: "I build voice apps.", createdAt: start))
-        context.insert(MemoryDocument(kind: .company, title: "Blau", body: "A voice app.", createdAt: start))
+        context.insert(MemoryDocument(kind: .company, title: "Choff", body: "A voice app.", createdAt: start))
         let questions = MemoryDocument(kind: .collection, title: "YC questions", createdAt: start)
         context.insert(questions)
         let item = CollectionItem(
@@ -56,7 +56,7 @@ struct DataExportTests {
         let stripe = Fact(predicate: "works at", objectText: "Stripe", validFrom: start, origin: .user)
         stripe.invalidate(at: start.addingTimeInterval(3_600))
         context.insert(stripe)
-        context.insert(ProfileBlock(text: "Joe builds Blau.", updatedAt: start))
+        context.insert(ProfileBlock(text: "Joe builds Choff.", updatedAt: start))
 
         let profile = VoiceProfile(
             name: "Me", embeddingModelVersion: "wespeaker-v1", centroid: [0.25, 0.5], createdAt: start)
@@ -71,12 +71,12 @@ struct DataExportTests {
 
     @Test func theSnapshotHoldsEveryRecord() throws {
         try seed()
-        let export = try DataExport.snapshot(in: context, exportedAt: exportedAt, app: "Blau 1.0 (1)")
+        let export = try DataExport.snapshot(in: context, exportedAt: exportedAt, app: "Choff 1.0 (1)")
 
         #expect(export.format == DataExport.formatIdentifier)
         #expect(export.schemaVersion == "3.0.0")
         #expect(export.conversations.first?.utterances.allSatisfy { $0.endReason == nil } == true)
-        #expect(export.app == "Blau 1.0 (1)")
+        #expect(export.app == "Choff 1.0 (1)")
         let conversation = try #require(export.conversations.first)
         #expect(conversation.title == "Interview prep")
         #expect(conversation.topics.map(\.title) == ["Fundraising"])
@@ -103,7 +103,7 @@ struct DataExportTests {
         #expect(stripe.statement == "User works at Stripe")
         #expect(!stripe.isCurrent)
         #expect(stripe.origin == "user")
-        #expect(export.profileBlocks.map(\.text) == ["Joe builds Blau."])
+        #expect(export.profileBlocks.map(\.text) == ["Joe builds Choff."])
 
         let voiceprint = try #require(export.voiceprints.first)
         #expect(voiceprint.embeddingModelVersion == "wespeaker-v1")
@@ -201,15 +201,15 @@ struct DataExportTests {
     @Test func knowledgeMarkdownHasPagesProfileAndFacts() throws {
         try seed()
         let markdown = exporter.knowledgeMarkdown(try DataExport.snapshot(in: context, exportedAt: exportedAt))
-        #expect(markdown.hasPrefix("# Blau knowledge and memory\n\nExported Oct 8, 2026"))
+        #expect(markdown.hasPrefix("# Choff knowledge and memory\n\nExported Oct 8, 2026"))
         #expect(markdown.contains("\n## About Me\n\n### About me\n\nI build voice apps.\n"))
-        #expect(markdown.contains("\n## Company\n\n### Blau\n\nA voice app.\n"))
+        #expect(markdown.contains("\n## Company\n\n### Choff\n\nA voice app.\n"))
         // A multi-line answer stays inside its list item.
         #expect(
             markdown.contains(
                 "\n1. Why now?\n   - Answer: Voice models got good.\n   - Practiced 1 time, last Oct 7, 2026\n"))
         #expect(markdown.contains("\n## Profile summary\n"))
-        #expect(markdown.contains("\nJoe builds Blau.\n"))
+        #expect(markdown.contains("\nJoe builds Choff.\n"))
         #expect(markdown.contains("\n### Current\n\n- Acme raised a seed round (since Oct 7, 2026)\n"))
         #expect(markdown.contains("\n### No longer true\n\n- User works at Stripe (Oct 7, 2026 – Oct 7, 2026)\n"))
         #expect(markdown.contains("- **Acme** (organization), also Acme Inc\n"))
@@ -218,8 +218,8 @@ struct DataExportTests {
 
     @Test func theReadmeSaysWhatIsInside() throws {
         try seed()
-        let readme = exporter.readme(try DataExport.snapshot(in: context, exportedAt: exportedAt, app: "Blau 1.0 (1)"))
-        #expect(readme.contains("from Blau 1.0 (1)."))
+        let readme = exporter.readme(try DataExport.snapshot(in: context, exportedAt: exportedAt, app: "Choff 1.0 (1)"))
+        #expect(readme.contains("from Choff 1.0 (1)."))
         #expect(readme.contains("1 conversation as readable text"))
         #expect(readme.contains("3 knowledge base pages"))
         #expect(readme.contains("2 learned facts"))
@@ -244,7 +244,7 @@ struct DataExportTests {
 
         let folder = try exporter.writeFolder(export, in: directory)
 
-        #expect(folder.lastPathComponent == "Blau Export 2026-10-08")
+        #expect(folder.lastPathComponent == "Choff Export 2026-10-08")
         let names = try FileManager.default.contentsOfDirectory(atPath: folder.path(percentEncoded: false)).sorted()
         #expect(names == ["Conversations.md", "Knowledge.md", "README.md", "blau-data.json"])
         let json = try Data(contentsOf: folder.appending(path: DataExporter.jsonFileName))
@@ -262,7 +262,7 @@ struct DataExportTests {
 
         let archive = try exporter.writeArchive(export, in: directory)
 
-        #expect(archive.lastPathComponent == "Blau Export 2026-10-08.zip")
+        #expect(archive.lastPathComponent == "Choff Export 2026-10-08.zip")
         let bytes = try Data(contentsOf: archive)
         #expect(bytes.starts(with: [0x50, 0x4B, 0x03, 0x04]))  // "PK\u{3}\u{4}": a zip file
         // Only the archive is left behind.
@@ -282,7 +282,7 @@ struct DataExportTests {
             try ditto.run()
             ditto.waitUntilExit()
             #expect(ditto.terminationStatus == 0)
-            let folder = unzipped.appending(path: "Blau Export 2026-10-08")
+            let folder = unzipped.appending(path: "Choff Export 2026-10-08")
             let json = try Data(contentsOf: folder.appending(path: DataExporter.jsonFileName))
             #expect(try DataExporter.decode(json) == export)
             let knowledge = try String(

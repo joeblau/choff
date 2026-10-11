@@ -276,7 +276,7 @@ struct RecordButtonModelTests {
             Issue.record("Expected a start failure, got \(model.state)")
             return
         }
-        #expect(message == "Conversations aren't available in this build of Blau yet.")
+        #expect(message == "Conversations aren't available in this build of Choff yet.")
     }
 
     // MARK: Pause listening

@@ -223,7 +223,7 @@ test-scripts: ## Test the secrets, CI, Instruments template, perf gate, privacy 
 	scripts/tests/test-release-scripts.sh
 	scripts/tests/test-soak-scripts.sh
 
-# Privacy manifests (#79, docs/privacy.md). PRIVACY_BUNDLE: a built Blau.app
+# Privacy manifests (#79, docs/privacy.md). PRIVACY_BUNDLE: a built Choff.app
 # or a Blau .xcarchive to check as well.
 .PHONY: check-privacy
 check-privacy: ## Validate the privacy manifests and that the sources' required-reason APIs are declared
