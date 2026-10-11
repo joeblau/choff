@@ -148,6 +148,26 @@ def load_baseline(path: str) -> dict:
 # MARK: - Comparing
 
 
+def matching_metric(metrics: dict, identifier: str) -> tuple:
+    """Find the same process metric across the Blau-to-Choff bundle rename.
+
+    Keep recorded identifiers and values intact. Only XCTest's CPU/memory
+    metrics for this app have an alias; other processes and signposts must
+    still match exactly. Prefer an exact match when both names are present.
+    """
+    if identifier in metrics:
+        return identifier, metrics[identifier]
+    for family in ("CPU", "Memory"):
+        prefix = f"com.apple.dt.XCTMetric_{family}-"
+        for old, new in (("blau", "choff"), ("choff", "blau")):
+            old_prefix = f"{prefix}com.joeblau.{old}."
+            if identifier.startswith(old_prefix):
+                alias = f"{prefix}com.joeblau.{new}." + identifier[len(old_prefix):]
+                if alias in metrics:
+                    return alias, metrics[alias]
+    return identifier, {}
+
+
 def worse_by_percent(baseline: float, current: float, polarity: str) -> float:
     """How much worse `current` is than `baseline`, in percent (negative when
     better)."""
@@ -165,6 +185,7 @@ def compare(results: dict, baseline: dict) -> list:
     default_tolerance = float(baseline.get("defaultTolerancePercent", DEFAULT_TOLERANCE))
     rows = []
     measured = results.get("tests", {})
+    matched = set()
     for test_id, metrics in sorted(baseline.get("tests", {}).items()):
         for metric_id, expected in sorted(metrics.items()):
             row = {
@@ -178,7 +199,9 @@ def compare(results: dict, baseline: dict) -> list:
                 "change": None,
                 "status": "missing",
             }
-            values = measured.get(test_id, {}).get(metric_id, {}).get("values", [])
+            measured_id, metric = matching_metric(measured.get(test_id, {}), metric_id)
+            matched.add((test_id, measured_id))
+            values = metric.get("values", [])
             if values:
                 current = float(statistic(values))
                 change = worse_by_percent(row["baseline"], current, expected.get("polarity", SMALLER))
@@ -189,7 +212,7 @@ def compare(results: dict, baseline: dict) -> list:
             rows.append(row)
     for test_id, metrics in sorted(measured.items()):
         for metric_id, metric in sorted(metrics.items()):
-            if metric_id in baseline.get("tests", {}).get(test_id, {}):
+            if (test_id, metric_id) in matched:
                 continue
             current = float(statistic(metric["values"]))
             if not any(metric["values"]):
@@ -345,7 +368,7 @@ def record(
             if not any(metric["values"]):
                 unavailable.append(f"{test_id} {metric.get('name', metric_id)}")
                 continue
-            old = previous.get("tests", {}).get(test_id, {}).get(metric_id, {})
+            _, old = matching_metric(previous.get("tests", {}).get(test_id, {}), metric_id)
             value = float(statistic(metric["values"]))
             # A metric that is usually zero (an idle app's CPU time) has no
             # percentage to gate: any non-zero value would be "infinitely"
