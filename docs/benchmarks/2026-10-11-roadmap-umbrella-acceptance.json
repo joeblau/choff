@@ -1,0 +1,1435 @@
+{
+  "source": "Current GitHub issue bodies and exhaustive current issue inventory, plus original concrete-task acceptance ledger.",
+  "concrete_task_count": 79,
+  "concrete_criteria_count": 192,
+  "umbrella_count": 11,
+  "complete": false,
+  "qualification": "Umbrella checkboxes include implementation history. An epic is not accepted merely because implementation boxes are checked or child issues were previously closed. Child original criteria and pending physical/external requirements govern completion.",
+  "issues": [
+    {
+      "issue": 1,
+      "title": "Architecture overview & research reference",
+      "url": "https://github.com/joeblau/voice/issues/1",
+      "current_state": "OPEN",
+      "original_body": "# Choff \u2014 architecture overview & research reference\n\n**Blau** is a native iOS app for long-form voice conversation with Grok. Everything is Swift / SwiftUI / SwiftData. Speech-to-text and voice ID run on device. Grok's realtime voice API generates the replies and the speech. All text is stored on device and synced through the user's private iCloud container.\n\n> This issue is the source of truth for architecture decisions. Each epic links back here and carries the research for its area.\n\n## Pipeline\n\n```\nMic \u2500\u25b6 AVAudioEngine (VPIO: echo cancel + noise suppression + AGC) \u2500\u25b6 16 kHz mono ring buffer\n   \u251c\u2500\u25b6 Silero VAD (FluidAudio) \u2500\u2500 speechStart / speechEnd\n   \u251c\u2500\u25b6 Voice ID gate (WeSpeaker ResNet34-LM embedding, cosine + AS-norm vs enrolled centroid)\n   \u2502        accept / reject / uncertain  \u2500\u2500\u2510\n   \u2514\u2500\u25b6 Streaming ASR (Parakeet realtime EOU 120M @320 ms, FluidAudio) \u2500\u2500 partials, EOU\n                                           \u25bc\n                 Utterance committer (only enrolled-speaker, final text; 2nd-pass TDT v3 for punctuation)\n                                           \u25bc\n   Grok realtime WS (turn_detection = null; text in \u2500\u25b6 audio + transcript out; client tools)\n                                           \u25bc\n   AVAudioPlayerNode (24 kHz PCM16) \u25c0\u2500\u2500 barge-in: flush + response.cancel + item.truncate\n                                           \u25bc\n   SwiftData (CloudKit private DB) \u2500\u25b6 Topic segmenter (TextTiling depth + hysteresis + on-device LLM confirm/label)\n                                   \u2514\u25b6 Memory indexer (EmbeddingGemma 256-d int8 + FTS5, local-only) \u2500\u25b6 search_memory tool\n```\n\n## Key decisions\n| Area | Decision | Why |\n|---|---|---|\n| Project | XcodeGen `project.yml`; app target + local SPM package `BlauKit` with one module per subsystem | Deterministic project files, fast unit tests, clean boundaries |\n| Min OS | iOS 26.0 (iOS 27 features behind `#available`) | SpeechAnalyzer fallback, Foundation Models, Liquid Glass toolbar |\n| LLM / voice | xAI Grok realtime `wss://api.x.ai/v1/realtime`, model pinned (currently `grok-voice-think-fast-2.0`) | Speech-to-speech with tool calling. OpenAI Realtime\u2013compatible events |\n| Turn control | `turn_detection: null`. The client commits **text** of verified utterances | Only the enrolled speaker reaches the LLM. Manual sessions are billed for audio actually exchanged, not session time |\n| Auth | **No backend.** The user's xAI API key lives in the Keychain (synced via iCloud Keychain). The app mints a short-lived client secret on device (`POST /v1/realtime/client_secrets`) and opens the WS with subprotocol `xai-client-secret.<token>` | No server to run and no key in the binary. `URLSessionWebSocketTask` strips `Authorization` on the WS upgrade |\n| ASR | FluidAudio `StreamingEouAsrManager` (Parakeet realtime EOU 120M, 320 ms chunks); 2nd pass Parakeet TDT v3; Apple `SpeechTranscriber` fallback | Low latency on the Neural Engine, built-in end-of-utterance detection, punctuation from the second pass |\n| Voice ID | WeSpeaker ResNet34-LM (FluidAudio CoreML, 256-d), 3\u20135 enrollment clips, cosine + AS-norm, accept/reject/uncertain with speculative ASR | Best maturity-to-size ratio on iOS; segment-level gating is practical today |\n| Topics | Streaming TextTiling-style depth score over exchange embeddings + hysteresis. Candidate boundaries confirmed and titled by Foundation Models `@Generable` (\u22645-word title) | Cheap, runs on device, doesn't flap; the LLM only sees candidate windows (4k-token context limit) |\n| Memory | Pinned ProfileBlock + add-only temporal facts (Mem0/Zep ideas) + hybrid BM25 (FTS5) + vector (EmbeddingGemma 256-d int8, brute-force Accelerate) with RRF; exposed to Grok as tools | Closest to current SOTA (LongMemEval / LoCoMo) that is practical on device at personal scale |\n| Storage | SwiftData + CloudKit private DB `iCloud.com.joeblau.choff` for **text and the voiceprint**. Vectors / FTS are local-only and rebuildable | Syncs across the user's devices; embeddings are large and tied to a model version |\n| Perf | `OSSignposter` per stage, MetricKit, XCTest perf metrics, debug HUD, thermal-adaptive policy, 1 h soak test | Built in from day one |\n\n## Module map (`BlauKit` local package)\n- `BlauCore`: shared types (Utterance, Speaker, TimeRange), protocols, clock, feature flags\n- `BlauTelemetry`: Logger categories, signposts, MetricKit, perf HUD model\n- `BlauAudio`: AVAudioSession / engine, capture fan-out, playback, resampling\n- `BlauTranscription`: VAD, streaming ASR, 2nd pass, SpeechAnalyzer fallback, model manager\n- `BlauVoiceID`: embeddings, enrollment, verification gate, LID\n- `BlauRealtime`: xAI WS client, event codables, session orchestration, tools\n- `BlauPersistence`: SwiftData schemas, migrations, ModelActors\n- `BlauTopics`: segmentation engine, labeling\n- `BlauMemory`: embeddings, index, hybrid retrieval, extraction, tools\n- App target `Blau`: SwiftUI views, composition root\n\n## Product decisions (confirmed 2026-10-07)\n1. **Timeline:** opens on the current topic with bullets above the fold. Older topics stay **compressed** (one row each) until tapped. Swipe down for history; swipe back or tap Now to return (#56, #58).\n2. **Voiceprint syncs via iCloud** with the rest of the user's data, so enrolling once works on every device (#19, #46).\n3. **No backend.** The app talks to xAI directly with the user's API key from the Keychain and mints ephemeral realtime tokens on device (#33). A token proxy is only needed if Blau ships publicly on a shared xAI account.\n\n## Research briefs (Oct 2026)\n<details><summary>xAI Grok Voice API</summary>\n\n- WS `wss://api.x.ai/v1/realtime?model=\u2026`. Ephemeral tokens via `POST /v1/realtime/client_secrets` (default 600 s, max 3600 s).\n- Events mirror OpenAI Realtime GA: `session.update`, `input_audio_buffer.*`, `conversation.item.create/truncate`, `response.create/cancel`, `response.output_audio.delta`, `response.output_audio_transcript.delta`, `response.function_call_arguments.done`, `response.done`.\n- Audio pcm/pcmu/pcma/opus, 8\u201348 kHz (default 24 kHz PCM16). JSON or binary transport.\n- `turn_detection: null` gives manual turns. Text input supported.\n- Tools: `function`, `web_search`, `x_search`, `file_search`, `mcp`.\n- Max session 120 min; `resumption` reconnects with `?conversation_id=` (history kept 30 min).\n- Pricing: $0.08/min S2S, $0.004/text input.\n- Voices: eve (default), ara, rex, sal, leo, \u2026 (`GET /v1/tts/voices`).\n- Swift sample: xai-org/xai-cookbook `examples/voice-agent-mobile/swift`.\n- Docs: https://docs.x.ai/developers/model-capabilities/audio/speech-to-speech \u00b7 https://docs.x.ai/developers/model-capabilities/audio/ephemeral-tokens \u00b7 https://docs.x.ai/developers/pricing\n</details>\n<details><summary>Parakeet ASR on iOS</summary>\n\n- FluidAudio \u22650.17.5 (Apache-2.0, iOS 17+). `StreamingEouAsrManager(chunkSize: .ms320, eouDebounceMs:)`: partial callback, EOU callback, token timestamps.\n- Call `finish()` per EOU: token history grows unbounded otherwise.\n- Models on HF `FluidInference/parakeet-realtime-eou-120m-coreml` (~225 MB) and `parakeet-tdt-0.6b-v3-coreml` (~480 MB), downloaded at runtime.\n- Silero VAD v6 CoreML via `VadManager`.\n- iOS 27 restricts background Neural Engine access (`com.apple.developer.background-tasks.continued-processing.inference`), so test screen-locked and keep a CPU fallback.\n- Fallback: `SpeechAnalyzer` + `SpeechTranscriber` (iOS 26).\n- https://github.com/FluidInference/FluidAudio\n</details>\n<details><summary>Voice ID</summary>\n\n- WeSpeaker ResNet34-LM (0.72% EER Vox1-O, ~25 MB CoreML, 256-d) via FluidAudio / speech-swift. CAM++ as challenger.\n- Enrollment: 3\u20135 \u00d7 3\u20136 s clips, centroid plus individual embeddings.\n- Short segments degrade badly (2.4% EER at 3 s, 18.4% at 1 s), so score at 1.5 s and re-score at 3 s.\n- Cosine 0.5\u20130.7 is the expected range; calibrate on recordings. AS-norm against a bundled ~1k impostor cohort.\n- Adaptive update with a drift cap.\n- PersonalVAD / VoiceFilter-Lite are closed; FireRedChat-pVAD (ONNX) is a later option.\n- LID: ECAPA VoxLingua107.\n- Noise: VPIO; DeepFilterNet3 CoreML (4 MB) for the ASR path.\n</details>\n<details><summary>Semantic memory</summary>\n\n- SOTA ideas: Mem0 (add-only fact extraction + hybrid retrieval), Zep/Graphiti (validity-dated facts), Letta (pinned memory blocks + sleep-time consolidation), Mastra Observational Memory, LongMemEval guidance (exchange-level chunks, fact-augmented keys, time-aware queries).\n- On device: EmbeddingGemma-300M (Matryoshka 256-d), FTS5 BM25 + int8 vectors brute-force with Accelerate, RRF fusion.\n- USearch HNSW only past ~200k vectors. Optional iOS 27 `SpotlightSearchTool`.\n</details>\n<details><summary>Topic segmentation & iOS infra</summary>\n\n- TextTiling depth + hysteresis (min topic 60 s / 4 exchanges, 30 s cooldown). Foundation Models `@Generable` confirm + title (4,096-token context).\n- TreeSeg for offline re-segmentation.\n- SwiftData + CloudKit rules: all properties optional or defaulted, no `.unique`, optional relationships with inverses, no `.deny`, additive-only production schema. Flat models (inheritance + CloudKit still buggy).\n- SwiftUI: `defaultScrollAnchor(.bottom)`, `onScrollGeometryChange`, no inverted ScrollView; iOS 27 prepend scroll regression FB24968838.\n- Toolbar: `.bottomBar` items + `ToolbarSpacer`.\n</details>\n\n## Roadmap\n\n### M0 Foundation\n- #12 Set up XcodeGen project.yml with app, test and perf targets\n- #13 Create the BlauKit local Swift package with one module per subsystem\n- #14 Add xcconfig-based configuration and secrets handling\n- #15 Set up the GitHub Actions CI pipeline\n- #16 Configure swift-format and the repo conventions\n- #17 Build the BlauTelemetry foundation: Logger categories and signposts\n- #18 Build the app shell: composition root, environment and feature flags\n- #19 Define SwiftData schema v1 (CloudKit-compatible): Conversation, Topic, Utterance\n- #20 Configure the iCloud container and SwiftData CloudKit sync\n- #21 Add a ModelActor write path for high-frequency pipeline writes\n- #22 Research spike: on-device model benchmark harness (ASR, voice ID, embeddings, background ANE)\n\n### M1 Voice Loop MVP\n- #23 Build AudioSessionController: session config, VPIO and lifecycle\n- #24 Build the mic capture engine: 16 kHz mono ring buffer and multi-consumer fan-out\n- #25 Build the streaming playback engine for 24 kHz PCM16 with jitter buffer and barge-in flush\n- #26 Make long sessions survive backgrounding, screen lock and the iOS 27 Neural Engine restrictions\n- #27 Integrate FluidAudio and build a model download manager\n- #28 Build the streaming voice activity segmenter (Silero VAD)\n- #29 Build streaming ASR with Parakeet realtime EOU: partials, end-of-utterance, utterance commit\n- #30 Add a second-pass transcription (Parakeet TDT v3) for punctuation and accuracy\n- #31 Add a SpeechAnalyzer / SpeechTranscriber fallback transcriber\n- #32 Build an ASR evaluation harness (WER, latency, RTF on fixtures)\n- #33 Store the xAI API key in the Keychain and mint realtime tokens on device (no backend)\n- #34 Build the realtime WebSocket client with typed client and server event models\n- #35 Configure the realtime session: manual turns, voice, instructions and output audio\n- #36 Build the turn orchestrator: verified utterance \u2192 Grok \u2192 audio and transcript\n- #37 Support barge-in: interrupt the agent when the user starts speaking\n- #38 Build the function-calling infrastructure for realtime sessions\n- #39 Keep long sessions going: 120-minute limit, resumption and context reseeding\n- #40 Build the main screen scaffold: bottom toolbar with settings (left) and record (right)\n- #41 Build the record button: states, level ring, haptics and accessibility\n- #42 Build the chat transcript view: user text right-aligned, agent text left-aligned, no bubbles\n- #43 Build the settings sheet presented from the bottom-left button\n- #44 Build onboarding and permissions: mic, model download, iCloud check, voice enrollment\n\n### M2 Voice ID & Topics\n- #45 Build the speaker embedding extractor (WeSpeaker ResNet34-LM, CoreML)\n- #46 Build voice enrollment: guided capture, voiceprint profile and secure storage\n- #47 Build the verification gate: accept, reject or uncertain per speech segment with speculative ASR\n- #48 Build the voice ID evaluation harness and threshold calibration\n- #49 Add adaptive voiceprint updates with a drift cap\n- #50 Add a language ID filter to ignore speech in other languages\n- #51 Research spike: noise suppression on the ASR and verification paths (VPIO vs DeepFilterNet3)\n- #52 Build the streaming topic segmentation engine (TextTiling depth + hysteresis)\n- #53 Confirm candidate boundaries and generate topic labels with on-device Foundation Models\n- #54 Manage the topic lifecycle: open, provisional title, refine on close, manual edits\n- #55 Add offline re-segmentation and label refinement at session end\n- #56 Build the topic timeline: bullets above the fold, swipe down for history, swipe back to the current topic\n- #57 Paginate timeline history and work around the iOS 27 prepend scroll regression\n- #58 Build the topic detail: expand a bullet to read its transcript and summary\n\n### M3 Semantic Memory\n- #59 Research spike: choose the on-device embedding model\n- #60 Build the shared text embedding service (Core ML, Matryoshka 256-d, int8)\n- #61 Add SwiftData schema v2 for memory models: Document, CollectionItem, Entity, Fact, ProfileBlock\n- #62 Build the local search index: chunks, FTS5 BM25 and an int8 vector matrix\n- #63 Build the incremental indexer driven by SwiftData history and CloudKit imports\n- #64 Build hybrid retrieval: BM25 + vector + RRF, time filters and entity expansion\n- #65 Build the knowledge base UI: profile, company, notes and collections (e.g. YC questions)\n- #66 Build the post-conversation fact and entity extraction pipeline (add-only, temporal)\n- #67 Maintain the profile block with sleep-time consolidation\n- #68 Expose memory to Grok as tools: search_memory, get_entity, remember, forget\n- #69 Build the practice mode: drill a collection (e.g. YC interview questions) by voice\n- #70 Build the memory retrieval and answer evaluation harness\n\n### M4 Polish & Beta\n- #71 Build the debug performance HUD overlay\n- #72 Add a MetricKit subscriber and on-device diagnostics export\n- #73 Build the XCTest performance suite with CI baselines\n- #74 Instrument end-to-end latency and document the latency budget\n- #75 Add thermal and power adaptation\n- #76 Run an automated long-session soak test (1\u20132 h)\n- #77 Create a custom Instruments template for Blau\n- #78 Export conversations and topics as Markdown to the iCloud Drive container\n- #79 Privacy, data controls and the privacy manifest\n- #80 Handle errors, offline mode and edge states\n- #81 Accessibility pass: VoiceOver, Dynamic Type, Reduce Motion, captions\n- #82 Branding: app icon, launch screen, colors and typography for Blau\n- #83 Set up the TestFlight release pipeline\n\n## Epics\n- #2 Epic: Project foundation (XcodeGen, modules, CI)\n- #3 Epic: Full-duplex audio pipeline\n- #4 Epic: Real-time on-device transcription (Parakeet)\n- #5 Epic: Voice ID \u2014 respond only to the enrolled speaker\n- #6 Epic: Grok realtime voice integration (xAI)\n- #7 Epic: SwiftData models & iCloud container sync\n- #8 Epic: Automatic topic switching & labeling\n- #9 Epic: Semantic memory & knowledge base\n- #10 Epic: SwiftUI experience (timeline, chat, controls, settings)\n- #11 Epic: Built-in performance scaffolding",
+      "child_tasks": [],
+      "completion": "reference issue remains open with roadmap"
+    },
+    {
+      "issue": 2,
+      "title": "Epic: Project foundation (XcodeGen, modules, CI)",
+      "url": "https://github.com/joeblau/voice/issues/2",
+      "current_state": "OPEN",
+      "original_body": "Set up the XcodeGen-generated project, the modular `BlauKit` Swift package, secrets handling, CI, linting and the app shell. Every other epic depends on this one.\n\n**Research:** XcodeGen `project.yml` with App / UnitTests / UITests / PerfTests targets, iOS 26.0 deployment target, SPM packages under `packages:`, xcconfig with gitignored `Secrets.xcconfig`, GitHub Actions `macos-26` runner (`brew install xcodegen && xcodegen generate && xcodebuild test`).\n\nArchitecture & research: #1\n\n## Tasks\n**M0 Foundation**\n- [x] #12 Set up XcodeGen project.yml with app, test and perf targets\n- [x] #13 Create the BlauKit local Swift package with one module per subsystem\n- [x] #14 Add xcconfig-based configuration and secrets handling\n- [ ] #15 Set up the GitHub Actions CI pipeline\n- [x] #16 Configure swift-format and the repo conventions\n- [x] #18 Build the app shell: composition root, environment and feature flags\n\n**M4 Polish & Beta**\n- [ ] #83 Set up the TestFlight release pipeline\n\n## Implementation completion audit \u2014 2026-10-10\n\nThe implementation audit recorded merged closing PRs for the child tasks below; the acceptance re-audit records remaining work:\n\n- #12: [#84](https://github.com/joeblau/voice/pull/84).\n- #13: [#87](https://github.com/joeblau/voice/pull/87).\n- #14: [#86](https://github.com/joeblau/voice/pull/86).\n- #15: [#90](https://github.com/joeblau/voice/pull/90).\n- #16: [#85](https://github.com/joeblau/voice/pull/85).\n- #18: [#97](https://github.com/joeblau/voice/pull/97).\n- #83: [#154](https://github.com/joeblau/voice/pull/154).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n## Acceptance re-audit \u2014 2026-10-11\n\n#83 is reopened because its original acceptance criteria remain incomplete. Its merged implementation PR is preserved. See the child issue for the concrete remaining checks and current evidence. This epic remains open until those criteria are verified.\n\n## CI runtime acceptance pending\n\n#15 remains open: the current warm-cache required CI run exceeds the original 15-minute runtime target. The current accessibility failure is tracked in PR #187; runtime optimization and a passing main run are still required.\n",
+      "child_tasks": [
+        {
+          "issue": 12,
+          "title": "Set up XcodeGen project.yml with app, test and perf targets",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "`xcodegen generate` produces a project that builds and launches on the iOS 26 simulator",
+              "completion": "verified"
+            },
+            {
+              "requirement": "All four targets exist and an empty test passes in each",
+              "completion": "verified"
+            },
+            {
+              "requirement": "README documents `brew install xcodegen && make generate`",
+              "completion": "verified"
+            },
+            {
+              "requirement": "No `.xcodeproj` committed",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 13,
+          "title": "Create the BlauKit local Swift package with one module per subsystem",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "`swift test` in `Packages/BlauKit` passes on macOS",
+              "completion": "verified"
+            },
+            {
+              "requirement": "App target links all modules",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Dependency graph documented in `docs/architecture.md`",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 14,
+          "title": "Add xcconfig-based configuration and secrets handling",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Fresh clone builds without secrets (features degrade gracefully)",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Release build fails if a raw API key is present",
+              "completion": "verified"
+            },
+            {
+              "requirement": "`AppConfig` unit tested",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 15,
+          "title": "Set up the GitHub Actions CI pipeline",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "CI green on main",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "PRs show lint + test checks",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Runtime < 15 min with warm cache",
+              "completion": "failed current original acceptance"
+            }
+          ]
+        },
+        {
+          "issue": 16,
+          "title": "Configure swift-format and the repo conventions",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "`make lint` passes on main",
+              "completion": "verified"
+            },
+            {
+              "requirement": "PR + issue templates present",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 18,
+          "title": "Build the app shell: composition root, environment and feature flags",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "App launches to an empty main screen",
+              "completion": "verified"
+            },
+            {
+              "requirement": "SwiftUI previews work with fake services",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "Flags toggleable in a DEBUG menu",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 83,
+          "title": "Set up the TestFlight release pipeline",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Tag push produces a TestFlight build",
+              "completion": "pending external prerequisites"
+            },
+            {
+              "requirement": "`docs/release.md` complete",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 3,
+      "title": "Epic: Full-duplex audio pipeline",
+      "url": "https://github.com/joeblau/voice/issues/3",
+      "current_state": "OPEN",
+      "original_body": "Run capture and playback at the same time for hour-long sessions: AVAudioSession `.playAndRecord` / `.voiceChat`, voice-processing IO (echo cancellation, noise suppression, AGC), a capture fan-out to VAD / ASR / voice ID, a streaming PCM player with barge-in flush, and robustness to interruptions, route changes and backgrounding.\n\n**Research notes:** call `inputNode.setVoiceProcessingEnabled(true)` before the engine starts. `setPreferredIOBufferDuration(0.01\u20130.02)`. Handle `interruptionNotification` (`.shouldResume`), `routeChangeNotification`, `AVAudioEngineConfigurationChange`, `mediaServicesWereResetNotification`. Background mode `audio`.\n\nArchitecture & research: #1\n\n## Tasks\n**M1 Voice Loop MVP**\n- [ ] #23 Build AudioSessionController: session config, VPIO and lifecycle\n- [ ] #24 Build the mic capture engine: 16 kHz mono ring buffer and multi-consumer fan-out\n- [ ] #25 Build the streaming playback engine for 24 kHz PCM16 with jitter buffer and barge-in flush\n- [ ] #26 Make long sessions survive backgrounding, screen lock and the iOS 27 Neural Engine restrictions\n\n## Implementation completion audit \u2014 2026-10-10\n\nEvery child task above is closed and has a merged closing PR:\n\n- #23: [#93](https://github.com/joeblau/voice/pull/93).\n- #24: [#103](https://github.com/joeblau/voice/pull/103).\n- #25: [#100](https://github.com/joeblau/voice/pull/100).\n- #26: [#112](https://github.com/joeblau/voice/pull/112).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n## Original acceptance audit \u2014 physical checks pending\n\nThis epic remains open while its original physical acceptance checks are pending in #23, #24, #25, #26. Prior merged implementation history above is retained; its earlier completion audit did not verify those physical results. The current app is Choff.\n",
+      "child_tasks": [
+        {
+          "issue": 23,
+          "title": "Build AudioSessionController: session config, VPIO and lifecycle",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Survives a phone call interruption and resumes",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Switching AirPods \u2194 speaker mid-session keeps capture and playback working",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Unit tests for the state machine with a mocked session",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 24,
+          "title": "Build the mic capture engine: 16 kHz mono ring buffer and multi-consumer fan-out",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "No allocations on the audio render thread (verified with Instruments)",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "3 concurrent consumers receive identical sample-accurate streams",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Dropped-frame counter exposed in telemetry",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 25,
+          "title": "Build the streaming playback engine for 24 kHz PCM16 with jitter buffer and barge-in flush",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Gapless playback of a recorded 2-minute delta stream",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "flush() \u2192 silence < 50 ms",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Played-ms accurate to \u00b120 ms against the test fixture",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 26,
+          "title": "Make long sessions survive backgrounding, screen lock and the iOS 27 Neural Engine restrictions",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "30-min locked-screen session transcribes and responds",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "No crash or silent stall on foreground \u2194 background transitions",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 4,
+      "title": "Epic: Real-time on-device transcription (Parakeet)",
+      "url": "https://github.com/joeblau/voice/issues/4",
+      "current_state": "OPEN",
+      "original_body": "Stream on-device speech-to-text with NVIDIA Parakeet through FluidAudio, with Silero VAD, end-of-utterance detection, a second pass for punctuation, a model download manager and an Apple SpeechAnalyzer fallback.\n\n**Research:** `StreamingEouAsrManager` @320 ms (p50 160 ms model latency), `finish()` per EOU, TDT v3 2nd pass, models ~225 MB / ~480 MB fetched from HF at runtime, iOS 27 background-ANE restriction \u2192 CPU fallback. Details are in the architecture issue.\n\nArchitecture & research: #1\n\n## Tasks\n**M1 Voice Loop MVP**\n- [x] #27 Integrate FluidAudio and build a model download manager\n- [x] #28 Build the streaming voice activity segmenter (Silero VAD)\n- [ ] #29 Build streaming ASR with Parakeet realtime EOU: partials, end-of-utterance, utterance commit\n- [x] #30 Add a second-pass transcription (Parakeet TDT v3) for punctuation and accuracy\n- [x] #31 Add a SpeechAnalyzer / SpeechTranscriber fallback transcriber\n- [x] #32 Build an ASR evaluation harness (WER, latency, RTF on fixtures)\n\n## Implementation completion audit \u2014 2026-10-10\n\nEvery child task above is closed and has a merged closing PR:\n\n- #27: [#99](https://github.com/joeblau/voice/pull/99).\n- #28: [#107](https://github.com/joeblau/voice/pull/107).\n- #29: [#111](https://github.com/joeblau/voice/pull/111).\n- #30: [#115](https://github.com/joeblau/voice/pull/115).\n- #31: [#121](https://github.com/joeblau/voice/pull/121).\n- #32: [#119](https://github.com/joeblau/voice/pull/119).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n## Original acceptance audit \u2014 physical checks pending\n\nThis epic remains open while its original physical acceptance checks are pending in #29. Prior merged implementation history above is retained; its earlier completion audit did not verify those physical results. The current app is Choff.\n",
+      "child_tasks": [
+        {
+          "issue": 27,
+          "title": "Integrate FluidAudio and build a model download manager",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Fresh install downloads + loads models with visible progress",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "Offline launch after the first download works",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Models excluded from backup (`isExcludedFromBackup`)",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 28,
+          "title": "Build the streaming voice activity segmenter (Silero VAD)",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Unit tests on fixture WAVs: segment boundaries within \u00b1100 ms of labels",
+              "completion": "verified"
+            },
+            {
+              "requirement": "CPU usage during silence < 3%",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 29,
+          "title": "Build streaming ASR with Parakeet realtime EOU: partials, end-of-utterance, utterance commit",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Partial text visible < 400 ms after speech on A17+",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "EOU \u2192 final utterance < 1.2 s after the user stops",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "1-hour fixture replay: flat memory, no growth in per-chunk latency",
+              "completion": "verified on Mac real-model replay"
+            }
+          ]
+        },
+        {
+          "issue": 30,
+          "title": "Add a second-pass transcription (Parakeet TDT v3) for punctuation and accuracy",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Stored utterances have punctuation and capitalization",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "Turn latency unchanged (signpost comparison)",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 31,
+          "title": "Add a SpeechAnalyzer / SpeechTranscriber fallback transcriber",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Toggle in Settings to force the Apple engine",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Seamless switch on background entry (if required by the spike)",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 32,
+          "title": "Build an ASR evaluation harness (WER, latency, RTF on fixtures)",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "`make eval-asr` prints a table per engine",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Nightly CI tracks WER / latency",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 5,
+      "title": "Epic: Voice ID \u2014 respond only to the enrolled speaker",
+      "url": "https://github.com/joeblau/voice/issues/5",
+      "current_state": "OPEN",
+      "original_body": "Only the enrolled user's speech reaches the LLM. Background noise, TV, other people and other languages are ignored.\n\n**Research:** WeSpeaker ResNet34-LM embeddings (FluidAudio CoreML, 256-d, 0.72% EER), 3\u20135 enrollment clips, cosine + AS-norm, score at 1.5 s and re-score at 3 s, accept/reject/uncertain, speculative ASR commit/discard, adaptive centroid with drift cap, ECAPA VoxLingua107 LID, VPIO + optional DeepFilterNet3.\n\nArchitecture & research: #1\n\n## Tasks\n**M2 Voice ID & Topics**\n- [x] #45 Build the speaker embedding extractor (WeSpeaker ResNet34-LM, CoreML)\n- [ ] #46 Build voice enrollment: guided capture, voiceprint profile and secure storage\n- [x] #47 Build the verification gate: accept, reject or uncertain per speech segment with speculative ASR\n- [x] #48 Build the voice ID evaluation harness and threshold calibration\n- [x] #49 Add adaptive voiceprint updates with a drift cap\n- [x] #50 Add a language ID filter to ignore speech in other languages\n- [x] #51 Research spike: noise suppression on the ASR and verification paths (VPIO vs DeepFilterNet3)\n\n## Implementation completion audit \u2014 2026-10-10\n\nThe following records establish merged implementation history; reopened acceptance work below is still outstanding:\n\n- #45: [#108](https://github.com/joeblau/voice/pull/108).\n- #46: [#145](https://github.com/joeblau/voice/pull/145).\n- #47: [#150](https://github.com/joeblau/voice/pull/150).\n- #48: [#110](https://github.com/joeblau/voice/pull/110).\n- #49: [#155](https://github.com/joeblau/voice/pull/155).\n- #50: [#156](https://github.com/joeblau/voice/pull/156).\n- #51: [#128](https://github.com/joeblau/voice/pull/128).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n\n## Remaining acceptance audit \u2014 2026-10-11\n\nReopened child acceptance: #46. Their merged implementation does not establish the original cross-device or physical workflow criteria. Keep this epic open until those results are verified.\n",
+      "child_tasks": [
+        {
+          "issue": 45,
+          "title": "Build the speaker embedding extractor (WeSpeaker ResNet34-LM, CoreML)",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Same-speaker cosine > different-speaker cosine on the fixture set",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Latency recorded in benchmarks.md",
+              "completion": "partially verified"
+            }
+          ]
+        },
+        {
+          "issue": 46,
+          "title": "Build voice enrollment: guided capture, voiceprint profile and secure storage",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Enrollment completes in < 60 s",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Profile syncs to a second device and verifies the owner there without re-enrolling",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Deleting the profile removes it on all devices",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Profile stores the model version so a model change prompts re-enrollment",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 47,
+          "title": "Build the verification gate: accept, reject or uncertain per speech segment with speculative ASR",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "TV / podcast / other-person speech is not sent to Grok in the eval scenarios",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Owner FRR < 3% on the eval set",
+              "completion": "verified on public evaluation set"
+            },
+            {
+              "requirement": "Barge-in only triggers on accepted or uncertain speech",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 48,
+          "title": "Build the voice ID evaluation harness and threshold calibration",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "`docs/voice-id-eval.md` with curves and chosen thresholds",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Thresholds committed to config",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 49,
+          "title": "Add adaptive voiceprint updates with a drift cap",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Simulated week of sessions keeps FRR stable without raising FAR",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 50,
+          "title": "Add a language ID filter to ignore speech in other languages",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Foreign-language fixture clips are rejected \u2265 90%",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Added latency < 30 ms",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 51,
+          "title": "Research spike: noise suppression on the ASR and verification paths (VPIO vs DeepFilterNet3)",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Decision recorded in the architecture issue with data",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 6,
+      "title": "Epic: Grok realtime voice integration (xAI)",
+      "url": "https://github.com/joeblau/voice/issues/6",
+      "current_state": "OPEN",
+      "original_body": "Connect to the xAI Grok realtime voice API: ephemeral-token auth, a typed WebSocket client, manual turn control with text input and audio output, barge-in, function calling, and session continuity past the 120-minute limit.\n\n**Research:** `wss://api.x.ai/v1/realtime?model=grok-voice-think-fast-2.0`, subprotocol auth `xai-client-secret.<token>`, `turn_detection: null`, `conversation.item.create(input_text)` \u2192 `response.create`, `response.output_audio.delta` (24 kHz PCM16), `response.cancel` + `conversation.item.truncate`, `resumption` with `conversation_id`.\n\nArchitecture & research: #1\n\n## Tasks\n**M1 Voice Loop MVP**\n- [ ] #33 Store the xAI API key in the Keychain and mint realtime tokens on device (no backend)\n- [x] #34 Build the realtime WebSocket client with typed client and server event models\n- [x] #35 Configure the realtime session: manual turns, voice, instructions and output audio\n- [ ] #36 Build the turn orchestrator: verified utterance \u2192 Grok \u2192 audio and transcript\n- [ ] #37 Support barge-in: interrupt the agent when the user starts speaking\n- [x] #38 Build the function-calling infrastructure for realtime sessions\n- [x] #39 Keep long sessions going: 120-minute limit, resumption and context reseeding\n\n**M4 Polish & Beta**\n- [x] #80 Handle errors, offline mode and edge states\n\n## Implementation completion audit \u2014 2026-10-10\n\nThe following records establish merged implementation history; reopened acceptance work below is still outstanding:\n\n- #33: [#91](https://github.com/joeblau/voice/pull/91).\n- #34: [#104](https://github.com/joeblau/voice/pull/104).\n- #35: [#106](https://github.com/joeblau/voice/pull/106).\n- #36: [#118](https://github.com/joeblau/voice/pull/118).\n- #37: [#123](https://github.com/joeblau/voice/pull/123).\n- #38: [#114](https://github.com/joeblau/voice/pull/114).\n- #39: [#124](https://github.com/joeblau/voice/pull/124).\n- #80: [#139](https://github.com/joeblau/voice/pull/139).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n\n## Remaining acceptance audit \u2014 2026-10-11\n\nReopened child acceptance: #33. Their merged implementation does not establish the original cross-device or physical workflow criteria. Keep this epic open until those results are verified.\n\n## Original acceptance audit \u2014 physical checks pending\n\nThis epic remains open while its original physical acceptance checks are pending in #36, #37. Prior merged implementation history above is retained; its earlier completion audit did not verify those physical results. The current app is Choff.\n",
+      "child_tasks": [
+        {
+          "issue": 33,
+          "title": "Store the xAI API key in the Keychain and mint realtime tokens on device (no backend)",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "No API key in the app binary or the repo",
+              "completion": "verified"
+            },
+            {
+              "requirement": "A key entered on one device is available on the user's other devices",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Token refresh covered by unit tests with a fake clock",
+              "completion": "verified"
+            },
+            {
+              "requirement": "An invalid key shows a recoverable error in Settings and onboarding",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 34,
+          "title": "Build the realtime WebSocket client with typed client and server event models",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Decodes every event in recorded fixture sessions",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Reconnects after a network drop",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Signposts for connect and per-event handling",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 35,
+          "title": "Configure the realtime session: manual turns, voice, instructions and output audio",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Changing voice/speed in Settings applies to the next session.update",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Snapshot test of the encoded session.update JSON",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 36,
+          "title": "Build the turn orchestrator: verified utterance \u2192 Grok \u2192 audio and transcript",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Full spoken conversation works end-to-end on device",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Transcript persisted for both roles",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "p50 EOU\u2192first audio measured and shown in the HUD",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 37,
+          "title": "Support barge-in: interrupt the agent when the user starts speaking",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Interrupt \u2192 silence < 150 ms",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "The model's next reply reflects only what was actually heard",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "No false interrupts from the agent's own voice on speaker",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 38,
+          "title": "Build the function-calling infrastructure for realtime sessions",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Echo tool round-trip test with recorded fixture",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Parallel calls produce a single response.create",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 39,
+          "title": "Keep long sessions going: 120-minute limit, resumption and context reseeding",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Simulated 2.5 h session (fake clock) rolls over seamlessly",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Network drop mid-response recovers and queued turns are delivered",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 80,
+          "title": "Handle errors, offline mode and edge states",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Airplane-mode test: transcript continues, recovers on reconnect",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Error catalog documented",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 7,
+      "title": "Epic: SwiftData models & iCloud container sync",
+      "url": "https://github.com/joeblau/voice/issues/7",
+      "current_state": "OPEN",
+      "original_body": "Store all text (conversations, utterances, topics, knowledge, facts) in SwiftData, mirrored to the user's private CloudKit database in `iCloud.com.joeblau.blau`. Use versioned schemas and migrations, and keep derived indexes local-only.\n\n**Research:** CloudKit rules: all properties optional/defaulted, no `.unique`, optional relationships with inverses, no `.deny`, additive-only prod schema. Avoid `@Model` inheritance (CloudKit crash reports). Use `VersionedSchema` + `SchemaMigrationPlan` from v1.\n\nArchitecture & research: #1\n\n## Tasks\n**M0 Foundation**\n- [x] #19 Define SwiftData schema v1 (CloudKit-compatible): Conversation, Topic, Utterance\n- [ ] #20 Configure the iCloud container and SwiftData CloudKit sync\n- [x] #21 Add a ModelActor write path for high-frequency pipeline writes\n\n**M3 Semantic Memory**\n- [x] #61 Add SwiftData schema v2 for memory models: Document, CollectionItem, Entity, Fact, ProfileBlock\n\n**M4 Polish & Beta**\n- [ ] #78 Export conversations and topics as Markdown to the iCloud Drive container\n- [ ] #79 Privacy, data controls and the privacy manifest\n\n## Implementation completion audit \u2014 2026-10-10\n\nThe following records establish merged implementation history; reopened acceptance work below is still outstanding:\n\n- #19: [#88](https://github.com/joeblau/voice/pull/88).\n- #20: [#98](https://github.com/joeblau/voice/pull/98).\n- #21: [#96](https://github.com/joeblau/voice/pull/96).\n- #61: [#105](https://github.com/joeblau/voice/pull/105).\n- #78: [#137](https://github.com/joeblau/voice/pull/137).\n- #79: [#149](https://github.com/joeblau/voice/pull/149).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n\n## Remaining acceptance audit \u2014 2026-10-11\n\nReopened child acceptance: #20, #78, #79. Their merged implementation does not establish the original cross-device or physical workflow criteria. Keep this epic open until those results are verified.\n",
+      "child_tasks": [
+        {
+          "issue": 19,
+          "title": "Define SwiftData schema v1 (CloudKit-compatible): Conversation, Topic, Utterance",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Unit tests create, fetch and delete with an in-memory container",
+              "completion": "verified"
+            },
+            {
+              "requirement": "A model test asserts CloudKit compatibility (no unique attrs, all relationships optional)",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Schema diagram in `docs/data-model.md`",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 20,
+          "title": "Configure the iCloud container and SwiftData CloudKit sync",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Data created on device A appears on device B (manual test plan documented)",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "App works signed out of iCloud",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Production schema deploy checklist in `docs/release.md`",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 21,
+          "title": "Add a ModelActor write path for high-frequency pipeline writes",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Stress test: 10k utterances inserted < N ms (baseline recorded)",
+              "completion": "verified"
+            },
+            {
+              "requirement": "No main-thread saves (Thread Checker / assertion)",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 61,
+          "title": "Add SwiftData schema v2 for memory models: Document, CollectionItem, Entity, Fact, ProfileBlock",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Migration test v1 \u2192 v2 with fixture store",
+              "completion": "verified"
+            },
+            {
+              "requirement": "CloudKit compatibility test passes",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 78,
+          "title": "Export conversations and topics as Markdown to the iCloud Drive container",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Files appear in Files.app \u2192 iCloud Drive \u2192 Blau",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Re-export is idempotent",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 79,
+          "title": "Privacy, data controls and the privacy manifest",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Delete-all removes CloudKit records (verified on second device)",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Privacy manifest validates in Xcode archive",
+              "completion": "partially verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 8,
+      "title": "Epic: Automatic topic switching & labeling",
+      "url": "https://github.com/joeblau/voice/issues/8",
+      "current_state": "OPEN",
+      "original_body": "Watch the conversation as it streams, detect when the topic changes, start a new topic, and give each topic a short auto-generated label.\n\n**Research:** TextTiling depth over exchange embeddings + hysteresis (\u226560 s / 4 exchanges per topic, 30 s cooldown, retroactive boundary at the deepest dip). Candidates are confirmed and titled by Foundation Models `@Generable TopicShift`. Provisional title \u2192 refined on close. TreeSeg offline re-segmentation.\n\nArchitecture & research: #1\n\n## Tasks\n**M2 Voice ID & Topics**\n- [x] #52 Build the streaming topic segmentation engine (TextTiling depth + hysteresis)\n- [x] #53 Confirm candidate boundaries and generate topic labels with on-device Foundation Models\n- [ ] #54 Manage the topic lifecycle: open, provisional title, refine on close, manual edits\n- [x] #55 Add offline re-segmentation and label refinement at session end\n\n## Implementation completion audit \u2014 2026-10-10\n\nThe following records establish merged implementation history; reopened acceptance work below is still outstanding:\n\n- #52: [#92](https://github.com/joeblau/voice/pull/92).\n- #53: [#102](https://github.com/joeblau/voice/pull/102).\n- #54: [#126](https://github.com/joeblau/voice/pull/126).\n- #55: [#136](https://github.com/joeblau/voice/pull/136).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n\n## Remaining acceptance audit \u2014 2026-10-11\n\nReopened child acceptance: #54. Their merged implementation does not establish the original cross-device or physical workflow criteria. Keep this epic open until those results are verified.\n",
+      "child_tasks": [
+        {
+          "issue": 52,
+          "title": "Build the streaming topic segmentation engine (TextTiling depth + hysteresis)",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Unit tests on scripted transcripts with labelled boundaries (Pk / WindowDiff metrics)",
+              "completion": "verified"
+            },
+            {
+              "requirement": "No flapping on a fixture with a brief digression",
+              "completion": "verified"
+            },
+            {
+              "requirement": "< 5 ms per update on device",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 53,
+          "title": "Confirm candidate boundaries and generate topic labels with on-device Foundation Models",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Labels \u2264 5 words for 100% of fixtures",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Works on non-Apple-Intelligence devices via fallback",
+              "completion": "verified"
+            },
+            {
+              "requirement": "p50 label latency recorded",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 54,
+          "title": "Manage the topic lifecycle: open, provisional title, refine on close, manual edits",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "New topic appears within ~2 exchanges of a real switch",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Manual rename persists and syncs via iCloud",
+              "completion": "partially verified"
+            }
+          ]
+        },
+        {
+          "issue": 55,
+          "title": "Add offline re-segmentation and label refinement at session end",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Pk improves on the fixture set vs streaming-only",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 9,
+      "title": "Epic: Semantic memory & knowledge base",
+      "url": "https://github.com/joeblau/voice/issues/9",
+      "current_state": "OPEN",
+      "original_body": "Give Blau a long-term memory: what it knows about the user, their company and collections (e.g. YC interview questions), plus semantic search over every past conversation and topic.\n\n**Research / SOTA:** pinned ProfileBlock (Letta), add-only temporal fact extraction with entity linking (Mem0 + Zep validity intervals), exchange-level chunks with fact-augmented keys (LongMemEval), hybrid FTS5 BM25 + EmbeddingGemma 256-d int8 vectors + RRF, local rebuildable index, exposed to Grok as function tools.\n\nArchitecture & research: #1\n\n## Tasks\n**M3 Semantic Memory**\n- [ ] #59 Research spike: choose the on-device embedding model\n- [ ] #60 Build the shared text embedding service (Core ML, Matryoshka 256-d, int8)\n- [ ] #62 Build the local search index: chunks, FTS5 BM25 and an int8 vector matrix\n- [ ] #63 Build the incremental indexer driven by SwiftData history and CloudKit imports\n- [x] #64 Build hybrid retrieval: BM25 + vector + RRF, time filters and entity expansion\n- [ ] #65 Build the knowledge base UI: profile, company, notes and collections (e.g. YC questions)\n- [x] #66 Build the post-conversation fact and entity extraction pipeline (add-only, temporal)\n- [x] #67 Maintain the profile block with sleep-time consolidation\n- [x] #68 Expose memory to Grok as tools: search_memory, get_entity, remember, forget\n- [ ] #69 Build the practice mode: drill a collection (e.g. YC interview questions) by voice\n- [x] #70 Build the memory retrieval and answer evaluation harness\n\n## Implementation completion audit \u2014 2026-10-10\n\nThe implementation audit recorded merged closing PRs for the child tasks below; the acceptance re-audit records remaining work:\n\n- #59: [#113](https://github.com/joeblau/voice/pull/113).\n- #60: [#120](https://github.com/joeblau/voice/pull/120).\n- #62: [#125](https://github.com/joeblau/voice/pull/125).\n- #63: [#133](https://github.com/joeblau/voice/pull/133).\n- #64: [#132](https://github.com/joeblau/voice/pull/132).\n- #65: [#146](https://github.com/joeblau/voice/pull/146).\n- #66: [#135](https://github.com/joeblau/voice/pull/135).\n- #67: [#143](https://github.com/joeblau/voice/pull/143).\n- #68: [#141](https://github.com/joeblau/voice/pull/141).\n- #69: [#151](https://github.com/joeblau/voice/pull/151).\n- #70: [#140](https://github.com/joeblau/voice/pull/140).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n## Acceptance re-audit \u2014 2026-10-11\n\n#59 is reopened because its original acceptance criteria remain incomplete. Its merged implementation PR is preserved. See the child issue for the concrete remaining checks and current evidence. This epic remains open until those criteria are verified.\n\n\n## Remaining acceptance audit \u2014 2026-10-11\n\nReopened child acceptance: #63, #65, #69. Their merged implementation does not establish the original cross-device or physical workflow criteria. Keep this epic open until those results are verified.\n\n## Original acceptance audit \u2014 physical checks pending\n\nThis epic remains open while its original physical acceptance checks are pending in #60, #62. Prior merged implementation history above is retained; its earlier completion audit did not verify those physical results. The current app is Choff.\n",
+      "child_tasks": [
+        {
+          "issue": 59,
+          "title": "Research spike: choose the on-device embedding model",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Decision + numbers in `docs/benchmarks.md`",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Model converted and hosted for download",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 60,
+          "title": "Build the shared text embedding service (Core ML, Matryoshka 256-d, int8)",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Batch of 32 chunks embeds within the budget from the spike",
+              "completion": "verified on physical A19 Pro"
+            },
+            {
+              "requirement": "Topic engine tests still pass with the new embedder",
+              "completion": "verified on Mac real-model replay"
+            }
+          ]
+        },
+        {
+          "issue": 62,
+          "title": "Build the local search index: chunks, FTS5 BM25 and an int8 vector matrix",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Search over 50k chunks < 20 ms p95 on A17",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Index fully rebuildable from SwiftData",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 63,
+          "title": "Build the incremental indexer driven by SwiftData history and CloudKit imports",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Note edited on device A becomes searchable on device B",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Rebuild of 10k chunks completes in the background and resumes after kill",
+              "completion": "partially verified"
+            }
+          ]
+        },
+        {
+          "issue": 64,
+          "title": "Build hybrid retrieval: BM25 + vector + RRF, time filters and entity expansion",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Recall@5 \u2265 target from the eval harness",
+              "completion": "verified"
+            },
+            {
+              "requirement": "p95 search latency < 50 ms",
+              "completion": "verified on physical A19 Pro"
+            }
+          ]
+        },
+        {
+          "issue": 65,
+          "title": "Build the knowledge base UI: profile, company, notes and collections (e.g. YC questions)",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Create a YC collection with 30 questions in < 1 min via paste",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Edits sync via iCloud and re-index",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 66,
+          "title": "Build the post-conversation fact and entity extraction pipeline (add-only, temporal)",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Extraction runs for every closed topic without blocking UI",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Contradiction test: the old fact is invalidated, the new one is active",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 67,
+          "title": "Maintain the profile block with sleep-time consolidation",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Profile stays within the token budget",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Diff view of consolidation changes for the user",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 68,
+          "title": "Expose memory to Grok as tools: search_memory, get_entity, remember, forget",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "\"What does my company do?\" answered from the knowledge base",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Tool round-trip adds < 300 ms p50",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 69,
+          "title": "Build the practice mode: drill a collection (e.g. YC interview questions) by voice",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Full practice run of 10 questions by voice",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Practice stats sync via iCloud",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 70,
+          "title": "Build the memory retrieval and answer evaluation harness",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Baseline numbers recorded; regressions fail nightly",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 10,
+      "title": "Epic: SwiftUI experience (timeline, chat, controls, settings)",
+      "url": "https://github.com/joeblau/voice/issues/10",
+      "current_state": "OPEN",
+      "original_body": "Build the full UI: record button bottom-right, settings button bottom-left (opens a sheet), a chat transcript with user text right-aligned and agent text left-aligned (no bubbles), and a topic timeline of bullets where history is revealed by swiping down.\n\n**Research:** `ToolbarItem(placement: .bottomBar)` + `ToolbarSpacer(.flexible)` (Liquid Glass), `defaultScrollAnchor(.bottom)`, `onScrollGeometryChange`, no inverted ScrollView, iOS 27 prepend regression workaround.\n\nArchitecture & research: #1\n\n## Tasks\n**M1 Voice Loop MVP**\n- [x] #40 Build the main screen scaffold: bottom toolbar with settings (left) and record (right)\n- [x] #41 Build the record button: states, level ring, haptics and accessibility\n- [x] #42 Build the chat transcript view: user text right-aligned, agent text left-aligned, no bubbles\n- [x] #43 Build the settings sheet presented from the bottom-left button\n- [x] #44 Build onboarding and permissions: mic, model download, iCloud check, voice enrollment\n\n**M2 Voice ID & Topics**\n- [x] #56 Build the topic timeline: bullets above the fold, swipe down for history, swipe back to the current topic\n- [ ] #57 Paginate timeline history and work around the iOS 27 prepend scroll regression\n- [x] #58 Build the topic detail: expand a bullet to read its transcript and summary\n\n**M4 Polish & Beta**\n- [ ] #81 Accessibility pass: VoiceOver, Dynamic Type, Reduce Motion, captions\n- [x] #82 Branding: app icon, launch screen, colors and typography for Blau\n\n## Implementation completion audit \u2014 2026-10-10\n\nEvery child task above is closed and has a merged closing PR:\n\n- #40: [#109](https://github.com/joeblau/voice/pull/109).\n- #41: [#127](https://github.com/joeblau/voice/pull/127).\n- #42: [#130](https://github.com/joeblau/voice/pull/130).\n- #43: [#134](https://github.com/joeblau/voice/pull/134).\n- #44: [#147](https://github.com/joeblau/voice/pull/147).\n- #56: [#158](https://github.com/joeblau/voice/pull/158), [#142](https://github.com/joeblau/voice/pull/142).\n- #57: [#158](https://github.com/joeblau/voice/pull/158).\n- #58: [#152](https://github.com/joeblau/voice/pull/152).\n- #81: [#159](https://github.com/joeblau/voice/pull/159).\n- #82: [#129](https://github.com/joeblau/voice/pull/129).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n## Current integration acceptance regressions\n\nThis epic remains open while #57 and #81 fail their original paging/accessibility checks on the current integration head. Fix and validation are in PR #187. Earlier implementation merges remain recorded above.\n",
+      "child_tasks": [
+        {
+          "issue": 40,
+          "title": "Build the main screen scaffold: bottom toolbar with settings (left) and record (right)",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Settings button bottom-left, record button bottom-right on all iPhone sizes",
+              "completion": "verified"
+            },
+            {
+              "requirement": "UI test locates both by accessibility identifier",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 41,
+          "title": "Build the record button: states, level ring, haptics and accessibility",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Snapshot tests for every state",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Start \u2192 listening < 500 ms (warm)",
+              "completion": "partially verified"
+            }
+          ]
+        },
+        {
+          "issue": 42,
+          "title": "Build the chat transcript view: user text right-aligned, agent text left-aligned, no bubbles",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Visual spec matches: user right, agent left, no bubbles",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Scrolling 1,000 rows at 120 Hz without hitches (perf test)",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 43,
+          "title": "Build the settings sheet presented from the bottom-left button",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Sheet opens from the bottom-left button",
+              "completion": "verified"
+            },
+            {
+              "requirement": "All sections navigable; changes take effect live where possible",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 44,
+          "title": "Build onboarding and permissions: mic, model download, iCloud check, voice enrollment",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Fresh install reaches a working conversation through onboarding",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "Denied mic permission shows a recovery path to Settings.app",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 56,
+          "title": "Build the topic timeline: bullets above the fold, swipe down for history, swipe back to the current topic",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Opens on the current topic with bullets visible above the fold",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Older topics render as compressed single-row bullets until tapped; only the current topic is expanded by default",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Swipe down reveals older topics; swipe back / tap Now returns",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Auto-label updates animate without scroll jumps",
+              "completion": "verified"
+            },
+            {
+              "requirement": "VoiceOver reads the timeline as a list of topics with times",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 57,
+          "title": "Paginate timeline history and work around the iOS 27 prepend scroll regression",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Scroll through 2,000 topics without jumps on iOS 26 and iOS 27",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "Memory stays bounded",
+              "completion": "partially verified"
+            }
+          ]
+        },
+        {
+          "issue": 58,
+          "title": "Build the topic detail: expand a bullet to read its transcript and summary",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Tap \u2192 expand < 100 ms",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Continue-topic seeds Grok context",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 81,
+          "title": "Accessibility pass: VoiceOver, Dynamic Type, Reduce Motion, captions",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Accessibility Inspector audit clean",
+              "completion": "failed current original acceptance"
+            },
+            {
+              "requirement": "UI tests run with AX5 text size",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 82,
+          "title": "Branding: app icon, launch screen, colors and typography for Blau",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Icon renders in all appearances",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Design tokens in an asset catalog",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    },
+    {
+      "issue": 11,
+      "title": "Epic: Built-in performance scaffolding",
+      "url": "https://github.com/joeblau/voice/issues/11",
+      "current_state": "OPEN",
+      "original_body": "Build performance measurement in from day one: signposts per pipeline stage, end-to-end latency metrics, MetricKit, an XCTest perf suite with baselines in CI, a debug HUD, thermal/power adaptation and long-session soak tests.\n\n**Research:** `OSSignposter` + `XCTOSSignpostMetric`, `XCTApplicationLaunchMetric`, `XCTMemoryMetric`, `MXMetricManager` diagnostics, `ProcessInfo.thermalState`, `os_proc_available_memory()`, package-benchmark for pure-Swift modules on macOS.\n\nArchitecture & research: #1\n\n## Tasks\n**M0 Foundation**\n- [x] #17 Build the BlauTelemetry foundation: Logger categories and signposts\n- [ ] #22 Research spike: on-device model benchmark harness (ASR, voice ID, embeddings, background ANE)\n\n**M4 Polish & Beta**\n- [x] #71 Build the debug performance HUD overlay\n- [ ] #72 Add a MetricKit subscriber and on-device diagnostics export\n- [x] #73 Build the XCTest performance suite with CI baselines\n- [ ] #74 Instrument end-to-end latency and document the latency budget\n- [ ] #75 Add thermal and power adaptation\n- [ ] #76 Run an automated long-session soak test (1\u20132 h)\n- [x] #77 Create a custom Instruments template for Blau\n\n## Implementation completion audit \u2014 2026-10-10\n\nThe implementation audit recorded merged closing PRs for the child tasks below; the acceptance re-audit records remaining work:\n\n- #17: [#89](https://github.com/joeblau/voice/pull/89).\n- #22: [#101](https://github.com/joeblau/voice/pull/101).\n- #71: [#131](https://github.com/joeblau/voice/pull/131).\n- #72: [#94](https://github.com/joeblau/voice/pull/94).\n- #73: [#148](https://github.com/joeblau/voice/pull/148).\n- #74: [#153](https://github.com/joeblau/voice/pull/153).\n- #75: [#122](https://github.com/joeblau/voice/pull/122).\n- #76: [#157](https://github.com/joeblau/voice/pull/157).\n- #77: [#95](https://github.com/joeblau/voice/pull/95).\n\nFollow-up integration bugs remain tracked in #179, #180, #182, and #183. Device, CloudKit-console, live-xAI, and release-account checks that were left pending in the child PRs remain pending; this audit verifies implementation merges and does not claim those manual checks passed.\n\n## Acceptance re-audit \u2014 2026-10-11\n\n#22 is reopened because its original acceptance criteria remain incomplete. Its merged implementation PR is preserved. See the child issue for the concrete remaining checks and current evidence. This epic remains open until those criteria are verified.\n\n## Original acceptance audit \u2014 physical checks pending\n\nThis epic remains open while its original physical acceptance checks are pending in #72, #74, #75, #76. Prior merged implementation history above is retained; its earlier completion audit did not verify those physical results. The current app is Choff.\n",
+      "child_tasks": [
+        {
+          "issue": 17,
+          "title": "Build the BlauTelemetry foundation: Logger categories and signposts",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Intervals visible in Instruments \u2192 os_signpost",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Unit tests verify helpers don't crash when signposting is disabled",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Naming doc in `docs/performance.md`",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 22,
+          "title": "Research spike: on-device model benchmark harness (ASR, voice ID, embeddings, background ANE)",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Results table for \u22652 devices committed",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Clear go/no-go on EOU-320 as the default",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Background-ANE behaviour documented with a mitigation decision",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 71,
+          "title": "Build the debug performance HUD overlay",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "HUD overhead < 1% CPU",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "Values match Instruments within tolerance",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 72,
+          "title": "Add a MetricKit subscriber and on-device diagnostics export",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Payloads captured on TestFlight builds",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Export works",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 73,
+          "title": "Build the XCTest performance suite with CI baselines",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Nightly perf job green with baselines committed",
+              "completion": "verified"
+            },
+            {
+              "requirement": "Intentional regression in a PR is caught",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 74,
+          "title": "Instrument end-to-end latency and document the latency budget",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "Budget doc committed",
+              "completion": "verified"
+            },
+            {
+              "requirement": "p50 / p95 measured on 2 devices and tracked per release",
+              "completion": "not yet proven in this acceptance audit"
+            }
+          ]
+        },
+        {
+          "issue": 75,
+          "title": "Add thermal and power adaptation",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "1-hour soak stays \u2264 `.fair` thermal on A17 at normal level, or degrades gracefully",
+              "completion": "not yet proven in this acceptance audit"
+            },
+            {
+              "requirement": "Policy unit tested",
+              "completion": "verified"
+            }
+          ]
+        },
+        {
+          "issue": 76,
+          "title": "Run an automated long-session soak test (1\u20132 h)",
+          "current_github_state": "OPEN",
+          "original_parent_checkbox_checked": false,
+          "all_original_criteria_verified": false,
+          "criteria_statuses": [
+            {
+              "requirement": "2 h run passes with a report artifact",
+              "completion": "partially verified"
+            },
+            {
+              "requirement": "Leaks instrument shows no growth",
+              "completion": "partially verified"
+            }
+          ]
+        },
+        {
+          "issue": 77,
+          "title": "Create a custom Instruments template for Blau",
+          "current_github_state": "CLOSED",
+          "original_parent_checkbox_checked": true,
+          "all_original_criteria_verified": true,
+          "criteria_statuses": [
+            {
+              "requirement": "Template opens and captures all Blau intervals",
+              "completion": "verified"
+            }
+          ]
+        }
+      ],
+      "completion": "incomplete: one or more original child criteria unverified"
+    }
+  ]
+}
