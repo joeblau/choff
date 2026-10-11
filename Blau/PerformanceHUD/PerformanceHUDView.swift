@@ -88,14 +88,18 @@ struct PerformanceHUDView: View {
                     Text(row.label)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
+                        // GridRow forwards accessibility modifiers to both
+                        // columns. Expose one reading from the label instead.
+                        .accessibilityValue(row.value)
+                        .accessibilityIdentifier("blau.hud.row.\(row.id)")
                     Text(row.value)
                         .foregroundStyle(color(row.level))
                         // One line when compact, so the panel keeps its size
                         // (and isn't laid out again) as the values change.
                         .lineLimit(controller.isExpanded ? 2 : 1)
                         .fixedSize(horizontal: false, vertical: controller.isExpanded)
+                        .accessibilityHidden(true)
                 }
-                .accessibilityElement(children: .combine)
             }
         }
     }

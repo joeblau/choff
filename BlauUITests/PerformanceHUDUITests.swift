@@ -24,9 +24,9 @@ final class PerformanceHUDUITests: XCTestCase {
         app.descendants(matching: .any)["blau.hud"]
     }
 
-    /// The row whose label starts with `label` (rows combine label and value).
+    /// The row exposes its name as the label and its reading as the value.
     private func row(_ app: XCUIApplication, _ label: String) -> XCUIElement {
-        hud(app).descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", label)).firstMatch
+        hud(app).descendants(matching: .any)["blau.hud.row.\(label)"]
     }
 
     func testSettingsDeveloperTogglesTheHUD() {
@@ -55,11 +55,12 @@ final class PerformanceHUDUITests: XCTestCase {
         // second or two.
         let fps = row(app, "FPS")
         XCTAssertTrue(fps.waitForExistence(timeout: 5))
-        let filled = NSPredicate(format: "NOT (label CONTAINS %@)", "–")
-        expectation(for: filled, evaluatedWith: fps)
-        expectation(for: filled, evaluatedWith: row(app, "CPU"))
-        expectation(for: filled, evaluatedWith: row(app, "Memory"))
-        expectation(for: filled, evaluatedWith: row(app, "Thermal"))
+        let filled = NSPredicate(format: "value != nil AND value != '' AND NOT (value CONTAINS %@)", "–")
+        for label in ["FPS", "CPU", "Memory", "Thermal"] {
+            let reading = row(app, label)
+            XCTAssertEqual(reading.label, label)
+            expectation(for: filled, evaluatedWith: reading)
+        }
         waitForExpectations(timeout: 10)
 
         // Tap: every section.
