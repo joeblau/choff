@@ -1807,8 +1807,11 @@
       "criteria": [
         {
           "requirement": "Batch of 32 chunks embeds within the budget from the spike",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "verified on physical A19 Pro",
+          "evidence": [
+            "Original shared-service batch32 physicalAirA19Pro Release65e1326:10iterations,p951151.1336ms<=1600ms,p501008.0353ms,mean124.125tokens,coldload17205.504ms. PublicQwencandidate609331156bytes exceedsunchanged400MBdownloadbudget; selectedmodel/A17stillpending.",
+            "docs/benchmarks/2026-10-11-iPhone18-4-qwen-batch32.json"
+          ]
         },
         {
           "requirement": "Topic engine tests still pass with the new embedder",
@@ -2831,7 +2834,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T11:55:20.084940+00:00",
+  "last_evidence_update": "2026-10-11T12:05:14.894690+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2854,12 +2857,12 @@
   },
   "criteriaStatusCounts": {
     "verified": 125,
-    "not yet proven in this acceptance audit": 46,
+    "not yet proven in this acceptance audit": 45,
     "failed current original acceptance": 1,
     "partially verified": 16,
     "verified on Mac real-model replay": 1,
     "verified on public evaluation set": 1,
-    "verified on physical A19 Pro": 1,
+    "verified on physical A19 Pro": 2,
     "pending external prerequisites": 1
   },
   "currentReviewSources": {

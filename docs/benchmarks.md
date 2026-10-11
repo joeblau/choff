@@ -1131,6 +1131,4 @@ retains those quantization differences.
 The compiled hosting folder is 609,331,156 bytes, above the original 400 MB
 model budget. It is a candidate, with no change to the selected model or
 hosting destination. EmbeddingGemma access remains unavailable. A signed
-benchmark host containing this candidate is prepared; its original on-phone
-batch-of-32 measurement is waiting for the Air to be unlocked. A passing
-XCTest case alone will not establish the unchanged 1,600 ms latency budget.
+benchmark host containing this candidate is prepared; the [original on-phone batch-of-32 measurement](benchmarks/2026-10-11-iPhone18-4-qwen-batch32.json) now passes on the physical Air A19 Pro. Its10measured iterations at124.125mean tokens give p50 **1,008.035 ms** and p95 **1,151.134 ms**, within the unchanged **1,600 ms** budget. Coldload is17,205.504ms; reported footprint451.064MB and Neural Engine growth424.469MB are retained. A17,model selection,download size and hosting acceptance remain pending.
