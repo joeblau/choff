@@ -139,7 +139,8 @@
           "evidence": [
             "CI 38114217207 restores Swift package cache, but UI shard 1 runs 1432 seconds against original 900-second target",
             "CI 38123804979 at2acfe8c completed allrequiredPASS but2277seconds end-to-end, exceeding original900seconds warm-cache target. LongestUIjob1501seconds. Original runtime requirement remains failed.",
-            "Two-worker experiment PR190 at d47201b CI 38127622172 remains inprogress beyond 900 s. Completed UI 1: Build 127 / Warm 208 / Test 693 s; UI 4: Build 121 / Warm 179 / Test 596 s. Separate unchanged expansion job FAIL: 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No limits or assertions changed; remaining UI 2 and whole-run terminal measurements pending."
+            "Two-worker experiment PR190 at d47201b CI 38127622172 remains inprogress beyond 900 s. Completed UI 1: Build 127 / Warm 208 / Test 693 s; UI 4: Build 121 / Warm 179 / Test 596 s. Separate unchanged expansion job FAIL: 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No limits or assertions changed; remaining UI 2 and whole-run terminal measurements pending.",
+            "Latestexact822 CI38140894068 completed1945s>original900s; 90functionalPASS1accessibilityFAIL2existingSKIP. Prior2422sA1/3281sf97/2950s8shard experiment retained. No runtime target weakened. /tmp/voice-ci-8220638-terminal-report.json"
           ]
         }
       ],
@@ -1981,13 +1982,14 @@
       "criteria": [
         {
           "requirement": "Create a YC collection with 30 questions in < 1 min via paste",
-          "completion": "failed current original acceptance",
+          "completion": "verified",
           "evidence": [
             "Original KnowledgeBaseUITests.testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASS on currentintegrationplusquerycandidate:30pastedquestions,orderedcount/savedcollectionchecked,creationassertionunchanged<60s,wholetest26.132s. All3knowledgeUIcasesPASS0skip. Actualsecond-device synccriterionremainspending.",
             "/tmp/voice-choff-knowledge-saved-leaf-query-summary.json",
             "Fresh eight-group CI 38131796908 at 6e1b16d, production source f24c6bc unchanged: original testPastingThirtyQuestionsCreatesACollectionInUnderAMinute fails its unchanged 60-second assertion at 115.7596 seconds. Collection creation and count complete. Preceding local PASS remains retained, but does not clear this current timing failure. Completed group 8: ten PASS, one FAIL, zero SKIP; full workflow remains live.",
             "Latest exact-head CI38133007062 atf97c3ac: original testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASSES, completecase55.6073seconds, unchanged60-secondcreationassertion. Prior6e/f24 failure115.7596seconds remainsretained; no causeproof claimed. Whole run fails a different onboardingfocus case. /tmp/voice-ci-f97c3ac-ui3-tests.json",
-            "LatestexactheadA1CI38137282198 originalcreationFAIL86.44666898s>=unchanged60s. Earlierf97PASS55.6073wholecase retained. Direct-IDV1all3KnowledgecasesPASSbothOS; remote60scriterionresolutionpending. /tmp/voice-ci-a1e33b9-ui3-summary.json"
+            "LatestexactheadA1CI38137282198 originalcreationFAIL86.44666898s>=unchanged60s. Earlierf97PASS55.6073wholecase retained. Direct-IDV1all3KnowledgecasesPASSbothOS; remote60scriterionresolutionpending. /tmp/voice-ci-a1e33b9-ui3-summary.json",
+            "Exacthead8220638 CI38140894068 originalcreationPASSED, wholecase41.020421s including setup; originaltimer/assertion60s unchanged. PreviousA1failure86.446669s andf97PASS55.607336s retained. /tmp/voice-ci-8220638-ui3-tests.json"
           ]
         },
         {
@@ -2461,7 +2463,7 @@
       "criteria": [
         {
           "requirement": "Accessibility Inspector audit clean",
-          "completion": "verified",
+          "completion": "failed current original acceptance",
           "evidence": [
             "CI 38114217207 fails its original history audit at eeb5ed4",
             "Native corrective candidate passes both history audits on iOS 27 with original audit rules",
@@ -2471,7 +2473,8 @@
             "/tmp/voice-ci-242-ui3-tests.json",
             "/tmp/voice-ci-242-ui4-tests.json",
             "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved.",
-            "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit."
+            "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit.",
+            "Exacthead8220638 CI38140894068 testTimelineAtTheLatestLineFAIL: Contrast failed, StaticText48 Continue frame(28,477,114,44) invisibleinactualscreenshot, collapsedmountedtopic. Priorpassing localhistory/AX5audit retained; newleafvisibilitycandidatepending. /tmp/voice-ci-8220638-ui2-latest-audit-activities.json"
           ],
           "qualification": "Current original automated accessibility equivalent audits and AX5 UI cases pass; earlier failures remain recorded above."
         },
@@ -2841,27 +2844,6 @@
   ],
   "all_original_criteria_verified": false,
   "last_evidence_update": "2026-10-11T12:43:14.490650+00:00",
-  "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
-  "scopeNotes": [
-    "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
-    "Verified criteria cite actual source, tests, reports or historical measured controls. Historical-author evidence is explicitly labelled; it is not represented as a fresh execution.",
-    "Not-yet-proven criteria are unverified, not automatically failing. Partial results do not establish real hardware, model access, multi-device or release acceptance.",
-    "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
-    "PR187 at f24c6bc has fresh required CI 38129326531 running; its unchanged expansion check PASS at 64.9/46.3/32.2/31.2/36.3 ms. Original a122d7e setup-card overlap CI failure is retained; all 11 original screen/setup/empty-main accessibility cases PASS on each supported OS after fading in place. Preceding both-OS topic/paging results and green 2acfe8c CI remain source-qualified. PR188 retains separately tested 093c20f score-reuse proof. PR190 two-worker experiment completed FAILURE in 2543 seconds; new eight-group duration-balanced source 6e1b16d has fresh CI queued. No PR or whole goal is claimed merged or complete. Integration f24c6bc CI 38129326531 subsequently completed FAILURE: one original DebugMenuUITests perfHUD toggle expectation failed, 90 functional PASS/two existing SKIP/one FAIL. Other required components and expansion PASS. Unchanged local toggle control passes five repetitions; that does not clear the CI failure.",
-    "Latest integration f97c3ac isolates model-readiness observation and animation inside the existing setup-card leaf. All 14 original debug-menu/main-screen/setup/empty-main-largest-text accessibility cases PASS on each supported OS, zero failures/skips; Root source hashes match terminal producers. All three original KnowledgeBaseUITests PASS locally with unchanged assertions, including 30-question creation (whole case about26seconds), but this does not clear the prior CI 115.7596-second failure against60seconds. The original debug-toggle failure was not reproduced by five unchanged, five CPU-load, or five 120ms fixture-delay controls at f24c6bc; causal contribution of parent readiness invalidation remains unproven. Fresh required CI38133007062 at f97c3ac queued. Eight-group CI38131796908 at6e1b16d remains live with completed group8 failure retained. Standalone signed benchmark-host launch again denied Locked; physical criteria remain pending.",
-    "Eight-group run38131796908 at6e1b16d completed FAILURE:93selected/89PASS/2FAIL/2existingSKIP;2950seconds against900. Original collection115.7596seconds against60 and HUD live-values expectation10seconds both failed. All component checkout logs confirm original6e/f24event merge. Expansion47.7/79.3/71.2/62.0/33.4ms PASSoriginal100. No runtime improvement or current integration acceptance claimed. Diagnostic controls at f97 show original HUD prefix query selects label-only static text on both supported OS versions, making local old-query passes insufficient live-reading proof. Explicit row label/value candidate is under validation; original CI failures remain retained.",
-    "Latest actualAir launch succeeds; signed minimal-host15case run terminates12PASS/2existingembeddingSKIP/1FoundationModelsratelimitFAIL. Full secondphysical reportcommittedwithallmetrics; A19notA17 orsecondphone/background. Currentf97CIUI3completed22PASS/1fresh-onboardingkeyboard-focusFAIL/0SKIP. Originalfieldtaprecordingandfailure retained; currentrunremainingUI2live. AlloriginalDebugMenuchecks inthatshardPASS; nowhole-run greenclaim.",
-    "Integrationf97CI38133007062 isterminalFAILURE:90PASS/1onboardingfocusFAIL/2existingSKIP. Original30-questioncreation PASSES wholecase55.6073s withunchanged60sassertion, so#65creationcriterionverified; earlierfailurepreserved. AllotherrequiredcomponentjobsPASS; no integrationmergeorwholegoalcompletion claimed.",
-    "Integrationa1e33b9addsproduction44-pointkeyentrytapregion/explicitfocus;all12originalcasesPASSbothOS,fullCI38137282198pending. HUD2efollow-uporiginal27longscrollingfailure retained; isolatedprobe pending.",
-    "A1requiredCIterminal89PASS2FAIL2existingSKIP2422seconds. OnboardingPASS,AboutMequerytimeoutand originalcreation86.4467>=60FAIL. Direct-IDcandidateV1 all3casesPASSbothOS;V2sharedSettings/Paste/create-path pending. Earlierf97creationPASSretained, currentcriterionfailed."
-  ],
-  "requestedAppConfiguration": {
-    "displayName": "Choff",
-    "appBundleIdentifier": "com.joeblau.choff",
-    "widgetBundleIdentifier": "com.joeblau.choff.widgets",
-    "developmentTeam": "K78G42H4U2",
-    "certificateIdentifier": "84M7UGLL47"
-  },
   "criteriaStatusCounts": {
     "verified": 124,
     "not yet proven in this acceptance audit": 44,
@@ -2871,11 +2853,5 @@
     "verified on public evaluation set": 1,
     "verified on physical A19 Pro": 2,
     "pending external prerequisites": 1
-  },
-  "currentReviewSources": {
-    "integration": "a1e33b92310e9b685769e312542a2097505966c4",
-    "voice_score_reuse": "093c20fe638bcfd6c0761f758271946c08152696",
-    "two_hour_soak": "13556587e3e8d89ed39609d8f5f6b81da2db42c7",
-    "ci_runtime_balanced": "6e1b16dca4c9a94b56a84a47eaa89288ae409d1d"
   }
 }

@@ -1,0 +1,61 @@
+{
+  "source": "822063818bcbdfa0e6cd60077bb20c572d25ed75",
+  "run": 38140894068,
+  "status": "completed",
+  "conclusion": "failure",
+  "watch_exit": 1,
+  "end_to_end_seconds": 1945,
+  "original_runtime_target_seconds": 900,
+  "functional": {
+    "selected": 93,
+    "passed": 90,
+    "failed": 1,
+    "skipped": 2
+  },
+  "native": {
+    "selected": 309,
+    "passed": 301,
+    "failed": 0,
+    "skipped": 8
+  },
+  "package": {
+    "selected": 3314,
+    "failed": 0,
+    "skipped": 68,
+    "passed": 3246
+  },
+  "expansion_attachment": "/tmp/voice-ci-8220638-perf-attachments/B0DEA84E-F565-4835-AF87-0F1F09E7B0C6.txt",
+  "original_expansion_limit_ms": 100,
+  "failures": [
+    {
+      "failureText": "XCTAssertTrue failed - Timeline: 1 audit issues:\nContrast failed: 48 \"Continue\" () at (28.0, 476.99999999999983, 114.0, 44.00000000000006)",
+      "targetName": "BlauUITests",
+      "testIdentifier": 4,
+      "testIdentifierString": "AccessibilityAuditUITests/testTimelineAtTheLatestLine()",
+      "testIdentifierURL": "test://com.apple.xcode/Blau/BlauUITests/AccessibilityAuditUITests/testTimelineAtTheLatestLine",
+      "testName": "testTimelineAtTheLatestLine()"
+    }
+  ],
+  "collection_original_case": {
+    "result": "Passed",
+    "whole_case_seconds": 41.02042102813721,
+    "original_creation_assertion_seconds": 60,
+    "assertions_timer_actions_unchanged": true
+  },
+  "onboarding_fresh_case": {
+    "result": "Passed",
+    "whole_case_seconds": 56.997307896614075
+  },
+  "about_me_case": {
+    "result": "Passed",
+    "whole_case_seconds": 133.1835560798645
+  },
+  "scope": "All93 originalfunctional cases executed. Exactidentifierqueries stricter;HUDlivevaluepredicate stronger withsame10sdeadline. Priorfailures retained. NewcollapsedContinueContrastissuefailsoriginalaudit; notcleanCI.",
+  "original_expansion_ms": [
+    66.8,
+    80.3,
+    49.4,
+    72.2,
+    64.5
+  ]
+}
