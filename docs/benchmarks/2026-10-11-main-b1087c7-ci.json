@@ -1,0 +1,76 @@
+{
+  "source": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+  "run": 38168106603,
+  "url": "https://github.com/joeblau/voice/actions/runs/38168106603",
+  "status": "completed",
+  "conclusion": "failure",
+  "wall_seconds": 4166.0,
+  "summaries": {
+    "app-ui-performance-xcresult-1": {
+      "result": "Passed",
+      "totalTestCount": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "testFailures": []
+    },
+    "app-ui-tests-2-xcresult-1": {
+      "result": "Passed",
+      "totalTestCount": 24,
+      "passedTests": 23,
+      "failedTests": 0,
+      "skippedTests": 1,
+      "testFailures": []
+    },
+    "app-ui-tests-1-xcresult-1": {
+      "result": "Passed",
+      "totalTestCount": 24,
+      "passedTests": 23,
+      "failedTests": 0,
+      "skippedTests": 1,
+      "testFailures": []
+    },
+    "app-unit-tests-xcresult-1": {
+      "result": "Passed",
+      "totalTestCount": 310,
+      "passedTests": 302,
+      "failedTests": 0,
+      "skippedTests": 8,
+      "testFailures": []
+    },
+    "app-ui-tests-4-xcresult-1": {
+      "result": "Failed",
+      "totalTestCount": 23,
+      "passedTests": 22,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "testFailures": [
+        {
+          "failureText": "XCTAssertTrue failed - History: 4 audit issues:\nText clipped: 48 \"Continue\" () at (106.0, 458.3951822916667, 196.0, 58.6666666666668)\nText clipped: 48 \"Share\" () at (103.33333333333333, 514.3243001302083, 125.00000000000001, 58.66666666666674)\nText clipped: 48 \"Continue\" () at (106.0, 588.728515625, 196.0, 58.66666666666674)\nText clipped: 48 \"Share\" () at (103.33333333333333, 644.6576334635415, 125.00000000000001, 58.666666666666856)",
+          "targetName": "BlauUITests",
+          "testIdentifier": 1,
+          "testIdentifierString": "AccessibilityAuditUITests/testHistoryWithCaptionAtTheLargestTextSize()",
+          "testIdentifierURL": "test://com.apple.xcode/Blau/BlauUITests/AccessibilityAuditUITests/testHistoryWithCaptionAtTheLargestTextSize",
+          "testName": "testHistoryWithCaptionAtTheLargestTextSize()"
+        }
+      ]
+    },
+    "app-ui-tests-3-xcresult-1": {
+      "result": "Passed",
+      "totalTestCount": 24,
+      "passedTests": 24,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "testFailures": []
+    }
+  },
+  "all_expected_checks_green": false,
+  "original_expansion_samples_ms": [
+    55.4,
+    46.5,
+    73.3,
+    39.2,
+    70.4
+  ],
+  "qualification": "Original 100 ms assertions unchanged. Main fails AX5 history audit; 900 second full CI requirement remains unmet. Prior PR192 exact-tree all-green evidence retained separately."
+}
