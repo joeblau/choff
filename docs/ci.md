@@ -106,20 +106,38 @@ When GitHub promotes Xcode 27 to a general-availability `macos-27` image, set
 | --------------- | ------------------------------------- | ----------------------------------------- |
 | `package-tests` | `Packages/BlauKit/.build`: clones, FluidAudio's binary artifacts and build products | Xcode build + `Package.swift` + `Package.resolved` |
 | `app-unit-tests`, `app-ui-tests`, `perf`, `soak` | `.build/DerivedData/SourcePackages`: package clones and binary artifacts | Xcode build + `Package.swift` + `Package.resolved` |
+| `app-unit-tests`, `app-ui-tests`, `app-ui-performance` | Complete `.build/DerivedData/Build/Products`, including the unmodified `.xctestrun` | Exact tracked build inputs and resolved app dependencies + Xcode build + architecture + build variant; no prefix fallback |
 | `perf-kit`      | `Packages/BlauKitBenchmarks/.build`: clones and build products | Xcode build + the benchmark package's `Package.swift` and `Package.resolved` + BlauKit's `Package.swift` |
 | `asr-eval`      | `Packages/BlauKit/.build` (shared with `package-tests`) and `.build/models`: the pinned Core ML models, about 700 MB | The same as `package-tests`; the models by `PinnedModelManifest.swift` |
 | `memory-eval`   | `Packages/BlauKit/.build` (shared with `package-tests`); the vectors are recorded fixtures, so nothing is downloaded | The same as `package-tests` |
 
-Each key changes only with the toolchain or the dependency graph, so a cache
+The package-cache keys change only with the toolchain or dependency graph, so a cache
 is saved once per change (on `main`, where pull requests can read it) and
 restored by prefix otherwise. A new Xcode build starts a fresh cache, so build
 products from one compiler never meet another.
 
 `~/Library/Caches/org.swift.swiftpm` is not cached: SwiftPM and Xcode keep
 their own clones in the directories above, so caching it would only store the
-same repositories twice. App build products (DerivedData `Build/`) are not
-cached either: a cold app build takes about a minute and a stale DerivedData
-is a classic source of flaky CI.
+same repositories twice. The app jobs cache complete test products with an
+exact input fingerprint; they do not restore compiler intermediates. Source,
+asset, configuration, test-plan or resolved dependency changes invalidate the
+key. Debug coverage and optimized performance builds use separate keys. The
+cache validator requires both test targets, relative existing product paths,
+the expected coverage metadata and unchanged file hashes. A missing or
+inconsistent cache cannot produce a passing test job.
+
+The app's dependencies are resolved before the product key is computed; the
+key includes their actual revisions and binary artifact checksums. A build
+that changes those inputs cannot be saved under the earlier key. Successful
+builds are saved before tests, so a test failure still supplies products for
+a subsequent warm-cache run while retaining its failing result.
+
+`make test-built-unit` and `make test-built-ui` use Xcode's
+`test-without-building` with that validated test plan. The latter uses the
+same discovered UI suite and shard selection as `make test-ui`; the original
+executed-count guards still run. Tests execute on every run, including cache
+hits. Test outcomes and result bundles are never cached. The original
+15-minute full-run target remains pending until measured on CI.
 
 Note that only `Packages/BlauKit/Package.resolved` is committed. The app
 target resolves the same `from:` ranges independently (the generated

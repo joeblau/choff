@@ -19,6 +19,7 @@ BUILD_DESTINATION ?= generic/platform=iOS Simulator
 XCODEBUILD_FLAGS  ?=
 UI_SHARD          ?=
 UI_TEST_SUITE     ?= all
+TEST_PRODUCT_VARIANT ?= debug-coverage
 
 XCODEGEN   ?= xcodegen
 XCODEBUILD := xcodebuild -project $(PROJECT) -derivedDataPath $(DERIVED_DATA) $(XCODEBUILD_FLAGS)
@@ -55,6 +56,21 @@ build-tests: generate ## Build the app and the Blau test plan's test bundles for
 .PHONY: test-unit
 test-unit: generate ## Run only the unit tests
 	$(XCODEBUILD) test -scheme Blau -testPlan Blau -only-testing:BlauTests -destination '$(DESTINATION)' $(SIM_FLAGS)
+
+.PHONY: test-built-unit test-built-ui
+test-built-unit: ## Run every native test from validated cached build products
+	@set -e; \
+	run=$$(python3 scripts/ci/test-products.py validate --products '$(DERIVED_DATA)/Build/Products' --variant '$(TEST_PRODUCT_VARIANT)'); \
+	xcodebuild test-without-building -xctestrun "$$run" $(XCODEBUILD_FLAGS) \
+		-only-testing:BlauTests -destination '$(DESTINATION)' $(SIM_FLAGS)
+
+test-built-ui: ## Run the unchanged UI suite/shard selection from validated build products
+	@set -e; \
+	run=$$(python3 scripts/ci/test-products.py validate --products '$(DERIVED_DATA)/Build/Products' --variant '$(TEST_PRODUCT_VARIANT)'); \
+	selection=$$(UI_TEST_SUITE='$(UI_TEST_SUITE)' scripts/ci/ui-test-shard.sh '$(or $(UI_SHARD),1/1)'); \
+	echo "UI tests ($(UI_TEST_SUITE)), shard $(or $(UI_SHARD),1/1): $$(echo "$$selection" | wc -l | tr -d ' ') tests"; \
+	xcodebuild test-without-building -xctestrun "$$run" $(XCODEBUILD_FLAGS) \
+		$$selection -destination '$(DESTINATION)' $(SIM_FLAGS)
 
 # With UI_SHARD=K/N, only the K-th of N slices of BlauUITests: CI runs the N
 # slices as parallel jobs (docs/ci.md). The selection is computed first so a
@@ -217,6 +233,7 @@ secrets: ## Create Config/Secrets.xcconfig from the example (kept if it exists)
 test-scripts: ## Test the secrets, CI, Instruments template, perf gate, privacy manifest, release and soak scripts
 	scripts/tests/test-secrets-scripts.sh
 	scripts/tests/test-ci-scripts.sh
+	python3 scripts/tests/test-test-products.py
 	scripts/tests/test-instruments-template.sh
 	scripts/tests/test-perf-gate.sh
 	scripts/tests/test-privacy-manifest.sh
