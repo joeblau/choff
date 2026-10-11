@@ -33,6 +33,12 @@ final class MemoryLearning {
         self.facts = facts
     }
 
+    deinit {
+        for follower in followers {
+            follower.cancel()
+        }
+    }
+
     /// Queues every topic `topics` closes from now on, follows the toggle,
     /// and starts on topics left in the queue by an earlier launch. Call
     /// once, at launch.
@@ -41,7 +47,9 @@ final class MemoryLearning {
         let pipeline = pipeline
         let events = topics.events()
         followers.append(
-            Task(priority: .utility) {
+            // Forward lifecycle events promptly; the pipeline schedules
+            // extraction separately at utility priority.
+            Task {
                 for await event in events {
                     if case .closed(let topic) = event {
                         await pipeline.topicClosed(topic.id)
