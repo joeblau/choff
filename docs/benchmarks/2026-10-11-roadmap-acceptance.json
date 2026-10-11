@@ -153,7 +153,63 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nBuild and test every PR automatically.\n\n## Implementation notes\n- Workflow `.github/workflows/ci.yml` on `macos-26`: select the latest Xcode, `brew install xcodegen`, `xcodegen generate`, cache SPM (`~/Library/Caches/org.swift.swiftpm`, `SourcePackages`).\n- Jobs:\n  - `lint` (swift-format)\n  - `package-tests` (`swift test` for BlauKit)\n  - `app-tests` (`xcodebuild test -scheme Blau -destination 'platform=iOS Simulator,name=iPhone 17'`)\n- Upload `.xcresult` bundles as artifacts. Concurrency group cancels superseded runs.\n- Add a nightly `perf` job, wired up by the perf-suite issue.\n\n## Acceptance criteria\n- [ ] CI green on main\n- [ ] PRs show lint + test checks\n- [ ] Runtime < 15 min with warm cache\n\n## Depends on\n- [ ] #12 Set up XcodeGen project.yml with app, test and perf targets\n- [ ] #13 Create the BlauKit local Swift package with one module per subsystem\n- [ ] #14 Add xcconfig-based configuration and secrets handling\n\n---\nEpic: #2 \u00b7 Milestone: **M0 Foundation** \u00b7 Architecture: #1"
+      "original_body": "## Summary\nBuild and test every PR automatically.\n\n## Implementation notes\n- Workflow `.github/workflows/ci.yml` on `macos-26`: select the latest Xcode, `brew install xcodegen`, `xcodegen generate`, cache SPM (`~/Library/Caches/org.swift.swiftpm`, `SourcePackages`).\n- Jobs:\n  - `lint` (swift-format)\n  - `package-tests` (`swift test` for BlauKit)\n  - `app-tests` (`xcodebuild test -scheme Blau -destination 'platform=iOS Simulator,name=iPhone 17'`)\n- Upload `.xcresult` bundles as artifacts. Concurrency group cancels superseded runs.\n- Add a nightly `perf` job, wired up by the perf-suite issue.\n\n## Acceptance criteria\n- [ ] CI green on main\n- [ ] PRs show lint + test checks\n- [ ] Runtime < 15 min with warm cache\n\n## Depends on\n- [ ] #12 Set up XcodeGen project.yml with app, test and perf targets\n- [ ] #13 Create the BlauKit local Swift package with one module per subsystem\n- [ ] #14 Add xcconfig-based configuration and secrets handling\n\n---\nEpic: #2 \u00b7 Milestone: **M0 Foundation** \u00b7 Architecture: #1",
+      "eight_group_terminal_ci": {
+        "source": "6e1b16dca4c9a94b56a84a47eaa89288ae409d1d",
+        "production_base": "f24c6bc456fec4ce992f30c702b557b13eedf96e",
+        "run": 38131796908,
+        "status": "completed",
+        "conclusion": "failure",
+        "watch_terminal_exit": 1,
+        "checkout_merge_short_sha": "b8e1fa2",
+        "all_component_checkouts_match_original_event_merge": true,
+        "functional_ui_counts": {
+          "selected": 93,
+          "passed": 89,
+          "failed": 2,
+          "skipped": 2
+        },
+        "end_to_end_seconds": 2950,
+        "original_limit_seconds": 900,
+        "original_runtime_target_achieved": false,
+        "failures": [
+          {
+            "test": "KnowledgeBaseUITests/testPastingThirtyQuestionsCreatesACollectionInUnderAMinute",
+            "measured_seconds": 115.75955903530121,
+            "original_limit_seconds": 60,
+            "diagnosis": "Paste button was visibly present; its original accessibility discovery took approximately 58.6 seconds. Full cause not proven.",
+            "shard": 8
+          },
+          {
+            "test": "PerformanceHUDUITests/testTheHUDShowsLiveDeviceValuesAndExpands",
+            "original_expectation_seconds": 10,
+            "diagnosis": "Failure recording shows all four device readings filled while expected unavailable pipeline latency rows contain an en dash. Original broad prefix query still failed its no-dash label predicate; row discovery under investigation.",
+            "shard": 6
+          }
+        ],
+        "expansion_samples_ms": [
+          47.7,
+          79.3,
+          71.2,
+          62.0,
+          33.4
+        ],
+        "original_expansion_limit_ms": 100,
+        "expansion_passed": true,
+        "terminal_jobs": "/tmp/voice-ci-balanced-6e1b16d-terminal-jobs.json",
+        "full_log": "/tmp/voice-ci-balanced-6e1b16d-full.log",
+        "shard_summaries": {
+          "1": "/tmp/voice-ci-balanced-6e1b16d-ui1-summary.json",
+          "2": "/tmp/voice-ci-balanced-6e1b16d-ui2-summary.json",
+          "3": "/tmp/voice-ci-balanced-6e1b16d-ui3-summary.json",
+          "4": "/tmp/voice-ci-balanced-6e1b16d-ui4-summary.json",
+          "5": "/tmp/voice-ci-balanced-6e1b16d-ui5-summary.json",
+          "6": "/tmp/voice-ci-balanced-6e1b16d-ui6-summary.json",
+          "7": "/tmp/voice-ci-balanced-6e1b16d-ui7-summary.json",
+          "8": "/tmp/voice-ci-balanced-6e1b16d-ui8-summary.json"
+        },
+        "qualification": "No original assertion, time limit, baseline, skip or executed-count gate was weakened; eight-group candidate is not green and did not achieve 15 minutes."
+      }
     },
     {
       "issue": 16,
@@ -2006,7 +2062,25 @@
         }
       ],
       "implementation_closure_is_not_acceptance_proof": true,
-      "original_body": "## Summary\nA live, toggleable overlay showing pipeline health during real conversations.\n\n## Implementation notes\n- Shows FPS (CADisplayLink), memory (`os_proc_available_memory()`), thermal state, CPU %, capture drops, VAD state, ASR chunk latency, voice score, EOU \u2192 first-audio latency (last / p50 / p95), topic depth score, tokens / cost estimate.\n- Draggable, compact / expanded. Enabled via Settings \u2192 Developer or a DEBUG triple-tap.\n\n## Acceptance criteria\n- [ ] HUD overhead < 1% CPU\n- [ ] Values match Instruments within tolerance\n\n## Depends on\n- [ ] #17 Build the BlauTelemetry foundation: Logger categories and signposts\n- [ ] #36 Build the turn orchestrator: verified utterance \u2192 Grok \u2192 audio and transcript\n\n---\nEpic: #11 \u00b7 Milestone: **M4 Polish & Beta** \u00b7 Architecture: #1"
+      "original_body": "## Summary\nA live, toggleable overlay showing pipeline health during real conversations.\n\n## Implementation notes\n- Shows FPS (CADisplayLink), memory (`os_proc_available_memory()`), thermal state, CPU %, capture drops, VAD state, ASR chunk latency, voice score, EOU \u2192 first-audio latency (last / p50 / p95), topic depth score, tokens / cost estimate.\n- Draggable, compact / expanded. Enabled via Settings \u2192 Developer or a DEBUG triple-tap.\n\n## Acceptance criteria\n- [ ] HUD overhead < 1% CPU\n- [ ] Values match Instruments within tolerance\n\n## Depends on\n- [ ] #17 Build the BlauTelemetry foundation: Logger categories and signposts\n- [ ] #36 Build the turn orchestrator: verified utterance \u2192 Grok \u2192 audio and transcript\n\n---\nEpic: #11 \u00b7 Milestone: **M4 Polish & Beta** \u00b7 Architecture: #1",
+      "hud_live_value_accessibility_diagnostic": {
+        "source": "f97c3ac2d54d74801774e09bdefde2d275e34f7b",
+        "ios26_selected_labels": [
+          "FPS",
+          "CPU",
+          "Memory",
+          "Thermal"
+        ],
+        "ios27_selected_labels": [
+          "FPS",
+          "CPU",
+          "Memory",
+          "Thermal"
+        ],
+        "selected_type": "StaticText",
+        "original_query_checks_label_only": true,
+        "qualification": "Temporary diagnostic logging restored after terminal runs. Diagnostic local passes do not prove actual readings or explain the different original CI failure; explicit row label/value fix is being validated."
+      }
     },
     {
       "issue": 72,
@@ -2654,7 +2728,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T11:03:44.177131+00:00",
+  "last_evidence_update": "2026-10-11T11:17:19.730673+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2662,7 +2736,8 @@
     "Not-yet-proven criteria are unverified, not automatically failing. Partial results do not establish real hardware, model access, multi-device or release acceptance.",
     "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
     "PR187 at f24c6bc has fresh required CI 38129326531 running; its unchanged expansion check PASS at 64.9/46.3/32.2/31.2/36.3 ms. Original a122d7e setup-card overlap CI failure is retained; all 11 original screen/setup/empty-main accessibility cases PASS on each supported OS after fading in place. Preceding both-OS topic/paging results and green 2acfe8c CI remain source-qualified. PR188 retains separately tested 093c20f score-reuse proof. PR190 two-worker experiment completed FAILURE in 2543 seconds; new eight-group duration-balanced source 6e1b16d has fresh CI queued. No PR or whole goal is claimed merged or complete. Integration f24c6bc CI 38129326531 subsequently completed FAILURE: one original DebugMenuUITests perfHUD toggle expectation failed, 90 functional PASS/two existing SKIP/one FAIL. Other required components and expansion PASS. Unchanged local toggle control passes five repetitions; that does not clear the CI failure.",
-    "Latest integration f97c3ac isolates model-readiness observation and animation inside the existing setup-card leaf. All 14 original debug-menu/main-screen/setup/empty-main-largest-text accessibility cases PASS on each supported OS, zero failures/skips; Root source hashes match terminal producers. All three original KnowledgeBaseUITests PASS locally with unchanged assertions, including 30-question creation (whole case about26seconds), but this does not clear the prior CI 115.7596-second failure against60seconds. The original debug-toggle failure was not reproduced by five unchanged, five CPU-load, or five 120ms fixture-delay controls at f24c6bc; causal contribution of parent readiness invalidation remains unproven. Fresh required CI38133007062 at f97c3ac queued. Eight-group CI38131796908 at6e1b16d remains live with completed group8 failure retained. Standalone signed benchmark-host launch again denied Locked; physical criteria remain pending."
+    "Latest integration f97c3ac isolates model-readiness observation and animation inside the existing setup-card leaf. All 14 original debug-menu/main-screen/setup/empty-main-largest-text accessibility cases PASS on each supported OS, zero failures/skips; Root source hashes match terminal producers. All three original KnowledgeBaseUITests PASS locally with unchanged assertions, including 30-question creation (whole case about26seconds), but this does not clear the prior CI 115.7596-second failure against60seconds. The original debug-toggle failure was not reproduced by five unchanged, five CPU-load, or five 120ms fixture-delay controls at f24c6bc; causal contribution of parent readiness invalidation remains unproven. Fresh required CI38133007062 at f97c3ac queued. Eight-group CI38131796908 at6e1b16d remains live with completed group8 failure retained. Standalone signed benchmark-host launch again denied Locked; physical criteria remain pending.",
+    "Eight-group run38131796908 at6e1b16d completed FAILURE:93selected/89PASS/2FAIL/2existingSKIP;2950seconds against900. Original collection115.7596seconds against60 and HUD live-values expectation10seconds both failed. All component checkout logs confirm original6e/f24event merge. Expansion47.7/79.3/71.2/62.0/33.4ms PASSoriginal100. No runtime improvement or current integration acceptance claimed. Diagnostic controls at f97 show original HUD prefix query selects label-only static text on both supported OS versions, making local old-query passes insufficient live-reading proof. Explicit row label/value candidate is under validation; original CI failures remain retained."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
