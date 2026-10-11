@@ -32,11 +32,8 @@ struct TopicTranscriptRows: View {
         TopicFinishedRows(
             conversationID: topic.conversationID, topicID: topic.isSynthetic ? nil : topic.id,
             membership: membership, model: environment.chat, rail: rail,
-            split: topic.isSynthetic
-                ? nil
-                : { [lifecycle = environment.topicLifecycle, topicID = topic.id] utteranceID in
-                    editor.split(topicID, atUtterance: utteranceID, using: lifecycle)
-                })
+            editor: topic.isSynthetic ? nil : editor, lifecycle: environment.topicLifecycle
+        )
         if isCurrent, environment.chat.conversationID?.rawValue == topic.conversationID {
             TopicLiveRows(model: environment.chat, rail: rail)
         }
@@ -53,20 +50,22 @@ private struct TopicFinishedRows: View {
     let membership: TopicMembership
     let model: ChatTranscriptModel
     let rail: Bool
-    /// Starts a new topic at an utterance; `nil` offers no split.
-    let split: ((UUID) -> Void)?
+    /// A synthetic topic offers no split.
+    let editor: TopicEditor?
+    let lifecycle: TopicLifecycle
     @Query private var utterances: [StoredUtterance]
 
     init(
         conversationID: UUID, topicID: UUID?, membership: TopicMembership, model: ChatTranscriptModel, rail: Bool,
-        split: ((UUID) -> Void)?
+        editor: TopicEditor?, lifecycle: TopicLifecycle
     ) {
         self.conversationID = conversationID
         self.topicID = topicID
         self.membership = membership
         self.model = model
         self.rail = rail
-        self.split = split
+        self.editor = editor
+        self.lifecycle = lifecycle
         // The whole conversation: whether a reply was cut off depends on the
         // line after it, which can be in the next topic.
         _utterances = Query(ChatTranscript.utterances(in: conversationID))
@@ -76,16 +75,15 @@ private struct TopicFinishedRows: View {
         let rows = rows
         let firstID = rows.first?.id
         ForEach(rows) { row in
-            ChatRowView(row: row, onSplit: splitAction(for: row, isFirst: row.id == firstID))
-                .timelineTranscriptRow(rail: rail)
+            TopicFinishedRow(row: row, rail: rail, split: splitAction(for: row, isFirst: row.id == firstID))
+                .equatable()
         }
     }
 
     /// "Split Topic Here" for a stored line that isn't the topic's first.
-    private func splitAction(for row: ChatRow, isFirst: Bool) -> (() -> Void)? {
-        guard let split, !isFirst, row.kind == .final, row.role != .system else { return nil }
-        let id = row.id
-        return { split(id) }
+    private func splitAction(for row: ChatRow, isFirst: Bool) -> TopicRowSplitAction? {
+        guard let editor, let topicID, !isFirst, row.kind == .final, row.role != .system else { return nil }
+        return TopicRowSplitAction(topicID: topicID, utteranceID: row.id, editor: editor, lifecycle: lifecycle)
     }
 
     private var rows: [ChatRow] {
@@ -115,6 +113,42 @@ private struct TopicFinishedRows: View {
 
     private var isLiveConversation: Bool {
         model.conversationID?.rawValue == conversationID
+    }
+}
+
+/// A single rendered row can stay unchanged while another topic expands.
+/// Keep the transcript's ForEach and query outside the comparison so its
+/// changing child list participates in the lazy stack's normal layout.
+private struct TopicFinishedRow: View, Equatable {
+    let row: ChatRow
+    let rail: Bool
+    let split: TopicRowSplitAction?
+
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.row == rhs.row && lhs.rail == rhs.rail && lhs.split == rhs.split
+    }
+
+    var body: some View {
+        ChatRowView(row: row, onSplit: split.map { action in { action.perform() } })
+            .timelineTranscriptRow(rail: rail)
+    }
+}
+
+/// Compare the owners and target of an action without retaining an older
+/// callback when a row moves to a different topic or editor.
+private struct TopicRowSplitAction: Equatable {
+    let topicID: UUID
+    let utteranceID: UUID
+    let editor: TopicEditor
+    let lifecycle: TopicLifecycle
+
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.topicID == rhs.topicID && lhs.utteranceID == rhs.utteranceID
+            && lhs.editor === rhs.editor && lhs.lifecycle === rhs.lifecycle
+    }
+
+    @MainActor func perform() {
+        editor.split(topicID, atUtterance: utteranceID, using: lifecycle)
     }
 }
 
