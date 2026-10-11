@@ -437,6 +437,34 @@ struct VerificationGateTests {
         #expect(gate.statistics.longestDelay == gated.delay)
     }
 
+    /// ASR can deliver its final before the VAD end reaches the gate. The
+    /// end must use that score rather than embed the same speech twice.
+    @Test func theSegmentEndReusesTheFinalsScoreInFlight() async throws {
+        let clock = ManualClock()
+        let embedding = Duration.milliseconds(40)
+        let (gate, verifier) = Self.timedGate(SpeakerTimeline([(0, 10, .owner)]), delay: embedding, clock: clock)
+        try await Self.feed(
+            [.started(SpeechScript.onset(0, at: 0))] + SpeechScript.audio(from: 0, to: 2.8), to: gate, clock: clock,
+            delay: embedding)
+        #expect(verifier.calls.count == 1)
+
+        let deciding = Task { await gate.decide(finalUtterance("Hello there", from: 0, to: 2.5)) }
+        await clock.waitForSleepers()
+        #expect(verifier.calls.count == 2)
+        let ending = Task { await gate.feed([.ended(SpeechScript.ended(0, from: 0, to: 2.5))]) }
+        // Either a duplicate embedding (old behavior) or the end waiting
+        // for the final's score has now suspended on the manual clock.
+        await clock.waitForSleepers(count: 2)
+        clock.advance(by: embedding)
+        let gated = await deciding.value
+        await ending.value
+
+        #expect(gated.decision == .accept)
+        #expect(gated.delay == embedding)
+        #expect(verifier.calls.map(\.count) == [24_000, 40_000])
+        #expect(gate.statistics.scores == 2)
+    }
+
     /// Every hold is a `voiceid.gate` interval, the latency budget's gate
     /// hop in Instruments and MetricKit (#74), ended with the disposition.
     @Test func everyHoldIsAGateIntervalEndedWithItsDisposition() async throws {
