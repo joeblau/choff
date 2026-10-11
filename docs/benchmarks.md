@@ -1065,3 +1065,5 @@ records all minute samples and these limitations.
 ## Instruments verification on the M3 Max
 
 At `093c20f`, the real HUD timing tap, CPU clock and memory probe matched Instruments within every original tolerance: all 450 paired intervals (nine kinds × 50), whole-load CPU 50.4% versus 50.3%, and footprint 104.7 MB in both. The committed Instruments template opened with all 14 configured instruments and captured all 25 canonical intervals, nine times each, from the real package signpost emitters. [The full report](benchmarks/2026-10-11-instruments-mac.json) retains the readings and both verification logs. These Mac checks do not establish physical-phone HUD display overhead, audio, or background acceptance.
+
+The original five-window Release HUD display test at `26cd0ba` measured 0.654% of one core in the local iPhone 17 simulator (shown minus hidden CPU time over ten seconds). The latest CI simulator result was 1.280% against the separate 1% roadmap target; its existing regression comparison passed. Both measurements are retained in the report. Physical-phone display overhead remains pending.

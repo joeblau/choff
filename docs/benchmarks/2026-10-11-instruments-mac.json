@@ -807,5 +807,44 @@
     "The template targets a stand-in Mac process; canonical intervals are emitted through actual BlauTelemetry by the package smoke workload.",
     "The HUD comparison validates the real timing tap, CPU clock and memory probe against Instruments on this Mac. It does not measure phone HUD display overhead or physical audio/background behavior.",
     "The current CI full-display HUD sample exceeded the separate original under-1%-CPU roadmap criterion despite passing its unchanged regression tolerance. That criterion is retained as pending."
-  ]
+  ],
+  "localSimulatorHUDDisplayOverhead": {
+    "sourceCommit": "26cd0ba81f716aacf5eb13393f98eaeb879ffa77",
+    "device": "iPhone17,iOS27.0simulatoronM3Max",
+    "scheme": "Blau-Perf",
+    "passedTests": 2,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "measurements": {
+      "hidden": [
+        0.000243,
+        0.000177,
+        0.0,
+        0.011338,
+        0.000358
+      ],
+      "shown": [
+        0.060463,
+        0.088895,
+        0.061772,
+        0.062306,
+        0.065737
+      ],
+      "secondsPerWindow": 10,
+      "cpuOverheadPercent": 0.6541139999999999
+    },
+    "source": "originalXCTCPUMetric,5ten-secondwindowsperphase;valuesfromXctestlogroundedtosixdecimals",
+    "originalBudgetPercent": 1.0,
+    "belowOriginalBudget": true,
+    "ciComparison": {
+      "sourceCommit": "24200082f910807fef465e78451db583f9a17abd",
+      "run": 38116987322,
+      "shownMeanSeconds": 0.135,
+      "hiddenMeanSeconds": 0.00697,
+      "windowSeconds": 10,
+      "overheadPercent": 1.2803,
+      "belowOriginalBudget": false
+    },
+    "qualification": "Local simulator smoke result0.654114%passes original1% target. Latest CI simulator sample exceeded it. Original phone display-overhead acceptance remains pending."
+  }
 }
