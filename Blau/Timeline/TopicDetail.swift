@@ -101,7 +101,7 @@ struct TopicDetailHeader: View {
         Group {
             if let onContinue {
                 Button(action: onContinue) {
-                    Label("Continue", systemImage: "arrow.uturn.forward")
+                    actionLabel("Continue", systemImage: "arrow.uturn.forward")
                 }
                 .buttonStyle(TopicActionButtonStyle(prominent: true))
                 .accessibilityHint("Starts a conversation that picks up this topic")
@@ -113,7 +113,7 @@ struct TopicDetailHeader: View {
                     item: TopicMarkdownDocument(topic: topic, container: container),
                     preview: SharePreview(Text(verbatim: topic.title))
                 ) {
-                    Label("Share", systemImage: "square.and.arrow.up")
+                    actionLabel("Share", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(TopicActionButtonStyle())
                 .accessibilityHint("Shares the topic as Markdown")
@@ -124,7 +124,7 @@ struct TopicDetailHeader: View {
                 Button {
                     showsActions = true
                 } label: {
-                    Label("More", systemImage: "ellipsis")
+                    actionLabel("More", systemImage: "ellipsis")
                         .labelStyle(.iconOnly)
                         .frame(minWidth: 20, minHeight: 20)
                 }
@@ -139,6 +139,18 @@ struct TopicDetailHeader: View {
                         topicID: topic.id, title: topic.title, canMerge: placement.canMerge, editor: editor)
                 }
             }
+        }
+    }
+
+    /// Mounted collapsed controls must also hide their text leaves from
+    /// accessibility; a custom button style can expose them independently.
+    private func actionLabel(_ title: LocalizedStringKey, systemImage: String) -> some View {
+        Label {
+            Text(title)
+                .accessibilityHidden(!isExpanded)
+        } icon: {
+            Image(systemName: systemImage)
+                .accessibilityHidden(true)
         }
     }
 }
