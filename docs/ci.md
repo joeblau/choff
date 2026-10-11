@@ -29,6 +29,12 @@ days (30 for perf), named `<job>-…-<attempt>` so a re-run never collides with
 the first attempt. Open an `.xcresult` with Xcode, or run
 `xcrun xcresulttool get test-results summary --path app-ui-tests.xcresult`.
 
+The unit, functional UI and UI performance jobs retry a failed result upload
+once after 10 seconds. A second upload failure fails the job. The retry keeps
+the same artifact name and retention, replacing only an incomplete artifact
+from that job's current run attempt. Failed tests still fail their job even
+when their result bundle uploads successfully.
+
 Run the perf job on demand from **Actions > CI > Run workflow** and tick
 **Also run the performance suite**; run it on a pull request's branch to check
 a change the micro-benchmarks don't cover. Tick **Record new performance
