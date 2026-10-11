@@ -1,0 +1,98 @@
+{
+  "worktree": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-hud-row-accessibility",
+  "base": "f97c3ac2d54d74801774e09bdefde2d275e34f7b",
+  "scope": "Explicit stable accessibility row identity, label and value. Original live readings now checked through nonempty value with ten-second deadline; same four original cases and interactions. No budgets/skips/baselines changed.",
+  "controller_session": 26255,
+  "status": "v2_both_supported_os_pass",
+  "original_query_diagnostic_producers": [
+    "/tmp/voice-choff-hud-query-control-f97c3ac-producer.json",
+    "/tmp/voice-choff-hud-query-control-ios27-f97c3ac-producer.json"
+  ],
+  "original_ci_failure_retained": true,
+  "first_candidate": {
+    "ios26": {
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0
+    },
+    "ios27": {
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0
+    },
+    "cause": "GridRow applies accessibility modifiers independently to both columns; two identical row identifiers/labels/values made original direct row snapshot lookup ambiguous.",
+    "summaries": [
+      "/tmp/voice-choff-hud-row-values-ios26-candidate-summary.json",
+      "/tmp/voice-choff-hud-row-values-ios27-candidate-summary.json"
+    ]
+  },
+  "revised_scope": "Only the label column exposes label plus actual reading value and unique row identifier; second visual value is hidden from accessibility to avoid speaking it twice. No test skip/budget/baseline changes.",
+  "ios26": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "producer": "/tmp/voice-choff-hud-row-values-v2-ios26-candidate-producer.json"
+  },
+  "ios27": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "producer": "/tmp/voice-choff-hud-row-values-v2-ios27-candidate-producer.json"
+  },
+  "lint": "PASS:1099Swiftfiles",
+  "qualification": "AffectedfourHUDtestsPASSbothOSat2e, strongeractualvaluepredicate,original10seconds. Originalfull27longpagingFAIL retained; isolatedcasePASSsame source/OS/model,differentownedinstance. Causeunproven. Preparedbranchrebasedona1key-focusparent, fullnew-headCIpending.",
+  "committed_head": "2e5830a",
+  "prepared_pr_body": "/tmp/voice-pr-hud-row-accessibility-next.md",
+  "long_paging_followup": {
+    "source": "2e5830a",
+    "controller_session": 65535,
+    "status": "both_supported_os_live",
+    "scope": "Two original opt-in2,000-topic paging methods on eachOS, unchanged source/assertions/60MBbudget; current Root boundary and HUD memory snapshot compatibility.",
+    "ios27_observed_failure": {
+      "test": "testScrollingThroughTwoThousandTopicsWithoutJumps",
+      "drag": 140,
+      "shift_points": 1,
+      "finger_travel_points": 349,
+      "source": "2e5830a",
+      "qualification": "Original assertion failed during concurrent supportedOSruns,newcompilerwork andpublic-modelconversion;causeunproven. Entire controller still waitsforios26. No thresholds changed."
+    }
+  },
+  "long_paging": {
+    "source": "2e5830a",
+    "ios26": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ios27": {
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0,
+      "failure": "Original scrollingtestdrag140 Seed Round Planning637 moved1pt for349ptfingertravel",
+      "attachments": "/tmp/voice-choff-hud-row-values-long-paging-ios27-attachments"
+    },
+    "qualification": "Both original tests executed with unchanged budgets. iOS27failure retained; recording showsonebarelymovingdrag. Causeunproven. Same failedcaseat2e nowrunningalone afterallowned otherUIproducerscompleted.",
+    "isolated_probe_session": 81223,
+    "isolated_probe_qualification": "Same2e source,OS27and iPhone17model, differentowned instance1530from original259. Onlyfailedoriginalmethod afterother ownedUI producers ended. Priorfailure/causeunproven retained.",
+    "isolated_probe": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "source_hash_matches": true,
+      "drags": 209,
+      "travel_pt": 349,
+      "shifts_pt": [
+        339,
+        583
+      ],
+      "bullets": 1999,
+      "footprint_MB": [
+        83,
+        79
+      ],
+      "producer": "/tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-producer.json",
+      "summary": "/tmp/voice-choff-hud-long-paging-ios27-isolated-2e5830a-summary.json",
+      "qualification": "Same2e source,OS27and iPhone17model, differentowned instance1530from original259. Onlyfailedoriginalmethod afterother ownedUI producers ended. Priorfailure/causeunproven retained."
+    }
+  }
+}
