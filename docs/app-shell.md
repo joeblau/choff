@@ -235,7 +235,11 @@ NavigationStack {
   draws them as Liquid Glass. Record uses the prominent (tinted) style,
   tinted per state (see [Record](#record)). Nothing is positioned by hand, which is what
   keeps the layout right on every screen size.
-- `MainScreen` is a `ScrollView` anchored to the bottom
+- The main screen uses a dark appearance. With a conversation, its current
+  topic title stays at the top, outside the scrolling history, and the
+  latest messages anchor above the bottom controls. Without a conversation,
+  the navigation title is **Choff**.
+- `MainScreen` contains a `ScrollView` anchored to the bottom
   (`defaultScrollAnchor(.bottom)`) that runs under the bar's glass, with
   the system scroll edge effect behind the controls. Its empty state is at
   least as tall as the area between the bars (a `GeometryReader` around the

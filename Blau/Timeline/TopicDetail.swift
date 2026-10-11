@@ -165,7 +165,7 @@ private struct TopicActionButtonStyle: ButtonStyle {
         configuration.label
             .padding(.horizontal, 12)
             .frame(minHeight: 44)
-            .foregroundStyle(prominent ? Color.white : Color.brand(.accent))
+            .foregroundStyle(prominent ? Color.white : Color.primary)
             .background(
                 prominent ? Color.brand(.accentFill) : Color(uiColor: .secondarySystemFill),
                 in: Capsule()

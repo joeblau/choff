@@ -1,20 +1,23 @@
 # Topic timeline
 
 The main screen is the topic timeline (#56): every topic of every
-conversation is a bullet on one vertical rail, the current topic at the
-bottom with its live transcript (#42) below its bullet, and the history
-above it. The product decisions are in issue #1 ("Timeline").
+conversation is a bullet on one vertical rail. The current topic's title
+stays at the top of the screen while its live transcript (#42) opens at the
+bottom, above the controls. Older topics remain in the scrolling history
+above the latest messages. This follows the owner's updated main-screen
+layout request; issue #1 documents the earlier timeline design.
 
 ```
-Yesterday                                   ← day heading
+  ◉ Now · 3:55 AM                           ← fixed current title
+    Draft 12
+───────────────────────────────────────────
+Yesterday                                   ← scrolling day heading
   ⦙ Conversation · 6:00 PM                  ← conversation heading
   ● Launch Checklist         6:00 PM · 8 min ›
   ● Draft 6                  6:08 PM · 8 min ›   ← provisional title, italic
 Today
   ⦙ Conversation · 3:31 AM
   ● Board Update             3:39 AM · 8 min ›
-  ◉ Now · 3:55 AM                           ← current topic (pinned header)
-    Draft 12
                  Remind me what we decided…    ← its transcript, chat styling
     You picked the second week of November…
                                    [↓ Now]  ← only when scrolled away
@@ -24,7 +27,7 @@ Today
 
 | What the user does | What happens |
 | --- | --- |
-| Opens the app | The screen is anchored to the latest line of the **current topic**: the open topic of the running conversation, or else of the most recent one (else that conversation's last topic). Its bullet is a pinned section header, so it stays on screen however long the transcript gets, and older bullets fill the space above it |
+| Opens the app | The conversation is anchored to the latest line of the **current topic**: the open topic of the running conversation, or else of the most recent one (else that conversation's last topic). Its title stays fixed above the scroll view, including for short conversations and while reading history. Older bullets fill the scrolling space above the latest messages |
 | Swipes down | Scrolls up into the history: compressed bullets on a continuous rail, oldest at the top, grouped by day ("Today", "Yesterday", "Tuesday, October 6") and by conversation. Each day heading appears once, in order: the focus conversation always comes last, so a running conversation that began before midnight, after which another device synced one that began after it, sits under the later day's heading |
 | Taps a compressed bullet | Expands it in place, in under 100 ms: its detail (summary, span, actions, [below](#topic-detail)) and transcript open below the bullet, which doesn't move. Tapping again compresses it. Several can be open at once |
 | Swipes back, taps **Now** or taps the current bullet | Returns to the latest line with a spring (a short ease under Reduce Motion). The Now pill shows whenever the latest line is out of view. From deep in a long history the lazy stack measures rows on the way down and the spring can stop short, so Now finishes the trip on the `UIScrollView` until the latest line is in view |
@@ -118,8 +121,9 @@ latency runs under eight CPU workers keep all 15 expansions under 100 ms.
 ## Scrolling
 
 - `ScrollView { LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) { … } .scrollTargetLayout() }`,
-  one `Section` per topic with the bullet as its header, plus the day and
-  conversation headings between them. **Not** an inverted scroll view (it
+  one `Section` per topic with older bullets as pinned headers, plus the day
+  and conversation headings between them. The current title is a sibling
+  above this scroll view in a `VStack`. **Not** an inverted scroll view (it
   breaks VoiceOver and context menus). Every transcript row is its own child
   of the lazy stack, so a 1,000-line topic builds only the rows on screen.
 - `defaultScrollAnchor(.bottom)` for the initial offset and alignment.
@@ -132,13 +136,13 @@ latency runs under eight CPU workers keep all 15 expansions under 100 ms.
   while its transcript opens; after that the scroll geometry alone decides.
   A prior Now scroll target is cleared before toggling, and the bullet's
   measured position corrects lazy-layout movement in the same frame. When
-  collapsing at the latest line, the current bullet supplies that hold,
-  preventing a stale size estimate from leaving space below the transcript.
+  collapsing at the latest line, the bottom anchor keeps following the
+  transcript; the fixed current title cannot move with the content.
   Collapsing a topic at the latest line therefore stays there, with no Now
   pill, and keeps following new lines.
 - **No scroll jumps from labels.** Compressed rows have a fixed height, so a
-  new title never changes the layout of the history; the current bullet's
-  title is at the bottom, where the anchor is.
+  new title never changes the layout of a compressed history row. The
+  current title stays outside the scrolling history.
 - `onScrollGeometryChange` tracks whether the latest line is in view:
   `visibleRect.maxY − contentInsets.bottom` against the content height.
   (`containerSize` leaves out the bar insets on iOS 26, so the visible rect
