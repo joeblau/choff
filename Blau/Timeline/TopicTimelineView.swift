@@ -373,15 +373,15 @@ private struct TopicTimelineScrollView: View {
         case .topic(let topic, let placement):
             let isExpanded = expansion.isExpanded(topic.id, current: timeline.currentTopicID)
             Section {
-                if isExpanded {
-                    if !placement.isCurrent {
-                        TopicDetailHeader(
-                            topic: topic, placement: placement, editor: editor,
-                            onContinue: continueAction(for: topic)
-                        ) { [expansionTimer] in
-                            expansionTimer.appeared(topic.id)
-                        }
+                if !placement.isCurrent {
+                    TopicDetailHeader(
+                        topic: topic, placement: placement, editor: editor, isExpanded: isExpanded,
+                        onContinue: continueAction(for: topic)
+                    ) { [expansionTimer] in
+                        expansionTimer.appeared(topic.id)
                     }
+                }
+                if isExpanded {
                     TopicTranscriptRows(
                         topic: topic,
                         membership: timeline.membership(in: topic.conversationID),
