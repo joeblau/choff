@@ -1790,19 +1790,20 @@
       "issue": 58,
       "title": "Build the topic detail: expand a bullet to read its transcript and summary",
       "url": "https://github.com/joeblau/voice/issues/58",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Tap \u2192 expand < 100 ms",
-          "completion": "verified",
+          "completion": "failed current original acceptance",
           "evidence": [
             "https://github.com/joeblau/voice/actions/runs/38114217207",
             "/tmp/voice-ci-eeb-latency-attachments: five original samples 65.8, 27.1, 26.0, 26.5, 26.3 ms",
             "Current 2420008 original five-sample benchmark: iOS 26 39.3/10.2/11.3/10.3/9.9 ms; iOS 27 34.2/19.4/20.9/18.9/26.6 ms. Fresh required CI still running; unchanged 100 ms limit.",
             "Current required CI 38119809945 at 26cd0ba: original five-sample app-ui-performance job completed successfully. No latency assertion or timeout changed.",
-            "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit."
+            "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit.",
+            "Completed original performance job in CI38146960809 at9fddbe9 failed its first expansion sample:109.5/60.2/68.9/59.1/54.1ms against unchanged100ms limit. Full workflow is still live; prior passes are retained. /tmp/voice-ci-9fddbe9-perf-summary.json and original Expand latency attachment."
           ],
-          "qualification": "Current local original five-sample cases pass on both supported OS versions; fresh required CI for a122d7e remains pending."
+          "qualification": "Current exact-head original expansion benchmark fails; previous qualified local/CI passes do not supersede this result. Original five samples and100ms requirement preserved."
         },
         {
           "requirement": "Continue-topic seeds Grok context",
@@ -2924,11 +2925,11 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T12:43:14.490650+00:00",
+  "last_evidence_update": "2026-10-11T14:48:25.897995+00:00",
   "criteriaStatusCounts": {
-    "verified": 125,
+    "verified": 124,
     "not yet proven in this acceptance audit": 44,
-    "failed current original acceptance": 1,
+    "failed current original acceptance": 2,
     "partially verified": 16,
     "verified on Mac real-model replay": 2,
     "verified on public evaluation set": 1,
@@ -2936,5 +2937,5 @@
     "pending external prerequisites": 1
   },
   "github_state_source": "/tmp/voice-current-all-issues.json",
-  "github_state_checked_at": "2026-10-11T14:01:00.969365+00:00"
+  "github_state_checked_at": "2026-10-11T14:48:25.897995+00:00"
 }
