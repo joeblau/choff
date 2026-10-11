@@ -51,6 +51,9 @@ Signing must be set up for a device build (Xcode > Settings > Accounts;
 `project.yml` sets the development team for both host and tests), and the device needs
 network access the first time: models download from Hugging Face
 (about 1 GB in total) into the test runner's container.
+The host prevents automatic screen locking while visible. Unlock the iPhone
+and keep the host in the foreground; another app or a manual lock still moves
+Foundation Models into its background budget.
 
 Each test attaches its result, the cumulative report for the device
 (`<date>-<model id>.json`) and a Markdown summary to the result bundle in

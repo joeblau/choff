@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 @main
 struct BlauBenchmarkHostApp: App {
@@ -11,6 +12,8 @@ struct BlauBenchmarkHostApp: App {
                     .multilineTextAlignment(.center)
             }
             .padding()
+            .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+            .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
         }
     }
 }
