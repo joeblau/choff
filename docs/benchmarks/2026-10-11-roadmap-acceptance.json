@@ -2651,14 +2651,14 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T10:24:34.746156+00:00",
+  "last_evidence_update": "2026-10-11T10:30:51.485044+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
     "Verified criteria cite actual source, tests, reports or historical measured controls. Historical-author evidence is explicitly labelled; it is not represented as a fresh execution.",
     "Not-yet-proven criteria are unverified, not automatically failing. Partial results do not establish real hardware, model access, multi-device or release acceptance.",
     "Some local raw xcresult/trace/log references are ephemeral validation artifacts outside Git. Committed benchmark reports and GitHub run URLs provide durable evidence where available.",
-    "PR187 at f24c6bc has fresh required CI 38129326531 running; its unchanged expansion check PASS at 64.9/46.3/32.2/31.2/36.3 ms. Original a122d7e setup-card overlap CI failure is retained; all 11 original screen/setup/empty-main accessibility cases PASS on each supported OS after fading in place. Preceding both-OS topic/paging results and green 2acfe8c CI remain source-qualified. PR188 retains separately tested 093c20f score-reuse proof. PR190 two-worker experiment completed FAILURE in 2543 seconds; new eight-group duration-balanced source 6e1b16d has fresh CI queued. No PR or whole goal is claimed merged or complete."
+    "PR187 at f24c6bc has fresh required CI 38129326531 running; its unchanged expansion check PASS at 64.9/46.3/32.2/31.2/36.3 ms. Original a122d7e setup-card overlap CI failure is retained; all 11 original screen/setup/empty-main accessibility cases PASS on each supported OS after fading in place. Preceding both-OS topic/paging results and green 2acfe8c CI remain source-qualified. PR188 retains separately tested 093c20f score-reuse proof. PR190 two-worker experiment completed FAILURE in 2543 seconds; new eight-group duration-balanced source 6e1b16d has fresh CI queued. No PR or whole goal is claimed merged or complete. Integration f24c6bc CI 38129326531 subsequently completed FAILURE: one original DebugMenuUITests perfHUD toggle expectation failed, 90 functional PASS/two existing SKIP/one FAIL. Other required components and expansion PASS. Unchanged local toggle control passes five repetitions; that does not clear the CI failure."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
