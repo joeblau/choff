@@ -13,7 +13,7 @@ evaluation.
 | `lint`          | swift-format (`make lint`), then the shell-script tests    | `make lint test-scripts` | nothing |
 | `package-tests` | `swift build --build-tests` and `swift test` in `Packages/BlauKit` on the macOS host | `make test-kit` | Swift Testing xUnit report |
 | `app-unit-tests` | XcodeGen, then the `Blau` test plan's unit tests (`BlauTests`) on an iOS Simulator | `make test-unit` | `app-unit-tests-xcresult` |
-| `app-ui-tests (K/4)` | Four functional UI shards balanced by recorded duration, Debug coverage, simulator warm-up, and an executed-count check ([UI-test shards](#ui-test-shards)) | `make test-ui UI_TEST_SUITE=functional UI_SHARD=K/4` | `app-ui-tests-K-xcresult` |
+| `app-ui-tests (K/8)` | Eight functional UI shards balanced by recorded duration, Debug coverage, simulator warm-up, and an executed-count check ([UI-test shards](#ui-test-shards)) | `make test-ui UI_TEST_SUITE=functional UI_SHARD=K/8` | `app-ui-tests-K-xcresult` |
 | `app-ui-performance` | The existing five-sample expansion benchmark, with optimized Swift and no coverage instrumentation; the 100 ms limit is unchanged | `make test-ui UI_TEST_SUITE=performance` with the flags below | `app-ui-performance-xcresult` |
 | `app-tests`     | Requires the unit job, every functional UI shard, and the UI performance job to pass (ubuntu, seconds) | `make test` runs the same tests in one go | nothing |
 | `perf-kit`      | The BlauKit micro-benchmarks (package-benchmark) on the macOS host; fails when an allocation count (and, on a machine with performance counters, an instruction count) is more than 10% above `Packages/BlauKitBenchmarks/Thresholds` ([performance.md](performance.md#micro-benchmarks)) | `make microbench-check` | `perf-kit-results` (the check's output), 30 days; the output on the summary page |
@@ -143,7 +143,13 @@ a subsequent warm-cache run while retaining its failing result.
 same discovered UI suite and shard selection as `make test-ui`; the original
 executed-count guards still run. Tests execute on every run, including cache
 hits. Test outcomes and result bundles are never cached. The original
-15-minute full-run target remains pending until measured on CI.
+15-minute full-run target remains unmet. The complete same-source warm run
+[38157084523, attempt 2](https://github.com/joeblau/voice/actions/runs/38157084523/attempts/2)
+took 3,027 seconds despite all ten test-product cache hits. Its original
+expansion assertion and three other original cases failed; the warm run is
+not acceptance evidence for green CI. For example, the performance job spent
+468 seconds warming its simulator before testing. The cache removes repeated
+builds but does not remove simulator startup, test execution or runner queues.
 
 Note that only `Packages/BlauKit/Package.resolved` is committed. The app
 target resolves the same `from:` ranges independently (the generated
@@ -175,9 +181,9 @@ into `-only-testing:BlauUITests/<Class>/<testMethod>` arguments, so a shard's
 failure reproduces locally with the command in the job's log:
 
 ```sh
-make test-ui UI_TEST_SUITE=functional UI_SHARD=2/4 DESTINATION='id=<simulator udid>' \
+make test-ui UI_TEST_SUITE=functional UI_SHARD=2/8 DESTINATION='id=<simulator udid>' \
   XCODEBUILD_FLAGS='-parallel-testing-enabled NO -collect-test-diagnostics never'
-UI_TEST_SUITE=functional scripts/ci/ui-test-shard.sh --list 2/4
+UI_TEST_SUITE=functional scripts/ci/ui-test-shard.sh --list 2/8
 ```
 
 Each functional shard and the separate expansion timing job use one
