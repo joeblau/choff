@@ -332,50 +332,61 @@ jobs:
           XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-performance.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
         run: |
           python3 - <<'PY_PROFILE'
-          import json, os, signal, subprocess, time
+          import ctypes, json, os, select, signal, subprocess, time, uuid
           from pathlib import Path
-          root=Path('.build/results/expansion-profile')
-          root.mkdir(parents=True,exist_ok=True)
-          udid=os.environ['UDID']
-          def app_pids():
-              result=[]
-              for row in subprocess.check_output(['ps','-axo','pid,comm'],text=True).splitlines():
-                  if f'/Devices/{udid}/' in row and row.rstrip().endswith('/Blau.app/Blau'):
-                      result.append(int(row.split(None,1)[0]))
-              return set(result)
-          before=app_pids()
-          options=json.loads(subprocess.check_output(['xcrun','xctrace','record','--template','Time Profiler','--instrument','os_signpost','--show-recording-options'],text=True))
-          options['Time Profiler']['highFrequencySampling']=True
-          options['Time Profiler']['recordWaitingThreads']=False
-          options['os_signpost']['dynamicTracingEnabledSubsystems']=['com.joeblau.blau']
-          settings=root/'recording-options.json'; settings.write_text(json.dumps(options,indent=2)+'\n')
-          runner=subprocess.Popen(['make','test-ui',f'UI_SHARD={os.environ["UI_SHARD"]}'])
-          trace=None; trace_log=None; target=None; trace_status=None
+          root = Path('.build/results/expansion-profile')
+          root.mkdir(parents=True, exist_ok=True)
+          udid = os.environ['UDID']
+          options = json.loads(subprocess.check_output(['xcrun', 'xctrace', 'record', '--template', 'Time Profiler', '--instrument', 'os_signpost', '--show-recording-options'], text=True))
+          options['Time Profiler']['highFrequencySampling'] = False
+          options['Time Profiler']['recordWaitingThreads'] = False
+          options['os_signpost']['dynamicTracingEnabledSubsystems'] = ['com.joeblau.blau']
+          settings = root / 'recording-options.json'
+          settings.write_text(json.dumps(options, indent=2) + '\n')
+          notify = ctypes.CDLL('/usr/lib/system/libsystem_notify.dylib')
+          notify.notify_register_file_descriptor.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_int), ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
+          notify.notify_register_file_descriptor.restype = ctypes.c_uint32
+          notify.notify_cancel.argtypes = [ctypes.c_int]
+          notify.notify_cancel.restype = ctypes.c_uint32
+          name = 'com.joeblau.blau.profile.started.' + str(uuid.uuid4())
+          fd = ctypes.c_int(-1)
+          token = ctypes.c_int(-1)
+          registration = notify.notify_register_file_descriptor(name.encode(), ctypes.byref(fd), 0, ctypes.byref(token))
+          if registration != 0:
+              raise RuntimeError(f'Profiler notification registration failed: {registration}')
+          runner = None
+          trace = None
+          trace_status = None
+          test_status = None
+          trace_log = (root / 'recording.log').open('w')
           try:
-              deadline=time.monotonic()+180
-              while runner.poll() is None and time.monotonic()<deadline:
-                  found=app_pids()-before
-                  if len(found)==1:
-                      target=found.pop(); break
-                  time.sleep(.1)
-              if target is not None:
-                  print(f'Attaching profiler to simulator {udid}, app PID {target}',flush=True)
-                  trace_log=(root/'recording.log').open('w')
-                  trace=subprocess.Popen(['xcrun','xctrace','record','--no-prompt','--template','Time Profiler','--instrument','os_signpost','--recording-options',str(settings),'--device',udid,'--attach',str(target),'--time-limit','180s','--output',str(root/'expansion.trace')],stdout=trace_log,stderr=subprocess.STDOUT)
-              test_status=runner.wait(timeout=600)
-              if trace is not None:
-                  trace_status=trace.wait(timeout=240)
-              else:
-                  print('No fresh simulator app process was found; trace is missing',flush=True)
-              (root/'statuses.json').write_text(json.dumps({'test_exit':test_status,'trace_exit':trace_status,'pid':target,'source':'03954c4322af6f6dcdef05a29763ec27619758ae','profiling_only':True},indent=2)+'\n')
+              trace = subprocess.Popen(['xcrun', 'xctrace', 'record', '--no-prompt', '--template', 'Time Profiler', '--instrument', 'os_signpost', '--recording-options', str(settings), '--device', udid, '--all-processes', '--notify-tracing-started', name, '--time-limit', '240s', '--output', str(root / 'expansion.trace')], stdout=trace_log, stderr=subprocess.STDOUT)
+              ready = select.select([fd.value], [], [], 120)[0]
+              if not ready:
+                  raise RuntimeError('Profiler did not announce that recording started')
+              os.read(fd.value, 4)
+              if trace.poll() is not None:
+                  raise RuntimeError(f'Profiler exited before the test: {trace.returncode}')
+              print('Profiler announced recording started; launching the original benchmark', flush=True)
+              runner = subprocess.Popen(['make', 'test-ui', f'UI_SHARD={os.environ["UI_SHARD"]}'])
+              test_status = runner.wait(timeout=600)
+              if trace.poll() is None:
+                  trace.send_signal(signal.SIGINT)
+              trace_status = trace.wait(timeout=300)
+              (root / 'statuses.json').write_text(json.dumps({'test_exit': test_status, 'trace_exit': trace_status, 'source': '03954c4322af6f6dcdef05a29763ec27619758ae', 'profiling_only': True, 'capture_started_before_test': True, 'sampling': 'standard', 'waiting_threads': False}, indent=2) + '\n')
           finally:
-              if runner.poll() is None:
-                  runner.terminate(); runner.wait(timeout=30)
+              if runner is not None and runner.poll() is None:
+                  runner.terminate()
+                  runner.wait(timeout=30)
               if trace is not None and trace.poll() is None:
                   trace.send_signal(signal.SIGINT)
-                  try: trace.wait(timeout=30)
-                  except subprocess.TimeoutExpired: trace.kill(); trace.wait()
-              if trace_log is not None: trace_log.close()
+                  try:
+                      trace.wait(timeout=30)
+                  except subprocess.TimeoutExpired:
+                      trace.kill()
+                      trace.wait()
+              trace_log.close()
+              notify.notify_cancel(token.value)
           raise SystemExit(test_status if test_status else (trace_status if trace_status is not None else 1))
           PY_PROFILE
 
