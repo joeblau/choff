@@ -2839,7 +2839,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T12:16:10.313339+00:00",
+  "last_evidence_update": "2026-10-11T12:42:40.157915+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2851,7 +2851,8 @@
     "Eight-group run38131796908 at6e1b16d completed FAILURE:93selected/89PASS/2FAIL/2existingSKIP;2950seconds against900. Original collection115.7596seconds against60 and HUD live-values expectation10seconds both failed. All component checkout logs confirm original6e/f24event merge. Expansion47.7/79.3/71.2/62.0/33.4ms PASSoriginal100. No runtime improvement or current integration acceptance claimed. Diagnostic controls at f97 show original HUD prefix query selects label-only static text on both supported OS versions, making local old-query passes insufficient live-reading proof. Explicit row label/value candidate is under validation; original CI failures remain retained.",
     "Latest actualAir launch succeeds; signed minimal-host15case run terminates12PASS/2existingembeddingSKIP/1FoundationModelsratelimitFAIL. Full secondphysical reportcommittedwithallmetrics; A19notA17 orsecondphone/background. Currentf97CIUI3completed22PASS/1fresh-onboardingkeyboard-focusFAIL/0SKIP. Originalfieldtaprecordingandfailure retained; currentrunremainingUI2live. AlloriginalDebugMenuchecks inthatshardPASS; nowhole-run greenclaim.",
     "Integrationf97CI38133007062 isterminalFAILURE:90PASS/1onboardingfocusFAIL/2existingSKIP. Original30-questioncreation PASSES wholecase55.6073s withunchanged60sassertion, so#65creationcriterionverified; earlierfailurepreserved. AllotherrequiredcomponentjobsPASS; no integrationmergeorwholegoalcompletion claimed.",
-    "Integrationa1e33b9addsproduction44-pointkeyentrytapregion/explicitfocus;all12originalcasesPASSbothOS,fullCI38137282198pending. HUD2efollow-uporiginal27longscrollingfailure retained; isolatedprobe pending."
+    "Integrationa1e33b9addsproduction44-pointkeyentrytapregion/explicitfocus;all12originalcasesPASSbothOS,fullCI38137282198pending. HUD2efollow-uporiginal27longscrollingfailure retained; isolatedprobe pending.",
+    "A1requiredCIterminal89PASS2FAIL2existingSKIP2422seconds. OnboardingPASS,AboutMequerytimeoutand originalcreation86.4467>=60FAIL. Direct-IDcandidateV1 all3casesPASSbothOS;V2sharedSettings/Paste/create-path pending. Earlierf97creationPASSretained, currentcriterionfailed."
   ],
   "requestedAppConfiguration": {
     "displayName": "Choff",
