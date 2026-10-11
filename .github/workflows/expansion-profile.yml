@@ -44,7 +44,7 @@ jobs:
       - name: Generate project
         run: make generate
 
-      - name: Verify profiler failures preserve original test results
+      - name: Verify recorder readiness and preserve original test results
         run: python3 scripts/tests/test-profile-expansion.py
 
       - name: Cache Swift packages
@@ -84,7 +84,7 @@ jobs:
           UDID: ${{ steps.simulator.outputs.udid }}
         run: scripts/ci/warm-simulator.sh "$UDID" .build/DerivedData/Build/Products/Debug-iphonesimulator/Choff.app
 
-      - name: Profile the original five expansion samples
+      - name: Start recording before the original five expansion samples
         id: test
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
