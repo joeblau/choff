@@ -38,6 +38,14 @@ final class DiagnosticsUITests: XCTestCase {
         addSamples.tap()
 
         let hangReports = app.descendants(matching: .any)["diagnostics.hangReports"]
+        // Samples persist between launches. In an already populated list,
+        // Add Sample Payloads is below the overview, outside the lazy rows
+        // currently in the accessibility tree. Return to it before checking.
+        var swipes = 0
+        while !(hangReports.exists && hangReports.isHittable) && swipes < 8 {
+            screen.swipeDown()
+            swipes += 1
+        }
         XCTAssertTrue(hangReports.waitForExistence(timeout: 5), "Overview did not show hang reports")
 
         let export = app.buttons["diagnostics.export"]
