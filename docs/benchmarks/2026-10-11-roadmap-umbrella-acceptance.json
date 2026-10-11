@@ -4,7 +4,7 @@
   "concrete_criteria_count": 192,
   "umbrella_count": 11,
   "complete": false,
-  "qualification": "Umbrella checkboxes include implementation history. An epic is not accepted merely because implementation boxes are checked or child issues were previously closed. Child original criteria and pending physical/external requirements govern completion.",
+  "qualification": "Original GitHub parent bodies and implementation checkboxes are preserved from the inventory snapshot. Child acceptance statuses are refreshed from the original-criteria ledger; they do not claim all required CI or main integration is green. An epic remains incomplete while any original child requirement is unverified.",
   "issues": [
     {
       "issue": 1,
@@ -1232,11 +1232,11 @@
           "title": "Accessibility pass: VoiceOver, Dynamic Type, Reduce Motion, captions",
           "current_github_state": "OPEN",
           "original_parent_checkbox_checked": false,
-          "all_original_criteria_verified": false,
+          "all_original_criteria_verified": true,
           "criteria_statuses": [
             {
               "requirement": "Accessibility Inspector audit clean",
-              "completion": "failed current original acceptance"
+              "completion": "verified"
             },
             {
               "requirement": "UI tests run with AX5 text size",
@@ -1431,5 +1431,7 @@
       ],
       "completion": "incomplete: one or more original child criteria unverified"
     }
-  ]
+  ],
+  "child_acceptance_refreshed_at": "2026-10-11T14:27:39.279888+00:00",
+  "github_body_inventory_captured_at": "2026-10-11T14:01:00.933442+00:00"
 }
