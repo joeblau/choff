@@ -1023,3 +1023,18 @@ refinement fixture, WER fell from 5.36% to 2.68%. These are Mac results;
 the physical-device and live conversation acceptance criteria remain open.
 The pinned revisions, timings, assertions and scope are recorded in
 [the installation report](benchmarks/2026-10-11-model-installation-mac.json).
+
+## Mac memory evaluation acceptance (2026-10-11)
+
+The full memory evaluation passed all 30 committed regression checks on
+production source `093c20f`, using Apple's on-device model as both reader
+and judge with answers required. On the M3 Max, hybrid Recall@5 was 91.1%
+and Complete@5 was 88.4%; 89 of 115 answers were correct (77.4%), with no
+model-call failures. The answer stage took 136.17 s. Retrieval and answer
+scores match the committed baseline; thresholds and baselines were unchanged.
+
+This evaluates the 265-chunk fixture index with recorded Qwen3 256-d int8
+vectors, rather than live EmbeddingGemma inference. It does not establish
+physical-phone latency, live Grok tool calls or cross-device indexing.
+[The complete report](benchmarks/2026-10-11-memory-eval-mac.json) retains
+all 115 rankings, answers and judge decisions, including incorrect answers.
