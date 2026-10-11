@@ -1219,7 +1219,7 @@
           "criteria_statuses": [
             {
               "requirement": "Tap \u2192 expand < 100 ms",
-              "completion": "failed current original acceptance"
+              "completion": "partially verified"
             },
             {
               "requirement": "Continue-topic seeds Grok context",
@@ -1432,6 +1432,6 @@
       "completion": "incomplete: one or more original child criteria unverified"
     }
   ],
-  "child_acceptance_refreshed_at": "2026-10-11T14:48:25.897995+00:00",
+  "child_acceptance_refreshed_at": "2026-10-11T15:18:22.796970+00:00",
   "github_body_inventory_captured_at": "2026-10-11T14:01:00.933442+00:00"
 }

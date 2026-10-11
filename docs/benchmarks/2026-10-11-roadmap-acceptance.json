@@ -1795,16 +1795,17 @@
       "criteria": [
         {
           "requirement": "Tap \u2192 expand < 100 ms",
-          "completion": "failed current original acceptance",
+          "completion": "partially verified",
           "evidence": [
             "https://github.com/joeblau/voice/actions/runs/38114217207",
             "/tmp/voice-ci-eeb-latency-attachments: five original samples 65.8, 27.1, 26.0, 26.5, 26.3 ms",
             "Current 2420008 original five-sample benchmark: iOS 26 39.3/10.2/11.3/10.3/9.9 ms; iOS 27 34.2/19.4/20.9/18.9/26.6 ms. Fresh required CI still running; unchanged 100 ms limit.",
             "Current required CI 38119809945 at 26cd0ba: original five-sample app-ui-performance job completed successfully. No latency assertion or timeout changed.",
             "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit.",
-            "Completed original performance job in CI38146960809 at9fddbe9 failed its first expansion sample:109.5/60.2/68.9/59.1/54.1ms against unchanged100ms limit. Full workflow is still live; prior passes are retained. /tmp/voice-ci-9fddbe9-perf-summary.json and original Expand latency attachment."
+            "Completed original performance job in CI38146960809 at9fddbe9 failed its first expansion sample:109.5/60.2/68.9/59.1/54.1ms against unchanged100ms limit. Full workflow is still live; prior passes are retained. /tmp/voice-ci-9fddbe9-perf-summary.json and original Expand latency attachment.",
+            "Same-source CI38146960809 attempt2 original expansion-only repeatPASS: 31.4/28.5/28.7/28.2/32.7ms, original100ms. First109.5ms failure remains retained; no causal fix or complete/reliable criterion claim. Issue58staysOPEN. /tmp/voice-ci-9fddbe9-attempt2-terminal-report.json"
           ],
-          "qualification": "Current exact-head original expansion benchmark fails; previous qualified local/CI passes do not supersede this result. Original five samples and100ms requirement preserved."
+          "qualification": "Original unchanged source has both failing and passing CI measurements; current repeat passes while original failure remains unresolved. Three unchanged native controls pass. Keep original criterion partial andissue58open."
         },
         {
           "requirement": "Continue-topic seeds Grok context",
@@ -2928,12 +2929,12 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T15:07:48.080991+00:00",
+  "last_evidence_update": "2026-10-11T15:18:22.796970+00:00",
   "criteriaStatusCounts": {
     "verified": 124,
     "not yet proven in this acceptance audit": 44,
-    "failed current original acceptance": 2,
-    "partially verified": 16,
+    "failed current original acceptance": 1,
+    "partially verified": 17,
     "verified on Mac real-model replay": 2,
     "verified on public evaluation set": 1,
     "verified on physical A19 Pro": 2,
