@@ -1,0 +1,137 @@
+{
+  "date_utc": "2026-10-11",
+  "production_source_base": "eeb5ed420f06d0bb8d4c3bc434f83e41873716b7",
+  "production_source_sha256": "7ee6d23a045d9cd8b78fcbcbb16e34578f1c881fc2fd700c0f9c18cbae63b28d",
+  "host": {
+    "cpu": "Apple M3 Max",
+    "memory_bytes": 137438953472,
+    "macos": "27.2"
+  },
+  "models": {
+    "speakerEmbedding": "df2625ac79a7ac6b65ad868fee6d80f320da4232",
+    "languageID": "2aa4d715a79e410d5f9aa32bd7a4fc9225bf9eb0",
+    "sileroVAD": "b419383c55c110e2c9271fa6ee0ea83d03c70d96"
+  },
+  "regression": {
+    "test": "VerificationGateTests.theSegmentEndReusesTheFinalsScoreInFlight",
+    "clock": "ManualClock",
+    "embedding_delay_ms": 40,
+    "original_sample_counts": [
+      24000,
+      40000,
+      40000
+    ],
+    "fixed_sample_counts": [
+      24000,
+      40000
+    ],
+    "original_assertion_failures": 2,
+    "fixed_decision": "accept",
+    "fixed_delay_ms": 40,
+    "targeted_gate_tests_passed": 76
+  },
+  "real_model_checks": {
+    "test_functions": 17,
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "14 voice embedding/enrollment/gate/language functions and 3 Silero functions; parameterized functions include multiple cases"
+  },
+  "real_gate_hold": {
+    "original_limit_ms": 100,
+    "fixtures": [
+      "bdl_a0003",
+      "rms_a0001",
+      "slt_a0002"
+    ],
+    "before_ms": [
+      48.24025,
+      117.686791,
+      111.685292
+    ],
+    "isolated_original_control_ms": [
+      36.679083,
+      39.991458,
+      69.194459
+    ],
+    "after_ms": [
+      47.2785,
+      47.542625,
+      44.243792
+    ],
+    "interpretation": "The original combined run failed while its isolated control passed. The manual-clock regression proves duplicate embedding independently of wall-clock contention; the fixed combined run passes the unchanged limit."
+  },
+  "speaker_embedding": {
+    "windows_ms": [
+      1500,
+      3000,
+      10000
+    ],
+    "minimum_same_speaker_cosine": [
+      0.5743619,
+      0.68343663,
+      0.68146867
+    ],
+    "maximum_different_speaker_cosine": [
+      0.37182748,
+      0.36804724,
+      0.37138855
+    ],
+    "fluid_audio_cosine": 1.0,
+    "owner_only_fixture_scenarios": "pass with active and inactive turn cases; public CMU ARCTIC owner persona, no live xAI"
+  },
+  "language": {
+    "foreign_rejection_percent_at_accepted_threshold_0_01": {
+      "clean": 95.5,
+      "room_near": 97.0,
+      "room_far": 98.5,
+      "loudspeaker": 95.5
+    },
+    "english_accepted_percent": {
+      "clean": 95.5,
+      "room_near": 100.0,
+      "room_far": 77.3,
+      "loudspeaker": 100.0
+    },
+    "accented_synthetic_english_accepted_percent": {
+      "clean": 16.7,
+      "room_near": 8.3,
+      "room_far": 8.3,
+      "loudspeaker": 8.3
+    },
+    "warm_2s_inference": {
+      "runs": 50,
+      "p50_ms": 5.78,
+      "p95_ms": 6.07,
+      "max_ms": 6.15
+    },
+    "final_hold": {
+      "finals": 20,
+      "median_ms": 4.94,
+      "max_ms": 5.27
+    },
+    "limitation": "Short accented synthetic English remains a model weakness; these fixture results do not establish owner acceptance in live phone use."
+  },
+  "silero": {
+    "fixture_boundary_limit_ms": 100,
+    "fixtures_passed": 4,
+    "silence_audio_seconds": 60,
+    "silence_model_calls": 235,
+    "silence_segments": 0,
+    "silence_cpu_percent_one_core": 0.17,
+    "backend_switch_max_probability_delta": 0.0,
+    "probability_baselines_changed": false
+  },
+  "full_package_suite": {
+    "selected": 3315,
+    "passed": 3249,
+    "skipped": 66,
+    "failed": 0,
+    "new_skips_vs_CI_eeb5ed4": 0,
+    "previous_skips_now_passed": [
+      "ASREvaluationEngineTests.theHarnessRunsEndToEndOnTheBundledFixtures",
+      "ASREvaluationDatasetTests.theBundledAudioMatchesItsLabels"
+    ]
+  },
+  "scope": "Mac Core ML and recorded fixture acceptance. Does not establish physical-iPhone microphone/background/thermal performance, personal owner FRR, or live xAI acceptance."
+}

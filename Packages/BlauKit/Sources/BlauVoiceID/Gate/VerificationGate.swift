@@ -386,10 +386,17 @@ public actor VerificationGate {
             verdict = inheritedVerdict(for: ended.id)
             shared.withLock { $0.shortSegments += 1 }
         } else {
-            if needsScore(segment, through: speech) {
-                if let audio = audio(of: segment, count: speech) {
-                    await score(ended.id, audio)
-                }
+            // A final may already be scoring this speech when VAD ends it.
+            // Let that result land before deciding whether the end needs
+            // another embedding. Re-read the segment after suspension;
+            // the snapshot above does not include the result in flight.
+            if (segments[ended.id]?.scoring ?? 0) > 0 {
+                _ = await waitUntil(configuration.decisionTimeout) { (self.segments[ended.id]?.scoring ?? 0) == 0 }
+            }
+            if let current = segments[ended.id], needsScore(current, through: speech),
+                let audio = audio(of: current, count: speech)
+            {
+                await score(ended.id, audio)
             }
             // Wait for a score an utterance started meanwhile.
             _ = await waitUntil(configuration.decisionTimeout) { (self.segments[ended.id]?.scoring ?? 0) == 0 }
