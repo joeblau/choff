@@ -290,7 +290,6 @@ extension MainScreenScaffold {
 /// again for each progress report (#182).
 private struct SpeechModelSetupInset: View {
     @Environment(ModelManager.self) private var models
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         // Hidden while checking, so an offline launch with every model
@@ -298,7 +297,9 @@ private struct SpeechModelSetupInset: View {
         if !models.isReady && models.setupStatus.phase != .checking {
             SpeechModelSetupView()
                 .padding()
-                .transition(Motion.slide(from: .bottom, reduceMotion: reduceMotion))
+                // Keep the card above Settings and Record throughout its
+                // transition; moving through the bottom edge crosses the bar.
+                .transition(.opacity)
         }
     }
 }
