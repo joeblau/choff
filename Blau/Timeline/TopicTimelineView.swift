@@ -553,12 +553,10 @@ private struct TopicTimelineScrollView: View {
         } else {
             expansionTimer.began(topic.id)
         }
-        guard isAtBottom else {
-            toggleExpansion(of: topic.id)
-            return
-        }
-        // Hold the tapped bullet while its transcript opens below it, even
-        // at the latest line. The top anchor and rendered-position hold are
+        // Hold the tapped bullet while its transcript opens below it.
+        // Lazy section estimates can change above the viewport even while
+        // reading history, especially at accessibility text sizes.
+        // The top anchor and rendered-position hold are
         // installed in the same transaction as the detail; deferring the
         // expansion to another main-actor task adds a layout/scheduling turn
         // to tap latency. Once the lazy rows settle, the geometry decides
