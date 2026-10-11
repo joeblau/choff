@@ -13,7 +13,7 @@ evaluation.
 | `lint`          | swift-format (`make lint`), then the shell-script tests    | `make lint test-scripts` | nothing |
 | `package-tests` | `swift build --build-tests` and `swift test` in `Packages/BlauKit` on the macOS host | `make test-kit` | Swift Testing xUnit report |
 | `app-unit-tests` | XcodeGen, then the `Blau` test plan's unit tests (`BlauTests`) on an iOS Simulator | `make test-unit` | `app-unit-tests-xcresult` |
-| `app-ui-tests (K/4)` | Four functional UI shards with Debug coverage, simulator warm-up, and an executed-count check ([UI-test shards](#ui-test-shards)) | `make test-ui UI_TEST_SUITE=functional UI_SHARD=K/4` | `app-ui-tests-K-xcresult` |
+| `app-ui-tests (K/4)` | Four functional UI shards, two simulator workers per shard, Debug coverage, simulator warm-up, and an executed-count check ([UI-test shards](#ui-test-shards)) | `make test-ui UI_TEST_SUITE=functional UI_SHARD=K/4` | `app-ui-tests-K-xcresult` |
 | `app-ui-performance` | The existing five-sample expansion benchmark, with optimized Swift and no coverage instrumentation; the 100 ms limit is unchanged | `make test-ui UI_TEST_SUITE=performance` with the flags below | `app-ui-performance-xcresult` |
 | `app-tests`     | Requires the unit job, every functional UI shard, and the UI performance job to pass (ubuntu, seconds) | `make test` runs the same tests in one go | nothing |
 | `perf-kit`      | The BlauKit micro-benchmarks (package-benchmark) on the macOS host; fails when an allocation count (and, on a machine with performance counters, an instruction count) is more than 10% above `Packages/BlauKitBenchmarks/Thresholds` ([performance.md](performance.md#micro-benchmarks)) | `make microbench-check` | `perf-kit-results` (the check's output), 30 days; the output on the summary page |
@@ -148,9 +148,14 @@ into `-only-testing:BlauUITests/<Class>/<testMethod>` arguments, so a shard's
 failure reproduces locally with the command in the job's log:
 
 ```sh
-make test-ui UI_TEST_SUITE=functional UI_SHARD=2/4 DESTINATION='id=<simulator udid>'
+make test-ui UI_TEST_SUITE=functional UI_SHARD=2/4 DESTINATION='id=<simulator udid>' \
+  XCODEBUILD_FLAGS='-parallel-testing-enabled YES -parallel-testing-worker-count 2 -collect-test-diagnostics never'
 UI_TEST_SUITE=functional scripts/ci/ui-test-shard.sh --list 2/4
 ```
+
+Each functional shard uses two isolated simulator workers. Xcode distributes
+the selected tests between them; the selection and executed-count check are
+unchanged. The separate expansion timing job still uses one worker.
 
 Nothing is dropped:
 
@@ -213,7 +218,9 @@ Two things the single job got for free need doing in each shard:
 
 The jobs run in parallel, so a run takes as long as its slowest job when
 enough runners are free; when they aren't, jobs queue, which can take longer
-than the jobs. Measured on the pull request for #179 (runs 38018073024 and
+than the jobs. The following reference numbers used one worker per shard;
+the two-worker configuration still needs measured CI timing against the
+original 15-minute warm-cache target. Measured on the pull request for #179 (runs 38018073024 and
 38021860678), `xcode-27` image, Xcode 27.1, warm cache:
 
 | Job             | Duration | Where the time goes |
