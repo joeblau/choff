@@ -1132,3 +1132,14 @@ The compiled hosting folder is 609,331,156 bytes, above the original 400 MB
 model budget. It is a candidate, with no change to the selected model or
 hosting destination. EmbeddingGemma access remains unavailable. A signed
 benchmark host containing this candidate is prepared; the [original on-phone batch-of-32 measurement](benchmarks/2026-10-11-iPhone18-4-qwen-batch32.json) now passes on the physical Air A19 Pro. Its10measured iterations at124.125mean tokens give p50 **1,008.035 ms** and p95 **1,151.134 ms**, within the unchanged **1,600 ms** budget. Coldload is17,205.504ms; reported footprint451.064MB and Neural Engine growth424.469MB are retained. A17,model selection,download size and hosting acceptance remain pending.
+
+### Physical Foundation Models standalone run (2026-10-11)
+
+The [complete standalone Air report](benchmarks/2026-10-11-iPhone18-4-foundation-models-isolated.json)
+passes the original benchmark after more than30minutes of idle time following
+the full-suite rate-limit failure. The original cold request and12warm plus12
+prewarmed requests are unchanged. All25titles meet the word limit; cold latency
+is4,180ms,warm p50/p95 is1,989/2,476ms,and prewarmed p50/p95 is1,997/2,218ms.
+Both preceding full-suite rate-limit failures remain recorded. This result
+qualifies the standalone A19 Pro measurement; it does not establish rate-limit
+recovery in a conversation or A17,two-device or background acceptance.
