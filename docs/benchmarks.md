@@ -8,9 +8,8 @@ Engine work when the screen is locked. This document describes the harness
 that measures them, the results so far, and the decisions that hang on them.
 
 **Status (2026-10-07):** the harness is complete and validated end to end
-against the real FluidAudio models on a Mac. **The iPhone results are still
-pending**: they need physical A17 Pro / A18 / A19 iPhones, which the
-harness's author did not have. The two decisions below are written as
+against the real FluidAudio models on a Mac. **The first iPhone Air measurements are recorded below.** Additional physical
+iPhones and the background probe are still needed for the acceptance decision. The two decisions below are written as
 rules with a provisional outcome, so whoever runs the benchmarks can settle
 them by filling in the tables.
 
@@ -46,8 +45,10 @@ make bench DEVICE=<identifier>        # Release build, about 20 minutes
 optimization level; FluidAudio's decoders are Swift code and are several
 times slower unoptimized). It sets `TEST_RUNNER_BLAU_DEVICE_TESTS=1`;
 without it every benchmark skips, so `make test` and CI never run them.
-Signing must be set up for a device build (Xcode > Settings > Accounts, and
-a development team on the `BlauBenchmarks` target), and the device needs
+Physical-device XCTest runs in the small `BlauBenchmarkHost` app, separate
+from the production app; the benchmark bundle still links BlauKit directly.
+Signing must be set up for a device build (Xcode > Settings > Accounts;
+`project.yml` sets the development team for both host and tests), and the device needs
 network access the first time: models download from Hugging Face
 (about 1 GB in total) into the test runner's container.
 
@@ -229,7 +230,40 @@ clock. The app and the XCTest target only compose the cases.
 
 ## Results
 
-### iPhones (pending)
+### iPhone Air (A19 Pro), 2026-10-11
+
+The first physical-device run uses iPhone18,4, iOS 27.2 (24B5099f), a Release
+build of source `abbb067` with the dedicated benchmark-host fix, and synthesized
+en-US speech. The [complete JSON report](benchmarks/2026-10-11-iPhone18-4.json)
+includes every result and outcome. XCTest reports **10 passed, four skipped,
+one failed**: EmbeddingGemma and the shared embedding folder were absent,
+DeepFilterNet3 was absent for both compute modes, and Foundation Models hit
+its rate limit. This is a partial suite result, not a complete acceptance pass.
+
+| Case | Metric | iPhone Air |
+| --- | --- | ---: |
+| EOU 160 ms | window p50 / p95 | 17.22 / 25.23 ms |
+| | RTFx | 11.18× |
+| EOU 320 ms | window p50 / p95 | 23.22 / 30.63 ms |
+| | window p95 / hop | 9.57% |
+| | RTFx | 43.42× |
+| | finish p95 | 7.37 ms |
+| | footprint growth | 223.73 MB |
+| EOU 1280 ms | window p50 / p95 | 41.42 / 51.26 ms |
+| | RTFx | 124.12× |
+| TDT v3 | RTFx | 167.81× |
+| WeSpeaker | 1.5 s embedding p50 / p95 | 38.71 / 94.30 ms |
+| | 3 s embedding p50 / p95 | 78.97 / 241.67 ms |
+| CAM++ | 1.5 s embedding p50 / p95 | 281.26 / 298.82 ms |
+| | 3 s embedding p50 / p95 | 293.01 / 340.71 ms |
+| Index, 50k chunks | hybrid search p95 | 2.48 ms |
+| Retrieval, 50k chunks | whole search p95 | 15.82 ms |
+
+These measurements do not establish the A17 budget. The EOU-320 decision still
+requires at least two physical iPhones and the background-ANE probe; neither
+has been substituted with simulator or Mac measurements.
+
+### Other iPhones (pending)
 
 Fill this table from the reports (`BenchmarkReport.comparisonTable` renders
 it from the JSON). Release builds only. Rows marked *budget* feed the
