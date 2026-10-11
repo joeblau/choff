@@ -7,11 +7,11 @@ latency, Foundation Models label latency, and what iOS 27 does to Neural
 Engine work when the screen is locked. This document describes the harness
 that measures them, the results so far, and the decisions that hang on them.
 
-**Status (2026-10-07):** the harness is complete and validated end to end
-against the real FluidAudio models on a Mac. **The first iPhone Air measurements are recorded below.** Additional physical
-iPhones and the background probe are still needed for the acceptance decision. The two decisions below are written as
-rules with a provisional outcome, so whoever runs the benchmarks can settle
-them by filling in the tables.
+**Status (2026-10-11):** the harness now runs on physical iPhones through a
+dedicated host, alongside the earlier Mac reference measurements. The first
+iPhone Air results are recorded below. Additional physical iPhones and the
+background probe are still needed for acceptance. The two decisions below
+remain provisional until their required measurements are available.
 
 ## What is measured
 
@@ -414,8 +414,11 @@ latency budget.
 partials, since end of utterance, not partial text, gates the turn. 160 ms
 is not a fallback (see above).
 
-**Verdict: pending.** No iPhone has reported yet (`.pending("0 of 2 iPhones
-reported qualifying results")`). Provisionally EOU-320 stays the default:
+**Verdict: pending.** The first iPhone Air run meets the EOU-320 latency,
+throughput and memory budgets with nominal thermal state at both endpoints.
+One of the required two physical iPhones has reported qualifying results;
+the second-device measurement and background probe remain outstanding.
+Provisionally EOU-320 stays the default:
 FluidAudio documents 14× RTFx for it on LibriSpeech (source comment on
 `StreamingChunkSize.ms320`), and on the loaded Mac its burst p95 used 15% of
 the hop and its paced p95 54%, a load-induced miss that has to be checked
