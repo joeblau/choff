@@ -122,12 +122,16 @@
         {
           "requirement": "CI green on main",
           "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "evidence": [
+            "Latest main 504e307 CI run 38059919347 completed with failure. Integration #187 is not yet merged; no green-main claim."
+          ]
         },
         {
           "requirement": "PRs show lint + test checks",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "verified",
+          "evidence": [
+            "PRs #187, #188 and #189 expose the original lint, Swift package, native app, functional UI and expansion-performance checks through GitHub Actions. Current PR187 jobs observed directly on run 38119809945; this criterion concerns check presence, not the separate green-main or runtime requirements."
+          ]
         },
         {
           "requirement": "Runtime < 15 min with warm cache",
@@ -154,8 +158,10 @@
       "criteria": [
         {
           "requirement": "`make lint` passes on main",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "verified",
+          "evidence": [
+            "Exact origin/main 504e3072ea2ab2b8aa694389d2fa6cedd04aae03: make lint passed for 1,095 tracked Swift files. Source archived unchanged into an isolated temporary Git index. /tmp/voice-choff-main-lint-504e307-producer.json"
+          ]
         },
         {
           "requirement": "PR + issue templates present",
@@ -219,7 +225,7 @@
       "issue": 18,
       "title": "Build the app shell: composition root, environment and feature flags",
       "url": "https://github.com/joeblau/voice/issues/18",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "App launches to an empty main screen",
@@ -541,7 +547,7 @@
       "issue": 27,
       "title": "Integrate FluidAudio and build a model download manager",
       "url": "https://github.com/joeblau/voice/issues/27",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Fresh install downloads + loads models with visible progress",
@@ -644,7 +650,7 @@
       "issue": 30,
       "title": "Add a second-pass transcription (Parakeet TDT v3) for punctuation and accuracy",
       "url": "https://github.com/joeblau/voice/issues/30",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Stored utterances have punctuation and capitalization",
@@ -673,7 +679,7 @@
       "issue": 31,
       "title": "Add a SpeechAnalyzer / SpeechTranscriber fallback transcriber",
       "url": "https://github.com/joeblau/voice/issues/31",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Toggle in Settings to force the Apple engine",
@@ -1007,7 +1013,7 @@
       "issue": 41,
       "title": "Build the record button: states, level ring, haptics and accessibility",
       "url": "https://github.com/joeblau/voice/issues/41",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Snapshot tests for every state",
@@ -1038,7 +1044,7 @@
       "issue": 42,
       "title": "Build the chat transcript view: user text right-aligned, agent text left-aligned, no bubbles",
       "url": "https://github.com/joeblau/voice/issues/42",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Visual spec matches: user right, agent left, no bubbles",
@@ -1106,7 +1112,7 @@
       "issue": 44,
       "title": "Build onboarding and permissions: mic, model download, iCloud check, voice enrollment",
       "url": "https://github.com/joeblau/voice/issues/44",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Fresh install reaches a working conversation through onboarding",
@@ -1353,7 +1359,7 @@
       "issue": 52,
       "title": "Build the streaming topic segmentation engine (TextTiling depth + hysteresis)",
       "url": "https://github.com/joeblau/voice/issues/52",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Unit tests on scripted transcripts with labelled boundaries (Pk / WindowDiff metrics)",
@@ -1556,18 +1562,21 @@
           "evidence": [
             "/tmp/voice-choff-retained-header-paging-ios27-summary.json: both original 2000-topic cases passed, 0 skips at eeb5ed4",
             "/tmp/voice-choff-retained-header-ios26-summary.json: two iOS 26 failures at eeb5ed4",
-            "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger."
+            "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
+            "Exact current app on iOS26.5 at8ee1add (test-only difference from26cd0ba): Now passes, drag paging fails on first page at drag18. Original checks unchanged; producer exit65. /tmp/voice-choff-paging-current-ios26-8ee1add.log",
+            "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running."
           ],
-          "qualification": "iOS 26 corrective candidate remains under test."
+          "qualification": "The prior original iOS26 failure is retained above. Corrective source2acfe8c has passed both original iOS26 paging cases; full iOS27 verification and physical-device checks remain pending."
         },
         {
           "requirement": "Memory stays bounded",
           "completion": "partially verified",
           "evidence": [
             "iOS 27 original paging test passed its unchanged 60 MB footprint growth budget at eeb5ed4",
-            "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger."
+            "Current 2420008 iOS 27: both original paging cases pass, no skips; 210 drags, 1999 bullets, footprint 85\u219271 MB. Corrected iOS 26 layout preceding five leaf AX modifiers passed both paging cases, footprint 53\u219262 MB; exact current iOS 26 detail/collapse eight cases also pass. Source qualification retained in ledger.",
+            "Source2acfe8c original iOS26 drag test passes: 212 drags,1999 bullets,footprint53\u219285MB within unchanged60MB growth budget. Original Now also passes in the completed11-case follow-up; largest-text topic detail fails separately. iOS27 full original cases still running."
           ],
-          "qualification": "iOS 26 paging acceptance is unresolved."
+          "qualification": "The prior original iOS26 failure is retained above. Corrective source2acfe8c has passed both original iOS26 paging cases; full iOS27 verification and physical-device checks remain pending."
         }
       ],
       "prior_unverified_followups": [
@@ -1587,11 +1596,12 @@
       "criteria": [
         {
           "requirement": "Tap \u2192 expand < 100 ms",
-          "completion": "partially verified",
+          "completion": "verified",
           "evidence": [
             "https://github.com/joeblau/voice/actions/runs/38114217207",
             "/tmp/voice-ci-eeb-latency-attachments: five original samples 65.8, 27.1, 26.0, 26.5, 26.3 ms",
-            "Current 2420008 original five-sample benchmark: iOS 26 39.3/10.2/11.3/10.3/9.9 ms; iOS 27 34.2/19.4/20.9/18.9/26.6 ms. Fresh required CI still running; unchanged 100 ms limit."
+            "Current 2420008 original five-sample benchmark: iOS 26 39.3/10.2/11.3/10.3/9.9 ms; iOS 27 34.2/19.4/20.9/18.9/26.6 ms. Fresh required CI still running; unchanged 100 ms limit.",
+            "Current required CI 38119809945 at 26cd0ba: original five-sample app-ui-performance job completed successfully. No latency assertion or timeout changed."
           ],
           "qualification": "Current corrective candidate still needs its own unchanged 100 ms check and complete UI validation."
         },
@@ -1794,8 +1804,11 @@
       "criteria": [
         {
           "requirement": "Create a YC collection with 30 questions in < 1 min via paste",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "verified",
+          "evidence": [
+            "Original KnowledgeBaseUITests.testPastingThirtyQuestionsCreatesACollectionInUnderAMinute PASS on currentintegrationplusquerycandidate:30pastedquestions,orderedcount/savedcollectionchecked,creationassertionunchanged<60s,wholetest26.132s. All3knowledgeUIcasesPASS0skip. Actualsecond-device synccriterionremainspending.",
+            "/tmp/voice-choff-knowledge-saved-leaf-query-summary.json"
+          ]
         },
         {
           "requirement": "Edits sync via iCloud and re-index",
@@ -1879,7 +1892,7 @@
       "issue": 68,
       "title": "Expose memory to Grok as tools: search_memory, get_entity, remember, forget",
       "url": "https://github.com/joeblau/voice/issues/68",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "\"What does my company do?\" answered from the knowledge base",
@@ -1954,14 +1967,14 @@
       "issue": 71,
       "title": "Build the debug performance HUD overlay",
       "url": "https://github.com/joeblau/voice/issues/71",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "HUD overhead < 1% CPU",
           "completion": "partially verified",
           "evidence": [
-            "Real-probe and tap unit budgets pass on093c20f, but full app current242 CI mean0.135s shown\u22120.00697s hidden over10s =1.2803%ofonecore, above original<1% criterion despite original regression gatePASS. Current26cd0ba local full-display measurement running; no threshold waiver.",
-            "/tmp/voice-ci-242-perf-artifact/perf-report.md"
+            "/tmp/voice-ci-242-perf-artifact/perf-report.md",
+            "Full app local Release measurements at 26cd0ba: shown minus hidden mean CPU over original ten-second windows = 0.654114% of one core. The prior CI 1.2803% result remains above the original 1% target; physical-phone measurement pending. /tmp/voice-choff-hud-overhead-local-26cd0ba-measurements.json"
           ]
         },
         {
@@ -2107,13 +2120,19 @@
       "criteria": [
         {
           "requirement": "2 h run passes with a report artifact",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "partially verified",
+          "evidence": [
+            "docs/benchmarks/2026-10-11-two-hour-soak-simulator.json: source1355658; both original two-hour accelerated simulator sessions passed all eight checks, zero XCTest skips. Physical weekly real-model run remains pending."
+          ],
+          "qualification": "Accelerated simulator evidence; original weekly physical-phone run with real models and device Instruments remains pending."
         },
         {
           "requirement": "Leaks instrument shows no growth",
-          "completion": "not yet proven in this acceptance audit",
-          "evidence": []
+          "completion": "partially verified",
+          "evidence": [
+            "Six readings throughout the profiled 121-minute-audio simulator run stayed at 56 blocks / 1792 bytes: zero leak and byte growth. Original zero-growth checks unchanged; device Instruments verification pending."
+          ],
+          "qualification": "Accelerated simulator evidence; original weekly physical-phone run with real models and device Instruments remains pending."
         }
       ],
       "prior_unverified_followups": [
@@ -2212,7 +2231,7 @@
       "issue": 80,
       "title": "Handle errors, offline mode and edge states",
       "url": "https://github.com/joeblau/voice/issues/80",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Airplane-mode test: transcript continues, recovers on reconnect",
@@ -2244,7 +2263,7 @@
       "criteria": [
         {
           "requirement": "Accessibility Inspector audit clean",
-          "completion": "verified",
+          "completion": "partially verified",
           "evidence": [
             "CI 38114217207 fails its original history audit at eeb5ed4",
             "Native corrective candidate passes both history audits on iOS 27 with original audit rules",
@@ -2252,8 +2271,10 @@
             "/tmp/voice-ci-242-ui1-tests.json",
             "/tmp/voice-ci-242-ui2-tests.json",
             "/tmp/voice-ci-242-ui3-tests.json",
-            "/tmp/voice-ci-242-ui4-tests.json"
-          ]
+            "/tmp/voice-ci-242-ui4-tests.json",
+            "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved."
+          ],
+          "qualification": "Automated history audits passed with original exclusions unchanged; AX5 topic-detail interaction failed in latest run."
         },
         {
           "requirement": "UI tests run with AX5 text size",
@@ -2263,7 +2284,8 @@
             "/tmp/voice-ci-242-ui1-tests.json",
             "/tmp/voice-ci-242-ui2-tests.json",
             "/tmp/voice-ci-242-ui3-tests.json",
-            "/tmp/voice-ci-242-ui4-tests.json"
+            "/tmp/voice-ci-242-ui4-tests.json",
+            "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved."
           ]
         }
       ],
@@ -2377,7 +2399,7 @@
       "issue": 173,
       "title": "Leave invalidated facts out of exchange keys and make the token estimate conservative (re-record memory-eval vectors)",
       "url": "https://github.com/joeblau/voice/issues/173",
-      "github_state": "CLOSED",
+      "github_state": "OPEN",
       "criteria": [
         {
           "requirement": "Invalidated statements are not in exchange keys, in both the rebuilder and the indexer. Fact links are kept.",
@@ -2476,7 +2498,7 @@
           "requirement": "Keep the same coverage; no tests skipped",
           "completion": "verified",
           "evidence": [
-            "Originalshardcheckerall93functionalUIcasesselected across24/23/23/23;90PASS2existingpagingSKIP1FAIL, pluslatencycase separate; no newskips/exclusions. Existing2longpaging runexplicitlyonlocalsupportedOSwith0skip. Native308selected300PASS8existingskip; candidate301PASSwithnewunitcase. Package full3315selected3249PASS66existingSKIP atvoicefix093c20f,2ASRfixturesnowpass.",
+            "Originalshardcheckerall93functionalUIcasesselected across24/23/23/23;92? Actual90PASS2existingpagingSKIP1FAIL, pluslatencycase separate; no newskips/exclusions. Existing2longpaging runexplicitlyonlocalsupportedOSwith0skip. Native308selected300PASS8existingskip; candidate301PASSwithnewunitcase. Package full3315selected3249PASS66existingSKIP atvoicefix093c20f,2ASRfixturesnowpass.",
             "/tmp/voice-ci-242-jobs.json",
             "/tmp/voice-ci-242-ui1-tests.json",
             "/tmp/voice-ci-242-ui2-tests.json",
@@ -2486,9 +2508,9 @@
         },
         {
           "requirement": "Confirm on a real CI run that app tests complete",
-          "completion": "partially verified",
+          "completion": "verified",
           "evidence": [
-            "Allactual242CIappjobscompleted andentirefunctionalcoverageobserved,butonetestfailedsetupcardrace. Fix26cd0ba passeslocal2UI+native8targetedandfull301native;freshCI38119809945running. Integrationapp-tests aggregator notgreenyet."
+            "Real required CI 38119809945 at26cd0ba completed successfully: app unit tests, all four UI shards, original expansion performance and aggregate app-tests all pass. The separate long-paging failure is retained under#57 and blocks merge."
           ]
         }
       ],
@@ -2614,7 +2636,7 @@
     }
   ],
   "all_original_criteria_verified": false,
-  "last_evidence_update": "2026-10-11T07:18:32.481430+00:00",
+  "last_evidence_update": "2026-10-11T08:29:24.225224+00:00",
   "reportScope": "Original 79 concrete GitHub tasks and192original acceptance/regression criteria; taskclosure alone is not acceptance proof.",
   "scopeNotes": [
     "Latest requested app name/bundle IDs/development team override original Blau naming in archived issue bodies. Internal module/scheme and legacy stored data names remain Blau.",
@@ -2641,9 +2663,8 @@
     "pending external prerequisites": 1
   },
   "currentReviewSources": {
-    "integration": "https://github.com/joeblau/voice/pull/187",
-    "voiceScoreReuse": "https://github.com/joeblau/voice/pull/188",
-    "requiredIntegrationCI": "https://github.com/joeblau/voice/actions/runs/38119809945",
-    "performanceAndSoak": "https://github.com/joeblau/voice/actions/runs/38116987322"
+    "integration": "2acfe8cde2361b988527dffe4fd3332902ac1361",
+    "voice_score_reuse": "093c20fe638bcfd6c0761f758271946c08152696",
+    "two_hour_soak": "13556587e3e8d89ed39609d8f5f6b81da2db42c7"
   }
 }

@@ -1068,6 +1068,19 @@ At `093c20f`, the real HUD timing tap, CPU clock and memory probe matched Instru
 
 The original five-window Release HUD display test at `26cd0ba` measured 0.654% of one core in the local iPhone 17 simulator (shown minus hidden CPU time over ten seconds). The latest CI simulator result was 1.280% against the separate 1% roadmap target; its existing regression comparison passed. Both measurements are retained in the report. Physical-phone display overhead remains pending.
 
+## Two-hour simulator soak (2026-10-11)
+
+At `1355658`, two sessions each ran 121 minutes of synthetic audio at 10× on
+an iOS 27 simulator. Both passed all eight original checks: 265 utterances
+were answered, no capture or subscriber frames were lost, and session
+renewal reseeded the new connection. Footprint slopes were +0.39 and
++0.54 MB per audio hour, below the unchanged 2 MB limit. The profiled run's
+six leak readings stayed at 56 blocks / 1,792 bytes, with zero growth.
+[The complete report](benchmarks/2026-10-11-two-hour-soak-simulator.json)
+preserves both sessions, every sample and the original thresholds. These
+sessions use scripted ASR, controlled speaker scores and a local realtime
+server; the weekly physical-phone run with real models remains pending.
+
 ## Original roadmap acceptance audit
 
 [The acceptance ledger](benchmarks/2026-10-11-roadmap-acceptance.json) preserves all 79 original concrete task bodies and their 192 acceptance or regression criteria, with evidence and qualifications for each. It distinguishes passing source, unit, simulator, Mac real-model and physical-device checks from remaining work. Two-device sync, live xAI/audio/background timing, gated model access and TestFlight still need acceptance evidence; the integration PR is awaiting its current required CI.
