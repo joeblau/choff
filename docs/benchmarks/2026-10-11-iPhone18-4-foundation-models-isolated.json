@@ -1,0 +1,90 @@
+{
+  "buildConfiguration": "Release",
+  "device": {
+    "activeProcessorCount": 6,
+    "chip": "A19 Pro",
+    "isSimulator": false,
+    "marketingName": "iPhone Air",
+    "modelIdentifier": "iPhone18,4",
+    "operatingSystem": "iOS 27.2 (Build 24B5099f)",
+    "physicalMemoryBytes": 12304695296
+  },
+  "results": [
+    {
+      "id": "topics.label.foundationModels",
+      "latencies": {
+        "label": {
+          "count": 12,
+          "maximum": 2647.6162919999997,
+          "mean": 2026.1088959166666,
+          "minimum": 1776.674625,
+          "p50": 1989.3349375,
+          "p90": 2313.5174578,
+          "p95": 2475.5602039499995,
+          "p99": 2613.20507439,
+          "standardDeviation": 251.6877664493416
+        },
+        "label.prewarmed": {
+          "count": 12,
+          "maximum": 2333.98875,
+          "mean": 1967.9990171666668,
+          "minimum": 1777.137333,
+          "p50": 1996.8055829999998,
+          "p90": 2121.2306372,
+          "p95": 2217.5830831499998,
+          "p99": 2310.7076166300003,
+          "standardDeviation": 172.86014722802614
+        }
+      },
+      "metrics": [
+        {
+          "key": "label.cold",
+          "unit": "ms",
+          "value": 4179.812334
+        },
+        {
+          "key": "titles.withinWordLimit",
+          "unit": "%",
+          "value": 100
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 13.282890319824219
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 2.1875228881835938
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "4 fixture boundary requests; 1.5 seconds lead before each timed request; titles are not logged"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T12:04:17Z",
+      "thermalStateAtEnd": "fair",
+      "thermalStateAtStart": "nominal",
+      "title": "Foundation Models topic label",
+      "wallTimeSeconds": 88.872556292
+    }
+  ],
+  "schemaVersion": 1,
+  "startedAt": "2026-10-11T12:04:17Z",
+  "acceptanceProvenance": {
+    "signedBuildSource": "65e1326f5e1f13e4b590c25900975891f756b462",
+    "producer": "/tmp/voice-choff-air-foundationmodels-isolated-65e1326-producer.json",
+    "selected": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "qualification": "Original benchmark alone afterover30minutes idle following full-suite rate-limit failure. Original12warm/12prewarmed/cold requests unchanged. Bothprecedingphysical full-suite rate-limit failures retained. NoA17,two-device,locked/backgroundor liveconversationacceptance claimed."
+  }
+}

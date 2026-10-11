@@ -205,9 +205,9 @@ onboarding), a development-signed build, plugged in and on a desk:
    installed models; `SoakTests` waits up to three minutes for **Start** to
    enable and fails, naming the missing models, if they aren't installed.
    The report's setup must say `Parakeet EOU, Silero VAD`.
-2. For leaks: Instruments → **Leaks** template → attach to **Blau** on the
+2. For leaks: Instruments → **Leaks** template → attach to **Choff** on the
    device once the soak screen shows `running`, and keep it recording
-   (`xcrun xctrace record --template Leaks --device <udid> --attach Blau
+   (`xcrun xctrace record --template Leaks --device <udid> --attach Choff
    --output .build/traces/soak-leaks.trace` does the same from the
    terminal). The leak count must not grow after the first few minutes.
 3. The report is attached to the test result

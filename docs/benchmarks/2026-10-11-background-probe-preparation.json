@@ -1,0 +1,29 @@
+{
+  "build_producer": "/tmp/voice-choff-background-probe-signed-build-producer.json",
+  "signed_source": "612d6cff489e9b6c6ab09ab4236ae4a5d8a569ca",
+  "signature": "Strict/deep codesignPASS;AppleDevelopmentJoeBlau84M7UGLL47;teamK78G42H4U2",
+  "bundle": "com.joeblau.choff.background-probe",
+  "configuration": "Release/BLAU_BENCHMARKS",
+  "temporary_project": "/Users/joeblau/Developer/joeblau/src/voice/.build/ChoffBackgroundProbe/project.yml",
+  "install": "/tmp/voice-choff-background-probe-install.json",
+  "launch": "/tmp/voice-choff-background-probe-launch.json",
+  "launch_outcome": "success",
+  "launch_kind": "BLAU_APP_ENVIRONMENT=ui-test;inmemorystore/fakeconversation,actualbenchmarkphase andcapturekeepalive",
+  "status": "prepared_installed_opened_manual_start_lock_return_pending",
+  "qualification": "No physicalbackgroundmodeloutcome claimed. Existingprobe/publicEOU320uses actualCoreML and UIApplicationprotected-data phases withdiscardedmicrophonekeepalive; usermusttapStart, allowmicrophone,foreground1min/lock8min/return. Source UIharness unchanged; rootmain/widget configurationuntouched.",
+  "report_retrieval_check": {
+    "status": "completed",
+    "exit_code": 1,
+    "json": "/tmp/voice-choff-background-probe-reports-copy.json",
+    "log": "/tmp/voice-choff-background-probe-reports-copy.log",
+    "reason": "Reports directory not present; no completed manual probe report retrieved. Manual mic/lock sequence remains pending."
+  },
+  "acceptance": "Prepared only. No completed measurement report exists; no physicalbackground/protected-data inference criterion is verified by this preparation.",
+  "manual_sequence": [
+    "Open Choff Probe and use existing Background Neural Engine probe with ten-minute duration.",
+    "User taps Start probe and allows microphone; captured audio is discarded.",
+    "One minute foreground, eight minutes locked, then unlock and return to app.",
+    "Retrieve the saved JSON and classify actual UIApplication/protected-data phases, success/failure samples and thermal/latency results."
+  ],
+  "source_identity": "Separate temporary Release/BLAU_BENCHMARKS app com.joeblau.choff.background-probe; unchanged productionbenchmarkharness, fakeconversation/inmemorystore, actualCoreML/publicParakeetEOU320 and actualAVAudioEngine keepalive. ProductionChoffbundle remainsseparate."
+}

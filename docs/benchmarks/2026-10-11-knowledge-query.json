@@ -2,7 +2,7 @@
   "worktree": "/Users/joeblau/Developer/joeblau/src/voice/.claude/worktrees/codex-knowledge-field-query",
   "base": "a1e33b9",
   "unchanged_control_session": 56583,
-  "scope": "SameoriginalhelperIDs/assertions/timeouts, exact identifier predicate replacesaliasINidentifiers lookup. Spindump provesframework fetchingelementtype/placeholder/identifieraliases; originalnamefieldvisibleandCPU.161sof3.43ssampled. No productionfix/rootcauseclaimed; controlandcandidatepending.",
+  "scope": "Exact assigned accessibility identifiers replace generic label/placeholder aliases while retaining the original actions, assertions, timeouts and 60-second collection limit. All five original Knowledge/Settings cases passed on each supported OS; the preceding CI failure and three passing unchanged controls are retained. No production UI change or controlled local reproduction is claimed.",
   "unchanged_control": {
     "passed_executions": 3,
     "failed_executions": 0,
@@ -56,5 +56,6 @@
     "summary": "/tmp/voice-choff-knowledge-exact-id-v2-ios26-summary.json",
     "producer": "/tmp/voice-choff-knowledge-exact-id-v2-ios26-producer.json"
   },
-  "status": "v2_allfiveoriginalcases_bothOS_pass"
+  "status": "v2_allfiveoriginalcases_bothOS_pass",
+  "qualification": "Tested source hashes and producers distinguish the field-only V1 from shared-query V2. V2 is incorporated into integration8220638, whose original Knowledge cases passed on CI38140894068. That whole workflow failed a separate collapsed-topic accessibility audit. Current integration36943d3 CI remains running."
 }

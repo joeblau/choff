@@ -1,0 +1,873 @@
+{
+  "buildConfiguration": "Release",
+  "device": {
+    "activeProcessorCount": 6,
+    "chip": "A19 Pro",
+    "isSimulator": false,
+    "marketingName": "iPhone Air",
+    "modelIdentifier": "iPhone18,4",
+    "operatingSystem": "iOS 27.2 (Build 24B5099f)",
+    "physicalMemoryBytes": 12304695296
+  },
+  "results": [
+    {
+      "id": "asr.eou.1280ms",
+      "latencies": {
+        "finish": {
+          "count": 5,
+          "maximum": 0.053584,
+          "mean": 0.0461834,
+          "minimum": 0.040416,
+          "p50": 0.044417,
+          "p90": 0.0525004,
+          "p95": 0.0530422,
+          "p99": 0.05347564,
+          "standardDeviation": 0.005175752567501657
+        },
+        "window": {
+          "count": 19,
+          "maximum": 51.786875,
+          "mean": 40.6422522631579,
+          "minimum": 14.476917,
+          "p50": 41.420334000000004,
+          "p90": 49.967683799999996,
+          "p95": 51.255612199999995,
+          "p99": 51.68062244,
+          "standardDeviation": 8.983804057029328
+        },
+        "window.burst": {
+          "count": 42,
+          "maximum": 12.412792000000001,
+          "mean": 10.521648928571429,
+          "minimum": 6.2158750000000005,
+          "p50": 10.431354,
+          "p90": 12.2292337,
+          "p95": 12.297340199999999,
+          "p99": 12.39408575,
+          "standardDeviation": 1.2220596967105983
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 6063.397667
+        },
+        {
+          "key": "rtfx",
+          "unit": "\u00d7",
+          "value": 124.11561405634659
+        },
+        {
+          "key": "window.p95OfHop",
+          "unit": "%",
+          "value": 4.004344703125
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 256.09557342529297
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 241.59384155273438
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 206.65625
+        }
+      ],
+      "notes": [
+        "Audio: synthesized speech (en-US)",
+        "Window 20480 samples, hop 20480 samples (1280.0 ms)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:35:13Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Parakeet EOU 120M, 1280ms chunks",
+      "wallTimeSeconds": 65.402198166
+    },
+    {
+      "id": "asr.eou.160ms",
+      "latencies": {
+        "finish": {
+          "count": 6,
+          "maximum": 15.388041999999999,
+          "mean": 7.608986166666667,
+          "minimum": 5.620834,
+          "p50": 6.103270500000001,
+          "p90": 11.054124999999999,
+          "p95": 13.221083499999999,
+          "p99": 14.9546503,
+          "standardDeviation": 3.4982391904798047
+        },
+        "window": {
+          "count": 368,
+          "maximum": 40.597875,
+          "mean": 17.904818383152172,
+          "minimum": 8.425375,
+          "p50": 17.2181045,
+          "p90": 22.515908800000002,
+          "p95": 25.232966549999993,
+          "p99": 32.98498474999999,
+          "standardDeviation": 4.185984268685098
+        },
+        "window.burst": {
+          "count": 740,
+          "maximum": 63.367166000000005,
+          "mean": 7.143170868918918,
+          "minimum": 5.4055409999999995,
+          "p50": 6.117625,
+          "p90": 9.3935083,
+          "p95": 11.70433605,
+          "p99": 21.160075000000013,
+          "standardDeviation": 3.864902795672877
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 7440.497375
+        },
+        {
+          "key": "rtfx",
+          "unit": "\u00d7",
+          "value": 11.178296843033658
+        },
+        {
+          "key": "window.p95OfHop",
+          "unit": "%",
+          "value": 31.54120818749999
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 253.14247131347656
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 224.546875
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 203.78125
+        }
+      ],
+      "notes": [
+        "Audio: synthesized speech (en-US)",
+        "Window 2560 samples, hop 1280 samples (80.0 ms)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:36:18Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Parakeet EOU 120M, 160ms chunks",
+      "wallTimeSeconds": 58.405645166
+    },
+    {
+      "id": "asr.eou.320ms",
+      "latencies": {
+        "finish": {
+          "count": 5,
+          "maximum": 7.408375,
+          "mean": 7.104575200000001,
+          "minimum": 6.817334000000001,
+          "p50": 7.069959,
+          "p90": 7.340825000000001,
+          "p95": 7.3746,
+          "p99": 7.40162,
+          "standardDeviation": 0.20389347750764372
+        },
+        "window": {
+          "count": 86,
+          "maximum": 38.403542,
+          "mean": 23.751454523255823,
+          "minimum": 11.067499999999999,
+          "p50": 23.223895999999996,
+          "p90": 29.7421875,
+          "p95": 30.626291249999998,
+          "p99": 34.14461700000003,
+          "standardDeviation": 4.190730701694842
+        },
+        "window.burst": {
+          "count": 177,
+          "maximum": 13.476791,
+          "mean": 7.398057915254237,
+          "minimum": 6.4187080000000005,
+          "p50": 7.0207500000000005,
+          "p90": 8.360699600000002,
+          "p95": 10.1626584,
+          "p99": 13.057488840000001,
+          "standardDeviation": 1.2695229565687367
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 6213.86675
+        },
+        {
+          "key": "rtfx",
+          "unit": "\u00d7",
+          "value": 43.4168947155789
+        },
+        {
+          "key": "window.p95OfHop",
+          "unit": "%",
+          "value": 9.570716015624999
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 253.62684631347656
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 223.734375
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 203.828125
+        }
+      ],
+      "notes": [
+        "Audio: synthesized speech (en-US)",
+        "Window 10080 samples, hop 5120 samples (320.0 ms)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:37:16Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Parakeet EOU 120M, 320ms chunks",
+      "wallTimeSeconds": 50.85420625
+    },
+    {
+      "id": "asr.tdt.v3",
+      "latencies": {
+        "utterance.5s": {
+          "count": 10,
+          "maximum": 83.62029199999999,
+          "mean": 73.6670626,
+          "minimum": 57.581875,
+          "p50": 77.991146,
+          "p90": 81.9712292,
+          "p95": 82.7957606,
+          "p99": 83.45538572,
+          "standardDeviation": 9.039393811972062
+        }
+      },
+      "metrics": [
+        {
+          "key": "load.cold",
+          "unit": "ms",
+          "value": 17890.977625000003
+        },
+        {
+          "key": "load.warm",
+          "unit": "ms",
+          "value": 107.34200000000001
+        },
+        {
+          "key": "rtfx",
+          "unit": "\u00d7",
+          "value": 167.80830040675
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 577.9393920898438
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 272.6719207763672
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 211.8125
+        }
+      ],
+      "notes": [
+        "Audio: synthesized speech (en-US)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:38:07Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Parakeet TDT 0.6B v3 (second pass)",
+      "wallTimeSeconds": 69.006686167
+    },
+    {
+      "id": "memory.embeddinggemma",
+      "latencies": {},
+      "metrics": [],
+      "notes": [],
+      "outcome": {
+        "skipped": {
+          "reason": "No EmbeddingGemma*.mlmodelc or .mlpackage in /var/containers/Bundle/Application/400F8B2A-0695-4F9F-8504-E393B4DB7DC8/ChoffBenchmarkHost.app/PlugIns/BlauBenchmarks.xctest/Assets; see docs/benchmarks.md"
+        }
+      },
+      "startedAt": "2026-10-11T04:39:16Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "EmbeddingGemma-300M, 256-d int8",
+      "wallTimeSeconds": 0.000890042
+    },
+    {
+      "id": "memory.embed.batch32",
+      "latencies": {},
+      "metrics": [],
+      "notes": [],
+      "outcome": {
+        "skipped": {
+          "reason": "No folder with blau-embedding.json in /var/containers/Bundle/Application/400F8B2A-0695-4F9F-8504-E393B4DB7DC8/ChoffBenchmarkHost.app/PlugIns/BlauBenchmarks.xctest/Assets; see docs/benchmarks.md"
+        }
+      },
+      "startedAt": "2026-10-11T04:39:16Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Shared text embedding, batch of 32",
+      "wallTimeSeconds": 0.000841333
+    },
+    {
+      "id": "memory.search50k",
+      "latencies": {
+        "search": {
+          "count": 200,
+          "maximum": 35.140791,
+          "mean": 6.87914355,
+          "minimum": 3.178958,
+          "p50": 5.0529790000000006,
+          "p90": 11.832312199999995,
+          "p95": 15.819454150000002,
+          "p99": 25.969905749999995,
+          "standardDeviation": 4.6038032625262675
+        }
+      },
+      "metrics": [
+        {
+          "key": "build",
+          "unit": "ms",
+          "value": 3945.129
+        },
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 57.296
+        },
+        {
+          "key": "chunks",
+          "unit": "",
+          "value": 50000
+        },
+        {
+          "key": "entities",
+          "unit": "",
+          "value": 2000
+        },
+        {
+          "key": "facts",
+          "unit": "",
+          "value": 5000
+        },
+        {
+          "key": "budget.search",
+          "unit": "ms",
+          "value": 50
+        },
+        {
+          "key": "search.expandedFacts",
+          "unit": "",
+          "value": 15.755
+        },
+        {
+          "key": "search.timeQueries",
+          "unit": "",
+          "value": 67
+        },
+        {
+          "key": "search.results",
+          "unit": "",
+          "value": 10
+        },
+        {
+          "key": "index.fileSize",
+          "unit": "MB",
+          "value": 91.1875
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 58.408164978027344
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 0
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "50000 chunks \u00d7 256-d int8 (5000 facts about 2000 entities), top 10, 200 queries, query embedding excluded",
+        "Within budget: search p95 15.82 ms \u2264 50 ms"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:39:16Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Memory search (hybrid), 50k chunks",
+      "wallTimeSeconds": 5.57550325
+    },
+    {
+      "id": "memory.index.search50k",
+      "latencies": {
+        "search.hybrid": {
+          "count": 200,
+          "maximum": 11.8735,
+          "mean": 1.6046912350000009,
+          "minimum": 1.278791,
+          "p50": 1.385875,
+          "p90": 1.8437755999999998,
+          "p95": 2.4836267999999992,
+          "p99": 4.864336749999968,
+          "standardDeviation": 0.9540444573875108
+        },
+        "search.keyword": {
+          "count": 200,
+          "maximum": 14.134959,
+          "mean": 1.1745483449999998,
+          "minimum": 0.602292,
+          "p50": 0.985125,
+          "p90": 1.417558,
+          "p95": 1.7983714499999994,
+          "p99": 4.049378329999943,
+          "standardDeviation": 1.199197124586265
+        },
+        "search.vector": {
+          "count": 200,
+          "maximum": 7.131958,
+          "mean": 1.4540087450000003,
+          "minimum": 1.272208,
+          "p50": 1.3790620000000002,
+          "p90": 1.4977040999999998,
+          "p95": 1.5224604,
+          "p99": 2.5509459199999824,
+          "standardDeviation": 0.4776498357995845
+        }
+      },
+      "metrics": [
+        {
+          "key": "build",
+          "unit": "ms",
+          "value": 4005.082166
+        },
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 58.773959
+        },
+        {
+          "key": "chunks",
+          "unit": "",
+          "value": 50000
+        },
+        {
+          "key": "budget.search",
+          "unit": "ms",
+          "value": 20
+        },
+        {
+          "key": "keyword.queriesWithHits",
+          "unit": "",
+          "value": 184
+        },
+        {
+          "key": "index.fileSize",
+          "unit": "MB",
+          "value": 97.36328125
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 56.501914978027344
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 0
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "50000 chunks \u00d7 256-d int8, top 20, 200 queries",
+        "Within budget: hybrid search p95 2.48 ms \u2264 20 ms"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:39:22Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Memory index search, 50k chunks",
+      "wallTimeSeconds": 5.018435083
+    },
+    {
+      "id": "audio.ns.apple-voice-isolation-hq",
+      "latencies": {
+        "frame": {
+          "count": 2950,
+          "maximum": 2.440709,
+          "mean": 0.22353158847457616,
+          "minimum": 0.0055,
+          "p50": 0.2978335,
+          "p90": 0.4332952,
+          "p95": 0.47811889999999946,
+          "p99": 0.7186824999999987,
+          "standardDeviation": 0.2343293106662782
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 54.291458
+        },
+        {
+          "key": "delay",
+          "unit": "ms",
+          "value": 94.4375
+        },
+        {
+          "key": "frame.p95OfFrame",
+          "unit": "%",
+          "value": 2.3905944999999975
+        },
+        {
+          "key": "rtfx",
+          "unit": "\u00d7",
+          "value": 89.47281293209586
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 74.18941497802734
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 17.65625
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "Audio: synthesized speech (en-US)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:39:27Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Apple AUSoundIsolation (highQualityVoice)",
+      "wallTimeSeconds": 0.732887
+    },
+    {
+      "id": "audio.ns.apple-voice-isolation",
+      "latencies": {
+        "frame": {
+          "count": 2950,
+          "maximum": 0.308708,
+          "mean": 0.2221911494915251,
+          "minimum": 0.214875,
+          "p50": 0.22024999999999997,
+          "p90": 0.2292081,
+          "p95": 0.23298154999999998,
+          "p99": 0.24421848999999976,
+          "standardDeviation": 0.006070297214712009
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 47.615667
+        },
+        {
+          "key": "delay",
+          "unit": "ms",
+          "value": 58.3125
+        },
+        {
+          "key": "frame.p95OfFrame",
+          "unit": "%",
+          "value": 1.1649077499999998
+        },
+        {
+          "key": "rtfx",
+          "unit": "\u00d7",
+          "value": 90.01258621582863
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 78.56441497802734
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 4.3125
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "Audio: synthesized speech (en-US)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:39:28Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Apple AUSoundIsolation (voice)",
+      "wallTimeSeconds": 0.720407917
+    },
+    {
+      "id": "audio.ns.dfn3.cpuOnly",
+      "latencies": {},
+      "metrics": [],
+      "notes": [
+        "iky1e/DeepFilterNet3-Streaming-CoreML@dfc12319; 16 kHz in and out through 48 kHz resamplers"
+      ],
+      "outcome": {
+        "skipped": {
+          "reason": "No DeepFilterNet3 model (scripts/fetch-deepfilternet3.sh)"
+        }
+      },
+      "startedAt": "2026-10-11T04:39:28Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "DeepFilterNet3 (cpuOnly)",
+      "wallTimeSeconds": 7.975e-05
+    },
+    {
+      "id": "audio.ns.dfn3.cpuAndNeuralEngine",
+      "latencies": {},
+      "metrics": [],
+      "notes": [
+        "iky1e/DeepFilterNet3-Streaming-CoreML@dfc12319; 16 kHz in and out through 48 kHz resamplers"
+      ],
+      "outcome": {
+        "skipped": {
+          "reason": "No DeepFilterNet3 model (scripts/fetch-deepfilternet3.sh)"
+        }
+      },
+      "startedAt": "2026-10-11T04:39:28Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "DeepFilterNet3 (cpuAndNeuralEngine)",
+      "wallTimeSeconds": 4.175e-05
+    },
+    {
+      "id": "topics.label.foundationModels",
+      "latencies": {},
+      "metrics": [
+        {
+          "key": "label.cold",
+          "unit": "ms",
+          "value": 3193.895708
+        }
+      ],
+      "notes": [],
+      "outcome": {
+        "failed": {
+          "message": "The session has been rate limited."
+        }
+      },
+      "startedAt": "2026-10-11T04:39:28Z",
+      "thermalStateAtEnd": "nominal",
+      "thermalStateAtStart": "nominal",
+      "title": "Foundation Models topic label",
+      "wallTimeSeconds": 21.468183875
+    },
+    {
+      "id": "voiceid.campplus",
+      "latencies": {
+        "embed.1.5s": {
+          "count": 30,
+          "maximum": 299.409041,
+          "mean": 280.74329576666673,
+          "minimum": 241.645625,
+          "p50": 281.257979,
+          "p90": 296.8447958,
+          "p95": 298.8189667,
+          "p99": 299.27274129,
+          "standardDeviation": 11.327452697532554
+        },
+        "embed.3s": {
+          "count": 30,
+          "maximum": 362.273625,
+          "mean": 296.49308603333327,
+          "minimum": 231.787667,
+          "p50": 293.011354,
+          "p90": 318.68183300000004,
+          "p95": 340.71181425000003,
+          "p99": 356.35815657,
+          "standardDeviation": 23.10594207351212
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 3385.783959
+        },
+        {
+          "key": "dimensions",
+          "unit": "",
+          "value": 192
+        },
+        {
+          "key": "cosine.sameSpeaker",
+          "unit": "score",
+          "value": 0.9078674924257345
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 230.73654174804688
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 77.82819366455078
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "FluidAudio loads CAM++ with .cpuAndGPU (its dynamic time axis is rejected by the ANE compiler); GPU work is not allowed in the background",
+        "Audio: synthesized speech (en-US)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:39:51Z",
+      "thermalStateAtEnd": "fair",
+      "thermalStateAtStart": "fair",
+      "title": "CAM++ embedding (challenger)",
+      "wallTimeSeconds": 33.454772292
+    },
+    {
+      "id": "voiceid.wespeaker",
+      "latencies": {
+        "embed.1.5s": {
+          "count": 30,
+          "maximum": 108.6095,
+          "mean": 47.31790006666666,
+          "minimum": 36.06675,
+          "p50": 38.7100415,
+          "p90": 78.02763780000001,
+          "p95": 94.30159564999995,
+          "p99": 106.77770282,
+          "standardDeviation": 19.608805886155473
+        },
+        "embed.3s": {
+          "count": 30,
+          "maximum": 280.510917,
+          "mean": 102.10135826666667,
+          "minimum": 56.873,
+          "p50": 78.9652915,
+          "p90": 187.7523083,
+          "p95": 241.67185609999984,
+          "p99": 275.78368732,
+          "standardDeviation": 57.86858897245827
+        }
+      },
+      "metrics": [
+        {
+          "key": "load",
+          "unit": "ms",
+          "value": 64.087542
+        },
+        {
+          "key": "dimensions",
+          "unit": "",
+          "value": 256
+        },
+        {
+          "key": "cosine.sameSpeaker",
+          "unit": "score",
+          "value": 0.8341130881775005
+        },
+        {
+          "key": "memory.footprint",
+          "unit": "MB",
+          "value": 278.09607696533203
+        },
+        {
+          "key": "memory.footprintGrowth",
+          "unit": "MB",
+          "value": 109.07821655273438
+        },
+        {
+          "key": "memory.neuralGrowth",
+          "unit": "MB",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "FluidAudio's export takes a fixed 10 s input and repeat-pads shorter windows, so compute is the same for every window length",
+        "Audio: synthesized speech (en-US)"
+      ],
+      "outcome": {
+        "completed": {}
+      },
+      "startedAt": "2026-10-11T04:40:24Z",
+      "thermalStateAtEnd": "fair",
+      "thermalStateAtStart": "fair",
+      "title": "WeSpeaker ResNet34-LM embedding",
+      "wallTimeSeconds": 18.598997208
+    }
+  ],
+  "schemaVersion": 1,
+  "startedAt": "2026-10-11T04:36:18Z"
+}

@@ -7,12 +7,11 @@ latency, Foundation Models label latency, and what iOS 27 does to Neural
 Engine work when the screen is locked. This document describes the harness
 that measures them, the results so far, and the decisions that hang on them.
 
-**Status (2026-10-07):** the harness is complete and validated end to end
-against the real FluidAudio models on a Mac. **The iPhone results are still
-pending**: they need physical A17 Pro / A18 / A19 iPhones, which the
-harness's author did not have. The two decisions below are written as
-rules with a provisional outcome, so whoever runs the benchmarks can settle
-them by filling in the tables.
+**Status (2026-10-11):** the harness now runs on physical iPhones through a
+dedicated host, alongside the earlier Mac reference measurements. Two complete
+iPhone Air runs are recorded below. Additional physical iPhones and the
+background probe are still needed for acceptance. The two decisions below
+remain provisional until their required measurements are available.
 
 ## What is measured
 
@@ -46,10 +45,15 @@ make bench DEVICE=<identifier>        # Release build, about 20 minutes
 optimization level; FluidAudio's decoders are Swift code and are several
 times slower unoptimized). It sets `TEST_RUNNER_BLAU_DEVICE_TESTS=1`;
 without it every benchmark skips, so `make test` and CI never run them.
-Signing must be set up for a device build (Xcode > Settings > Accounts, and
-a development team on the `BlauBenchmarks` target), and the device needs
+Physical-device XCTest runs in the small `BlauBenchmarkHost` app, separate
+from the production app; the benchmark bundle still links BlauKit directly.
+Signing must be set up for a device build (Xcode > Settings > Accounts;
+`project.yml` sets the development team for both host and tests), and the device needs
 network access the first time: models download from Hugging Face
 (about 1 GB in total) into the test runner's container.
+The host prevents automatic screen locking while visible. Unlock the iPhone
+and keep the host in the foreground; another app or a manual lock still moves
+Foundation Models into its background budget.
 
 Each test attaches its result, the cumulative report for the device
 (`<date>-<model id>.json`) and a Markdown summary to the result bundle in
@@ -229,7 +233,72 @@ clock. The app and the XCTest target only compose the cases.
 
 ## Results
 
-### iPhones (pending)
+### iPhone Air (A19 Pro), 2026-10-11
+
+The first physical-device run uses iPhone18,4, iOS 27.2 (24B5099f), a Release
+build of source `abbb067` with the dedicated benchmark-host fix, and synthesized
+en-US speech. The [complete JSON report](benchmarks/2026-10-11-iPhone18-4.json)
+includes every result and outcome. XCTest reports **10 passed, four skipped,
+one failed**: EmbeddingGemma and the shared embedding folder were absent,
+DeepFilterNet3 was absent for both compute modes, and Foundation Models hit
+its rate limit. This is a partial suite result, not a complete acceptance pass.
+
+| Case | Metric | iPhone Air |
+| --- | --- | ---: |
+| EOU 160 ms | window p50 / p95 | 17.22 / 25.23 ms |
+| | RTFx | 11.18× |
+| EOU 320 ms | window p50 / p95 | 23.22 / 30.63 ms |
+| | window p95 / hop | 9.57% |
+| | RTFx | 43.42× |
+| | finish p95 | 7.37 ms |
+| | footprint growth | 223.73 MB |
+| EOU 1280 ms | window p50 / p95 | 41.42 / 51.26 ms |
+| | RTFx | 124.12× |
+| TDT v3 | RTFx | 167.81× |
+| WeSpeaker | 1.5 s embedding p50 / p95 | 38.71 / 94.30 ms |
+| | 3 s embedding p50 / p95 | 78.97 / 241.67 ms |
+| CAM++ | 1.5 s embedding p50 / p95 | 281.26 / 298.82 ms |
+| | 3 s embedding p50 / p95 | 293.01 / 340.71 ms |
+| Index, 50k chunks | hybrid search p95 | 2.48 ms |
+| Retrieval, 50k chunks | whole search p95 | 15.82 ms |
+
+These measurements do not establish the A17 budget. The EOU-320 decision still
+requires at least two physical iPhones and the background-ANE probe; neither
+has been substituted with simulator or Mac measurements.
+
+### iPhone Air with the minimal benchmark host, 2026-10-11
+
+The signed Release host at `be0c1a7` keeps the device awake while its
+foreground benchmarks run. Its host, benchmark, package and XcodeGen
+sources are byte-identical to the prepared `c1d918e` branch. The complete
+[second physical report](benchmarks/2026-10-11-iPhone18-4-minimal-host.json)
+retains all 15 results: **12 passed, two skipped, one failed**. Both
+DeepFilterNet3 configurations now run with the pinned bundled model;
+EmbeddingGemma and the shared embedding bundle remain unavailable, and
+Foundation Models again reports its session rate limit. Speech is
+synthesized en-US; this is not a microphone or background probe.
+
+| Case | Metric | iPhone Air |
+| --- | --- | ---: |
+| EOU 320 ms | window p50 / p95 | 24.80 / 31.76 ms |
+| | window p95 / hop | 9.93% |
+| | RTFx | 28.83× |
+| | finish p95 | 12.71 ms |
+| | footprint growth | 216.88 MB |
+| DeepFilterNet3, CPU | frame p95 / delay | 1.322 / 30.0 ms |
+| DeepFilterNet3, CPU + Neural Engine | frame p95 / delay | 1.319 / 30.0 ms |
+| Apple voice isolation | frame p95 / delay | 0.333 / 58.31 ms |
+| Apple high-quality voice isolation | frame p95 / delay | 0.600 / 94.44 ms |
+| Index, 50k chunks | hybrid search p95 | 2.47 ms |
+| Retrieval, 50k chunks | whole search p95 | 18.50 ms |
+
+The configured compute units do not by themselves prove which processor
+ran every model operation. These A19 measurements do not establish the
+A17 budget, the second-device EOU decision or locked/background behavior.
+The preceding report and its missing-model and rate-limit outcomes remain
+preserved.
+
+### Other iPhones (pending)
 
 Fill this table from the reports (`BenchmarkReport.comparisonTable` renders
 it from the JSON). Release builds only. Rows marked *budget* feed the
@@ -380,8 +449,11 @@ latency budget.
 partials, since end of utterance, not partial text, gates the turn. 160 ms
 is not a fallback (see above).
 
-**Verdict: pending.** No iPhone has reported yet (`.pending("0 of 2 iPhones
-reported qualifying results")`). Provisionally EOU-320 stays the default:
+**Verdict: pending.** The first iPhone Air run meets the EOU-320 latency,
+throughput and memory budgets with nominal thermal state at both endpoints.
+One of the required two physical iPhones has reported qualifying results;
+the second-device measurement and background probe remain outstanding.
+Provisionally EOU-320 stays the default:
 FluidAudio documents 14× RTFx for it on LibriSpeech (source comment on
 `StreamingChunkSize.ms320`), and on the loaded Mac its burst p95 used 15% of
 the hop and its paced p95 54%, a load-induced miss that has to be checked
@@ -969,3 +1041,122 @@ machine; `BLAU_INDEX_BENCHMARK=1 swift test -Xswiftc -O --scratch-path
    verdict.
 3. Update the ASR, Voice ID and Perf rows of "Key decisions" in #1, and the
    Parakeet research brief's background note, with the verdicts.
+
+## Mac installation and second-pass acceptance (2026-10-11)
+
+The real pinned-model download smoke test passed with Silero, WeSpeaker,
+EOU-320, EOU-1280, TDT v3 and language ID on an M3 Max (128 GB, macOS 27.2).
+It verifies ready states, production model loading, offline relaunch, and
+backup exclusion. First launch took 179.47 s; the store occupied 1.003 GB.
+
+Both real-model second-pass fixture tests also passed. All 11 isolated
+sentences were capitalized and punctuated (WER 0.89%). In the streaming
+refinement fixture, WER fell from 5.36% to 2.68%. These are Mac results;
+the physical-device and live conversation acceptance criteria remain open.
+The pinned revisions, timings, assertions and scope are recorded in
+[the installation report](benchmarks/2026-10-11-model-installation-mac.json).
+
+## Mac memory evaluation acceptance (2026-10-11)
+
+The full memory evaluation passed all 30 committed regression checks on
+production source `093c20f`, using Apple's on-device model as both reader
+and judge with answers required. On the M3 Max, hybrid Recall@5 was 91.1%
+and Complete@5 was 88.4%; 89 of 115 answers were correct (77.4%), with no
+model-call failures. The answer stage took 136.17 s. Retrieval and answer
+scores match the committed baseline; thresholds and baselines were unchanged.
+
+This evaluates the 265-chunk fixture index with recorded Qwen3 256-d int8
+vectors, rather than live EmbeddingGemma inference. It does not establish
+physical-phone latency, live Grok tool calls or cross-device indexing.
+[The complete report](benchmarks/2026-10-11-memory-eval-mac.json) retains
+all 115 rankings, answers and judge decisions, including incorrect answers.
+
+## Mac ASR and topic acceptance (2026-10-11)
+
+At source `093c20f`, the full ASR evaluation passed all 25 existing gates
+on both the default backend and CPU-only execution, without changing the
+baseline or thresholds. EOU-320 streaming WER was 9.8% and audio-time EOU
+p95 was 1,495 ms on both backends; TDT v3 WER was 1.7%. The complete
+[default report](benchmarks/2026-10-11-asr-eval-mac-default.json) and
+[CPU report](benchmarks/2026-10-11-asr-eval-mac-cpu.json) preserve every
+fixture result, including the one unended streaming utterance.
+
+The existing real-model hour replay also passed: 704 utterances across
+7,808 chunks in 148.02 s, settled chunk mean 18.74→18.56 ms and zero
+rounded-MB footprint growth. This replays an hour of audio using scripted
+VAD and a manual clock; it does not establish locked/background phone
+behavior or two hours of physical-device leak acceptance.
+
+All three real Foundation Models topic tests passed. Every one of 22
+fixture labels stayed within five words; p50/p90 latency was 1.66/1.87 s.
+The model confirmed all eight true boundaries but vetoed zero of one brief
+digression. The separate streaming hysteresis tests cover that digression.
+[The hour/topic report](benchmarks/2026-10-11-asr-hour-topic-labels-mac.json)
+records all minute samples and these limitations.
+
+## Instruments verification on the M3 Max
+
+At `093c20f`, the real HUD timing tap, CPU clock and memory probe matched Instruments within every original tolerance: all 450 paired intervals (nine kinds × 50), whole-load CPU 50.4% versus 50.3%, and footprint 104.7 MB in both. The committed Instruments template opened with all 14 configured instruments and captured all 25 canonical intervals, nine times each, from the real package signpost emitters. [The full report](benchmarks/2026-10-11-instruments-mac.json) retains the readings and both verification logs. These Mac checks do not establish physical-phone HUD display overhead, audio, or background acceptance.
+
+The original five-window Release HUD display test at `26cd0ba` measured 0.654% of one core in the local iPhone 17 simulator (shown minus hidden CPU time over ten seconds). The latest CI simulator result was 1.280% against the separate 1% roadmap target; its existing regression comparison passed. Both measurements are retained in the report. Physical-phone display overhead remains pending.
+
+## Two-hour simulator soak (2026-10-11)
+
+At `1355658`, two sessions each ran 121 minutes of synthetic audio at 10× on
+an iOS 27 simulator. Both passed all eight original checks: 265 utterances
+were answered, no capture or subscriber frames were lost, and session
+renewal reseeded the new connection. Footprint slopes were +0.39 and
++0.54 MB per audio hour, below the unchanged 2 MB limit. The profiled run's
+six leak readings stayed at 56 blocks / 1,792 bytes, with zero growth.
+[The complete report](benchmarks/2026-10-11-two-hour-soak-simulator.json)
+preserves both sessions, every sample and the original thresholds. These
+sessions use scripted ASR, controlled speaker scores and a local realtime
+server; the weekly physical-phone run with real models remains pending.
+
+## Original roadmap acceptance audit
+
+[The acceptance ledger](benchmarks/2026-10-11-roadmap-acceptance.json) preserves all 79 original concrete task bodies and their 192 acceptance or regression criteria, with evidence and qualifications for each. It distinguishes passing source, unit, simulator, Mac real-model and physical-device checks from remaining work. Two-device sync, live xAI/audio/background timing, gated model access and TestFlight still need acceptance evidence; the integration PR is awaiting its current required CI.
+
+### Public Qwen conversion candidate (2026-10-11)
+
+The complete [Mac conversion report](benchmarks/2026-10-11-qwen-coreml-mac.json)
+uses the cached, pinned Qwen3-Embedding-0.6B checkpoint. Loading its reference
+weights explicitly as float32 fixes the earlier bfloat16-to-NumPy failure;
+the regression failed before the fix and all 12 offline converter checks pass
+after it. The full evaluation contains 200 retrieval queries and 216 documents.
+Both CPU and CPU/Neural Engine predictions are finite. Recall@5 is 0.8092
+for the reference, 0.7992 on CPU and 0.7967 with CPU/Neural Engine; the report
+retains those quantization differences.
+
+The compiled hosting folder is 609,331,156 bytes, above the original 400 MB
+model budget. It is a candidate, with no change to the selected model or
+hosting destination. EmbeddingGemma access remains unavailable. A signed
+benchmark host containing this candidate is prepared; the [original on-phone batch-of-32 measurement](benchmarks/2026-10-11-iPhone18-4-qwen-batch32.json) now passes on the physical Air A19 Pro. Its10measured iterations at124.125mean tokens give p50 **1,008.035 ms** and p95 **1,151.134 ms**, within the unchanged **1,600 ms** budget. Coldload is17,205.504ms; reported footprint451.064MB and Neural Engine growth424.469MB are retained. A17,model selection,download size and hosting acceptance remain pending.
+
+### Physical Foundation Models standalone run (2026-10-11)
+
+The [complete standalone Air report](benchmarks/2026-10-11-iPhone18-4-foundation-models-isolated.json)
+passes the original benchmark after more than30minutes of idle time following
+the full-suite rate-limit failure. The original cold request and12warm plus12
+prewarmed requests are unchanged. All25titles meet the word limit; cold latency
+is4,180ms,warm p50/p95 is1,989/2,476ms,and prewarmed p50/p95 is1,997/2,218ms.
+Both preceding full-suite rate-limit failures remain recorded. This result
+qualifies the standalone A19 Pro measurement; it does not establish rate-limit
+recovery in a conversation or A17,two-device or background acceptance.
+
+The original real-model Swift topic suite also passes on the int8 Qwen
+candidate on Mac. Allfive scripted transcripts retain their labelled
+boundaries, including the brief digression and re-segmentation. Mean Pk is
+0.000 against the unchanged0.25limit at the default0.5depth. The
+[complete original output](benchmarks/2026-10-11-qwen-topics-mac.json) is
+retained; selected-model,A17and live-conversation acceptance remain pending.
+
+The existing four-bit weight option was also measured with the fixed float32
+reference loader. Its [complete Mac report](benchmarks/2026-10-11-qwen-coreml-int4-mac.json)
+retains the full200-query evaluation. Hosting size is415,991,310bytes, still
+above the unchanged400,000,000-byte limit. CPU/CPU+Neural Engine Recall@5 is
+0.8067/0.8042, but minimum256-dimensional cosine to the reference drops to
+0.85254/0.85066. Both outputs remain finite. CPU+Neural Engine128-tokenp95
+is61.98ms; the compute plan assigns95.7% of estimated cost to CPU and1.51%
+to the Neural Engine. These are Mac measurements and plan estimates. This
+variant remains a candidate; no budget or model-selection change was made.

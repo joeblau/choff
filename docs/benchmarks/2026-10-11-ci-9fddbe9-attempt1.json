@@ -1,0 +1,82 @@
+{
+  "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+  "run": 38146960809,
+  "attempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "watch_session": 4216,
+  "watch_exit": 1,
+  "end_to_end_seconds": 2409,
+  "original_runtime_target_seconds": 900,
+  "functional": {
+    "selected": 93,
+    "passed": 91,
+    "failed": 0,
+    "skipped": 2
+  },
+  "functional_shards": {
+    "1": {
+      "selected": 24,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 1
+    },
+    "2": {
+      "selected": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "3": {
+      "selected": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "4": {
+      "selected": 23,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "native": {
+    "selected": 310,
+    "passed": 302,
+    "failed": 0,
+    "skipped": 8
+  },
+  "package": {
+    "selected": 3314,
+    "passed": 3246,
+    "failed": 0,
+    "skipped": 68
+  },
+  "ui_performance": {
+    "selected": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "original_expansion_ms": [
+    109.5,
+    60.2,
+    68.9,
+    59.1,
+    54.1
+  ],
+  "original_expansion_limit_ms": 100,
+  "failures": [
+    {
+      "failureText": "XCTAssertLessThan failed: (\"109.5\") is not less than (\"100.0\") - Expanding took 109.5 ms (109.5 ms, 60.2 ms, 68.9 ms, 59.1 ms, 54.1 ms)",
+      "targetName": "BlauUITests",
+      "testIdentifier": 1,
+      "testIdentifierString": "TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds()",
+      "testIdentifierURL": "test://com.apple.xcode/Blau/BlauUITests/TopicDetailUITests/testTappingExpandsWithinAHundredMilliseconds",
+      "testName": "testTappingExpandsWithinAHundredMilliseconds()"
+    }
+  ],
+  "terminal_jobs": "/tmp/voice-ci-9fddbe9-attempt1-terminal-jobs.json",
+  "full_log": "/tmp/voice-ci-9fddbe9-attempt1-full.log",
+  "scope": "All93 original functional UI cases selected:91PASS,two existing skips, including original accessibility audits and creation/onboarding assertions. Native302PASS/eight existing skips includes new actual-priority regression and prior failing deleted-profile case. Only expansion first sample failed. Aggregate app-tests correctly failed. Exact-source repeat is a reproducibility assessment, not a causal fix or original criterion completion. Original100ms and900s budgets retained."
+}
