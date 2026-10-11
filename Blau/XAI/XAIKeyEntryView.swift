@@ -45,6 +45,11 @@ struct XAIKeyEntryView: View {
                 .submitLabel(.go)
                 .focused($isFieldFocused)
                 .onSubmit(connect)
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    isFieldFocused = true
+                }
                 .disabled(account.isBusy)
                 .accessibilityIdentifier(XAIKeyIdentifiers.field)
                 .onChange(of: input) {
