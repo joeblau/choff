@@ -143,7 +143,8 @@
             "CI 38114217207 restores Swift package cache, but UI shard 1 runs 1432 seconds against original 900-second target",
             "CI 38123804979 at2acfe8c completed allrequiredPASS but2277seconds end-to-end, exceeding original900seconds warm-cache target. LongestUIjob1501seconds. Original runtime requirement remains failed.",
             "Two-worker experiment PR190 at d47201b CI 38127622172 remains inprogress beyond 900 s. Completed UI 1: Build 127 / Warm 208 / Test 693 s; UI 4: Build 121 / Warm 179 / Test 596 s. Separate unchanged expansion job FAIL: 63.8/106.4/79.2/134.4/102.3 ms versus 100 ms. No limits or assertions changed; remaining UI 2 and whole-run terminal measurements pending.",
-            "Latestexact822 CI38140894068 completed1945s>original900s; 90functionalPASS1accessibilityFAIL2existingSKIP. Prior2422sA1/3281sf97/2950s8shard experiment retained. No runtime target weakened. /tmp/voice-ci-8220638-terminal-report.json"
+            "Latestexact822 CI38140894068 completed1945s>original900s; 90functionalPASS1accessibilityFAIL2existingSKIP. Prior2422sA1/3281sf97/2950s8shard experiment retained. No runtime target weakened. /tmp/voice-ci-8220638-terminal-report.json",
+            "Latestexact36943d3 CI38144326888 terminal2183s>900. All91functionalPASS/twoexistingSKIP; one nativeprofileconditionwaitfailure. Earlier1945/2422/3281/2950s results retained; no runtime improvement claimed."
           ]
         }
       ],
@@ -2532,7 +2533,7 @@
       "criteria": [
         {
           "requirement": "Accessibility Inspector audit clean",
-          "completion": "failed current original acceptance",
+          "completion": "verified",
           "evidence": [
             "CI 38114217207 fails its original history audit at eeb5ed4",
             "Native corrective candidate passes both history audits on iOS 27 with original audit rules",
@@ -2543,7 +2544,8 @@
             "/tmp/voice-ci-242-ui4-tests.json",
             "Source2acfe8c iOS26 original normal and AX5 history audits pass; seven topic-detail tests include one AX5 failure opening detail (No topic detail). Current complete AX5 functional validation remains unresolved.",
             "Current sourcea122d7e: ten original topic-detail/history-audit/collapse cases pass on each of iOS26 and iOS27, zero failures/skips. AX5 actions now pass; original audits/exclusions unchanged. Expansion samples26:40.3/11.9/15.8/12.3/12.6ms;27:27.1/21.4/25.5/19.3/25.7ms, original100ms limit.",
-            "Exacthead8220638 CI38140894068 testTimelineAtTheLatestLineFAIL: Contrast failed, StaticText48 Continue frame(28,477,114,44) invisibleinactualscreenshot, collapsedmountedtopic. Priorpassing localhistory/AX5audit retained; newleafvisibilitycandidatepending. /tmp/voice-ci-8220638-ui2-latest-audit-activities.json"
+            "Exacthead8220638 CI38140894068 testTimelineAtTheLatestLineFAIL: Contrast failed, StaticText48 Continue frame(28,477,114,44) invisibleinactualscreenshot, collapsedmountedtopic. Priorpassing localhistory/AX5audit retained; newleafvisibilitycandidatepending. /tmp/voice-ci-8220638-ui2-latest-audit-activities.json",
+            "Exact36943d3 CI38144326888 all93functional cases executed,91PASS/twoexistingSKIP; alloriginalaccessibilityauditsPASS, includingpreviousghostContinuecontrastcase. All11 originalaudits/topic actionsPASSbothOSlocally, source-qualified report2026-10-11-collapsed-action-accessibility.json. WholeCI failed separate nativeprofileconditionwait; no green-mainclaim."
           ],
           "qualification": "Current original automated accessibility equivalent audits and AX5 UI cases pass; earlier failures remain recorded above."
         },
@@ -2924,9 +2926,9 @@
   "all_original_criteria_verified": false,
   "last_evidence_update": "2026-10-11T12:43:14.490650+00:00",
   "criteriaStatusCounts": {
-    "verified": 124,
+    "verified": 125,
     "not yet proven in this acceptance audit": 44,
-    "failed current original acceptance": 2,
+    "failed current original acceptance": 1,
     "partially verified": 16,
     "verified on Mac real-model replay": 2,
     "verified on public evaluation set": 1,

@@ -1,0 +1,56 @@
+{
+  "source": "36943d3fe3f313cea67540072d5fc042db4db3c4",
+  "run": 38144326888,
+  "status": "completed",
+  "conclusion": "failure",
+  "watch_exit": 1,
+  "end_to_end_seconds": 2183,
+  "original_runtime_target_seconds": 900,
+  "functional": {
+    "selected": 93,
+    "passed": 91,
+    "failed": 0,
+    "skipped": 2
+  },
+  "native": {
+    "selected": 309,
+    "passed": 300,
+    "failed": 1,
+    "skipped": 8
+  },
+  "package": {
+    "selected": 3314,
+    "passed": 3246,
+    "failed": 0,
+    "skipped": 68
+  },
+  "original_expansion_ms": [
+    81.8,
+    73.7,
+    73.8,
+    50.2,
+    76.3
+  ],
+  "original_expansion_limit_ms": 100,
+  "failures": [
+    {
+      "failureText": "Issue recorded: Timed out waiting for condition",
+      "targetName": "BlauTests",
+      "testIdentifier": 196,
+      "testIdentifierString": "ProfileMemoryAppTests/aDeletedFactLeavesTheProfileAtTheNextActivation()",
+      "testIdentifierURL": "test://com.apple.xcode/Blau/BlauTests/ProfileMemoryAppTests/aDeletedFactLeavesTheProfileAtTheNextActivation()",
+      "testName": "aDeletedFactLeavesTheProfileAtTheNextActivation()"
+    }
+  ],
+  "collection_original_case": {
+    "result": "Passed",
+    "whole_case_seconds": 57.010846972465515,
+    "original_limit_seconds": 60,
+    "original_actions_assertions_timer_unchanged": true
+  },
+  "onboarding_fresh_case": {
+    "result": "Passed",
+    "whole_case_seconds": 54.04431509971619
+  },
+  "scope": "All original93 functional tests executed:91PASS,two existing long-test skips; all original accessibility audits passed. Only native profile-removal condition wait failed; consolidation completed shortly after the guard expired. Controlled priority RED/GREEN correction is committed34d3783 outside this CI. All original gates and limits retained; whole CI failed."
+}
