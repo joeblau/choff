@@ -66,13 +66,16 @@ jobs:
         run: make build-tests
 
       - name: Preserve application debug symbols and runner details
+        continue-on-error: true
         run: |
           mkdir -p .build/results/profile-symbols
           app=.build/DerivedData/Build/Products/Debug-iphonesimulator/Choff.app
-          dsymutil "$app/Choff.debug.dylib" -o .build/results/profile-symbols/Choff.debug.dylib.dSYM
-          shasum -a 256 "$app/Choff.debug.dylib" > .build/results/profile-symbols/binary.sha256
           xcodebuild -version > .build/results/profile-symbols/xcode.txt
           sysctl hw.ncpu hw.memsize > .build/results/profile-symbols/host.txt
+          binary="$app/Choff"
+          if [[ -f "$app/Choff.debug.dylib" ]]; then binary="$app/Choff.debug.dylib"; fi
+          shasum -a 256 "$binary" > .build/results/profile-symbols/binary.sha256
+          dsymutil "$binary" -o .build/results/profile-symbols/Choff.dSYM > .build/results/profile-symbols/dsymutil.log 2>&1
 
       - name: Warm up simulator
         timeout-minutes: 15
