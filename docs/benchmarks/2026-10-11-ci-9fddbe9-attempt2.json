@@ -1,0 +1,98 @@
+{
+  "source": "9fddbe91f5d704bccfb08c9e2f959d95c4259ac2",
+  "run": 38146960809,
+  "attempt": 2,
+  "status": "completed",
+  "conclusion": "success",
+  "watch_session": 50333,
+  "watch_exit": 0,
+  "reexecuted_job": "app-ui-performance",
+  "reexecuted_test_count": 1,
+  "original_expansion_ms": [
+    31.4,
+    28.5,
+    28.7,
+    28.2,
+    32.7
+  ],
+  "original_expansion_limit_ms": 100,
+  "original_latency_attachment": {
+    "path": "/tmp/voice-ci-9fddbe9-attempt2-perf-attachments/7A10A707-3A06-455D-B857-790977BA95F9.txt",
+    "contents": "Tap \u2192 expanded: 31.4 ms, 28.5 ms, 28.7 ms, 28.2 ms, 32.7 ms"
+  },
+  "summary": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "CD85F334-D4C3-44B6-A7B8-EAABB9C6C1B4",
+          "deviceName": "iPhone 17",
+          "modelName": "iPhone 17",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        },
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "passedTests": 1,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Default"
+        }
+      }
+    ],
+    "environmentDescription": "Blau \u00b7 Built with macOS 27.0.1",
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "finishTime": 1791731769.862,
+    "passedTests": 1,
+    "result": "Passed",
+    "runtimeWarnings": [],
+    "skippedTests": 0,
+    "startTime": 1791731689.115,
+    "statistics": [],
+    "testFailures": [],
+    "title": "Test - Blau",
+    "topInsights": [],
+    "totalTestCount": 1
+  },
+  "required_component_conclusions": {
+    "lint": "success",
+    "package-tests": "success",
+    "app-unit-tests": "success",
+    "perf-kit": "success",
+    "app-ui-performance": "success",
+    "app-tests": "success",
+    "app-ui-tests (1/4)": "success",
+    "app-ui-tests (2/4)": "success",
+    "app-ui-tests (3/4)": "success",
+    "app-ui-tests (4/4)": "success"
+  },
+  "successful_components_carried_from_attempt1": {
+    "functional": {
+      "selected": 93,
+      "passed": 91,
+      "failed": 0,
+      "skipped": 2
+    },
+    "native": {
+      "selected": 310,
+      "passed": 302,
+      "failed": 0,
+      "skipped": 8
+    },
+    "package": {
+      "selected": 3314,
+      "passed": 3246,
+      "failed": 0,
+      "skipped": 68
+    }
+  },
+  "first_attempt_report": "docs/benchmarks/2026-10-11-ci-9fddbe9-attempt1.json",
+  "original_full_pipeline_seconds": 2409,
+  "original_full_pipeline_limit_seconds": 900,
+  "original_runtime_target_achieved": false,
+  "original_issue58_complete": false,
+  "qualification": "Only the failed original expansion job reran on unchanged source. Its five samples passed; GitHub carried forward preceding successful components and reran aggregate app-tests. First109.5ms failure is retained; no causal correction or robust original58completion is established. The full first-attempt warm-cache runtime remains2409s>900; this partial repeat is not a whole-pipeline runtime measurement."
+}

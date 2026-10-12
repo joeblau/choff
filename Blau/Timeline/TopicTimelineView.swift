@@ -210,6 +210,7 @@ private struct TopicTimelineScrollView: View {
 
     @Environment(AppEnvironment.self) private var environment
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.continueTopic) private var continueTopic
     @State private var expansion = TopicExpansion()
     /// Rename, merge and split from any bullet, detail or line (#54, #58).
@@ -233,6 +234,9 @@ private struct TopicTimelineScrollView: View {
     /// tapped bullet stays put.
     @State private var topAnchorHolds = 0
     @State private var position = ScrollPosition(idType: TopicTimeline.ItemID.self)
+    /// Measure the viewport without giving the floating controls a full-size
+    /// hit-testing surface over the history on iOS 26.
+    @State private var historySize: CGSize = .zero
     @Namespace private var rotor
 
     var body: some View {
@@ -249,7 +253,9 @@ private struct TopicTimelineScrollView: View {
 
     private var history: some View {
         ScrollView {
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+            // The current title already stays fixed. Large history headings
+            // scroll so they cannot cover the detail actions beneath them.
+            LazyVStack(spacing: 0, pinnedViews: dynamicTypeSize.isAccessibilitySize ? [] : [.sectionHeaders]) {
                 if timeline.hasOlderHistory {
                     EarlierHistoryRow()
                         .id(TopicTimeline.ItemID.earlier)
@@ -274,6 +280,11 @@ private struct TopicTimelineScrollView: View {
         // On the scroll view itself, not on this view: an identifier set
         // outside the overlay would also replace the Now pill's.
         .accessibilityIdentifier(MainScreenAccessibility.content)
+        .onGeometryChange(for: CGSize.self) { geometry in
+            geometry.size
+        } action: { _, size in
+            historySize = size
+        }
         .scrollPosition($position)
         .defaultScrollAnchor(.bottom, for: .initialOffset)
         .defaultScrollAnchor(.bottom, for: .alignment)
@@ -321,17 +332,18 @@ private struct TopicTimelineScrollView: View {
             ZStack {
                 if !isAtBottom {
                     VStack(spacing: 8) {
-                        // Grok's words stay on screen while its row is out
-                        // of view (#81).
-                        LiveCaption(model: environment.chat, conversationID: timeline.current?.conversationID)
+                        // Fit the caption below the pinned title without
+                        // covering all the history at large text sizes.
+                        LiveCaption(
+                            model: environment.chat, conversationID: timeline.current?.conversationID,
+                            availableSize: historySize)
                         NowButton(action: returnToNow)
                     }
                     .padding(.bottom, 12)
                     .transition(Motion.slide(from: .bottom, reduceMotion: reduceMotion))
                 }
             }
-            // Only the floating controls animate, not the timeline's own
-            // layout when `isAtBottom` flips.
+            // Only floating controls animate when `isAtBottom` flips.
             .animation(reduceMotion ? nil : .snappy, value: isAtBottom)
         }
         // VoiceOver hears when a new topic opens or its title is refined.

@@ -16,7 +16,7 @@ Files shows as **iCloud Drive → Choff** and Finder as **iCloud Drive → Choff
 | ------- | ----- | --- |
 | Entitlement `com.apple.developer.icloud-services` | adds `CloudDocuments` to `CloudKit` | iCloud Drive (documents) for the container |
 | Entitlement `com.apple.developer.ubiquity-container-identifiers` | `iCloud.com.joeblau.choff` | The container `FileManager.url(forUbiquityContainerIdentifier:)` opens |
-| Info.plist `NSUbiquitousContainers` → `iCloud.com.joeblau.choff` | `NSUbiquitousContainerIsDocumentScopePublic: true`, `NSUbiquitousContainerName: Blau`, `NSUbiquitousContainerSupportedFolderLevels: Any` | Publishes `Documents` to iCloud Drive under the name **Choff** |
+| Info.plist `NSUbiquitousContainers` → `iCloud.com.joeblau.choff` | `NSUbiquitousContainerIsDocumentScopePublic: true`, `NSUbiquitousContainerName: Choff`, `NSUbiquitousContainerSupportedFolderLevels: Any` | Publishes `Documents` to iCloud Drive under the name **Choff** |
 
 Things to know (Apple's "Configuring iCloud services"):
 

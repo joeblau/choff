@@ -28,7 +28,7 @@ CloudKit schema deploy and the privacy manifest.
 
    ```sh
    git switch main && git pull
-   git tag -a v0.1.0 -m "Blau 0.1.0"
+   git tag -a v0.1.0 -m "Choff 0.1.0"
    git push origin v0.1.0
    ```
 
@@ -354,7 +354,7 @@ and tick it there.
       `verify-report.md`): distribution signature, `iCloud.com.joeblau.choff`,
       `CloudKit`, `aps-environment = production` and the Production iCloud
       environment. For a build made outside the workflow, run
-      `scripts/release/release.py verify-ipa --ipa Blau.ipa --version <v> --build <n>`.
+      `scripts/release/release.py verify-ipa --ipa Choff.ipa --version <v> --build <n>`.
 - [ ] Release builds never run `initializeCloudKitSchema()`
       (`SchemaInitializationPolicy.never`, covered by `PersistenceOptionsTests`).
 - [ ] Install the TestFlight build on two devices on the same iCloud account

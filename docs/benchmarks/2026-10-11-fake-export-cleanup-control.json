@@ -1,0 +1,33 @@
+{
+  "source": "0734f9d3b4a06f5331d42c46ccf3382611ee48dc",
+  "app_base": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+  "change": "Only live AppEnvironment startup removes stale DataExport files. Fake startup leaves files owned by another environment alone.",
+  "regression_red": {
+    "selected": 19,
+    "passed": 17,
+    "failed": 2,
+    "skipped": 0,
+    "new_parameter_failures": [
+      "preview",
+      "unitTest"
+    ],
+    "original_case_failed": "removingOneExportLeavesALaterOne()",
+    "qualification": "Unmodified main application source with the new regression test only. Late fake cleanup also broke the original export test."
+  },
+  "regression_green": {
+    "selected": 19,
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0,
+    "all_three_non_live_kinds_pass": true
+  },
+  "native": {
+    "totalTestCount": 311,
+    "passedTests": 303,
+    "failedTests": 0,
+    "skippedTests": 8
+  },
+  "source_hash_matches_all_controls": true,
+  "lint": "1100 Swift files strict clean",
+  "qualification": "Fix proves non-live startup isolation and clears the locally reproduced failure. Full fresh CI remains pending; older UI timeouts and latency failures are not waived or attributed to this cleanup."
+}

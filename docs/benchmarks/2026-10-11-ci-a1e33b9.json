@@ -1,0 +1,59 @@
+{
+  "source": "a1e33b92310e9b685769e312542a2097505966c4",
+  "run": 38137282198,
+  "status": "completed",
+  "conclusion": "failure",
+  "watch_exit": 1,
+  "end_to_end_seconds": 2422,
+  "original_runtime_target_seconds": 900,
+  "functional": {
+    "selected": 93,
+    "passed": 89,
+    "failed": 2,
+    "skipped": 2
+  },
+  "native": {
+    "selected": 309,
+    "passed": 301,
+    "failed": 0,
+    "skipped": 8
+  },
+  "package": {
+    "selected": 3314,
+    "passed": 3246,
+    "failed": 0,
+    "skipped": 68
+  },
+  "original_expansion_ms": [
+    76.8,
+    45.7,
+    32.2,
+    43.5,
+    52.5
+  ],
+  "original_expansion_limit_ms": 100,
+  "failures": [
+    {
+      "failureText": "Failed to get matching snapshots: Timed out while evaluating UI query.",
+      "targetName": "BlauUITests",
+      "testIdentifier": 8,
+      "testIdentifierString": "KnowledgeBaseUITests/testAboutMeCompanyAndNotesSaveAsYouType()",
+      "testIdentifierURL": "test://com.apple.xcode/Blau/BlauUITests/KnowledgeBaseUITests/testAboutMeCompanyAndNotesSaveAsYouType",
+      "testName": "testAboutMeCompanyAndNotesSaveAsYouType()"
+    },
+    {
+      "failureText": "XCTAssertLessThan failed: (\"86.4466689825058\") is not less than (\"60.0\") - Creating the collection took 86.4466689825058 s",
+      "targetName": "BlauUITests",
+      "testIdentifier": 8,
+      "testIdentifierString": "KnowledgeBaseUITests/testPastingThirtyQuestionsCreatesACollectionInUnderAMinute()",
+      "testIdentifierURL": "test://com.apple.xcode/Blau/BlauUITests/KnowledgeBaseUITests/testPastingThirtyQuestionsCreatesACollectionInUnderAMinute",
+      "testName": "testPastingThirtyQuestionsCreatesACollectionInUnderAMinute()"
+    }
+  ],
+  "onboarding_fresh_case": {
+    "result": "Passed",
+    "whole_case_seconds": 78.77118396759033,
+    "source_test_unchanged": true
+  },
+  "scope": "OriginalCIgateall93functionalcases executed. Allsuccessfulcomponents/previousfailuresretained. Direct-IDquerycandidateandnewHUDfollow-up outside thisrun."
+}

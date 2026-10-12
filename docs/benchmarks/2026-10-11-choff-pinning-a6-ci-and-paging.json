@@ -1,0 +1,128 @@
+{
+  "source": "a6aa24fb77aac62b1831a8b117dabf4a6b1848a4",
+  "run": 38163558249,
+  "attempt": 1,
+  "status": "completed",
+  "conclusion": "success",
+  "required_job_successes": [
+    "app-tests",
+    "app-ui-performance",
+    "app-ui-tests (1/4)",
+    "app-ui-tests (2/4)",
+    "app-ui-tests (3/4)",
+    "app-ui-tests (4/4)",
+    "app-unit-tests",
+    "lint",
+    "package-tests",
+    "perf-kit"
+  ],
+  "optional_existing_skips": [
+    "memory-eval",
+    "perf",
+    "soak",
+    "asr-eval"
+  ],
+  "native": {
+    "selected": 310,
+    "passed": 302,
+    "failed": 0,
+    "skipped": 8
+  },
+  "package": {
+    "selected": 3314,
+    "failed": 0,
+    "skipped": 68,
+    "passed": 3246
+  },
+  "functional_shards": {
+    "1": {
+      "selected": 24,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 1
+    },
+    "2": {
+      "selected": 24,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 1
+    },
+    "3": {
+      "selected": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0
+    },
+    "4": {
+      "selected": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "functional": {
+    "selected": 95,
+    "passed": 93,
+    "failed": 0,
+    "skipped": 2
+  },
+  "ui_performance": {
+    "selected": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "original_expansion_ms": [
+    69.8,
+    63.3,
+    72.4,
+    99.2,
+    64.1
+  ],
+  "original_expansion_limit_ms": 100,
+  "end_to_end_seconds": 3322,
+  "original_runtime_target_seconds": 900,
+  "runtime_target_satisfied": false,
+  "all_artifacts": "/tmp/choff-pinning-a6-all-artifacts",
+  "full_log": "/tmp/choff-pinning-a6-full.log",
+  "paging_originals": {
+    "source_hash_matches": true,
+    "ios26": {
+      "selected": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "drags": 212,
+      "movement_pt": [
+        493,
+        532
+      ],
+      "footprint_mb": [
+        56,
+        62
+      ]
+    },
+    "ios27": {
+      "selected": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "drags": 207,
+      "movement_pt": [
+        339,
+        597
+      ],
+      "footprint_mb": [
+        72,
+        93
+      ]
+    },
+    "original_drag_travel_pt": 349.6,
+    "original_fling_limit_pt": 250,
+    "original_slop_pt": 40,
+    "original_memory_growth_limit_mb": 60,
+    "source": "a6aa24fb77aac62b1831a8b117dabf4a6b1848a4",
+    "producer": "/tmp/choff-pinning-a6-paging-producer.json",
+    "scope": "Original 2000-topic fixtures explicitly enabled on both operating systems, no skips. Both owned simulators shut down. Different-source user-requested timeline layout; earlier e6 iOS27 601pt failure retained without cause attribution."
+  }
+}

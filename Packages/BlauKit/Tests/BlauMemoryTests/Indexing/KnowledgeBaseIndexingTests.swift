@@ -127,6 +127,29 @@ struct KnowledgeBaseIndexingTests {
         await indexer.waitUntilIdle()
         #expect(try await IndexerTestSupport.fingerprint(fixture.index) == fixture.reference())
     }
+
+    @Test @MainActor func aCollectionDeletionDoesNotInvalidateAFetchedDocumentSnapshot() async throws {
+        let fixture = try Fixture()
+        let collectionID = UUID()
+        _ = try await fixture.store.saveDocument(
+            collectionID, kind: .collection, title: "Interview questions", body: "")
+        let added = try await fixture.store.addItems(
+            CollectionImport(parsing: ycInterviewPaste).items, to: collectionID
+        ).addedIDs
+
+        // A reader fetched the parent before another context deleted an
+        // item. Loading the relationship's identities doesn't read their
+        // scalar fields; those may still be faults when the deletion lands.
+        let context = ModelContext(fixture.container)
+        let records = try context.fetch(FetchDescriptor<MemoryDocument>())
+        #expect(records.first?.collectionItems?.count == 30)
+        try await fixture.store.deleteItems([added[1]])
+
+        let snapshots = try SwiftDataMemorySources.documentSnapshots(records, in: context)
+        let snapshot = try #require(snapshots.first)
+        #expect(snapshot.items.count == 29)
+        #expect(!snapshot.items.contains { $0.id == added[1] })
+    }
 }
 
 /// Thirty interview questions, one per line, numbered.

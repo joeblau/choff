@@ -1,0 +1,13 @@
+{
+  "merged_head": "b1087c709fe9da286f0ab0a56a752f239746c4ad",
+  "tested_head": "a6aa24fb77aac62b1831a8b117dabf4a6b1848a4",
+  "merged_tree": "f55548bb53522be0284bb2beea3f5cebdd8afd19",
+  "tested_tree": "f55548bb53522be0284bb2beea3f5cebdd8afd19",
+  "tree_matches": true,
+  "pr": 192,
+  "pr_ci_run": 38163558249,
+  "all_ten_expected_jobs_passed": true,
+  "actual_main_ci_run": 38168106603,
+  "actual_main_ci_status_at_recording": "queued",
+  "actual_main_ci_green_verified": false
+}

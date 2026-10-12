@@ -41,6 +41,9 @@ struct TopicDetailHeader: View {
     var body: some View {
         if #available(iOS 27, *) {
             content
+                // Retain the prepared layout, but do not draw collapsed
+                // text beneath the zero-height clipping frame.
+                .opacity(isExpanded ? 1 : 0)
                 .frame(height: isExpanded ? nil : 0)
                 .clipped()
                 .allowsHitTesting(isExpanded)
@@ -104,6 +107,7 @@ struct TopicDetailHeader: View {
                     actionLabel("Continue", systemImage: "arrow.uturn.forward")
                 }
                 .buttonStyle(TopicActionButtonStyle(prominent: true))
+                .accessibilityLabel("Continue")
                 .accessibilityHint("Starts a conversation that picks up this topic")
                 .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.continueTopic : "")
                 .accessibilityHidden(!isExpanded)
@@ -116,6 +120,7 @@ struct TopicDetailHeader: View {
                     actionLabel("Share", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(TopicActionButtonStyle())
+                .accessibilityLabel("Share")
                 .accessibilityHint("Shares the topic as Markdown")
                 .accessibilityIdentifier(isExpanded ? TopicDetailAccessibility.share : "")
                 .accessibilityHidden(!isExpanded)
@@ -142,12 +147,13 @@ struct TopicDetailHeader: View {
         }
     }
 
-    /// Mounted collapsed controls must also hide their text leaves from
-    /// accessibility; a custom button style can expose them independently.
+    /// Each native control supplies its own accessibility label. Styled
+    /// text leaves must not surface as separate elements from a retained
+    /// collapsed header; the native button remains the accessible action.
     private func actionLabel(_ title: LocalizedStringKey, systemImage: String) -> some View {
         Label {
             Text(title)
-                .accessibilityHidden(!isExpanded)
+                .accessibilityHidden(true)
         } icon: {
             Image(systemName: systemImage)
                 .accessibilityHidden(true)

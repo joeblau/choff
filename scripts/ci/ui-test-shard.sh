@@ -8,13 +8,13 @@
 #        scripts/ci/ui-test-shard.sh --check K/N <result.xcresult>
 #
 # Lists every XCTest method in BlauUITests (a `func testX()` in a class or an
-# extension of one), sorts them by "Class/testMethod" and deals them out like
-# cards: the i-th test goes to shard (i mod N) + 1. Dealing single tests rather
-# than whole classes spreads the slow classes (the accessibility audits take
-# about twice as long per test as the rest) evenly over the shards, and a new
-# test lands in a shard without anyone editing a list. Every test is in
-# exactly one shard. In the default all suite the N shards cover the whole
-# target; CI's functional shards plus its performance job do the same.
+# extension of one). Functional shards balance recorded case durations;
+# unrecorded cases use the median duration and remain selected. The default
+# all suite sorts by "Class/testMethod" and assigns the i-th test to shard
+# (i mod N) + 1. Every discovered test is in exactly one shard, without
+# anyone editing a selection list. In the default all suite the N shards
+# cover the whole target; CI's functional shards plus its performance job
+# do the same.
 #
 # The listing is read from the sources, so it fails rather than guess when a
 # test-like method is not where XCTest would find it: a `func testX()` outside
@@ -38,6 +38,8 @@
 #   UI_TEST_SUITE         all (default), functional, or performance. The
 #                         performance suite is the tap-to-expand benchmark;
 #                         functional plus performance covers every test once.
+#   UI_SHARD_TIMINGS      Recorded duration profile for functional shards
+#                         (default scripts/ci/ui-test-durations.json).
 #   XCRESULT_SUMMARY_JSON For --check: read `xcrun xcresulttool get
 #                         test-results summary` output from this file instead
 #                         of running xcresulttool (tests).
@@ -181,7 +183,13 @@ case "$suite" in
     *) die "unknown UI_TEST_SUITE '$suite': expected all, functional, or performance" ;;
 esac
 
-selected="$(awk -v shard="$shard" -v count="$count" '(NR - 1) % count == shard - 1' <<<"$all_tests")"
+if [[ "$suite" == functional && "$count" -gt 1 ]]; then
+    selected="$(python3 "$repo/scripts/ci/balance-ui-shards.py" \
+        "${UI_SHARD_TIMINGS:-$repo/scripts/ci/ui-test-durations.json}" "$spec" <<<"$all_tests")" \
+        || die "could not balance the discovered functional tests"
+else
+    selected="$(awk -v shard="$shard" -v count="$count" '(NR - 1) % count == shard - 1' <<<"$all_tests")"
+fi
 
 case "$mode" in
     list)

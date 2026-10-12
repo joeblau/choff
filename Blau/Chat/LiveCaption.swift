@@ -4,6 +4,7 @@ import BlauPersistence
 import BlauRealtime
 import SwiftData
 import SwiftUI
+import UIKit
 
 /// The accessibility identifiers UI tests use for live captions.
 enum LiveCaptionAccessibility {
@@ -29,6 +30,8 @@ struct LiveCaption: View {
     let model: ChatTranscriptModel
     /// Only the running conversation on screen has a caption.
     let conversationID: UUID?
+    /// Space available to the floating caption, below the pinned title.
+    let availableSize: CGSize
 
     var body: some View {
         if let conversationID, model.conversationID?.rawValue == conversationID,
@@ -37,10 +40,12 @@ struct LiveCaption: View {
             if case .streaming(let item) = row.kind, let progress = model.progress {
                 // As often as the streaming row: a few times a second.
                 TimelineView(.periodic(from: .now, by: 0.05)) { _ in
-                    LiveCaptionCard(text: ChatTranscript.revealedText(of: row.text, played: progress(item)))
+                    LiveCaptionCard(
+                        text: ChatTranscript.revealedText(of: row.text, played: progress(item)),
+                        availableSize: availableSize)
                 }
             } else {
-                LiveCaptionCard(text: row.text)
+                LiveCaptionCard(text: row.text, availableSize: availableSize)
             }
         }
     }
@@ -51,13 +56,12 @@ struct LiveCaption: View {
 struct LiveCaptionCard: View {
     /// Everything heard of the reply so far.
     let text: String
+    let availableSize: CGSize
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        let caption = ChatCaption.tail(
-            of: text, maxCharacters: ChatCaption.maxCharacters(isAccessibilitySize: dynamicTypeSize.isAccessibilitySize)
-        )
+        let caption = LiveCaptionSizing.tail(of: text, availableSize: availableSize, size: dynamicTypeSize)
         if !caption.isEmpty {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Grok")
@@ -81,6 +85,56 @@ struct LiveCaptionCard: View {
             .accessibilityValue(Text(verbatim: caption))
             .accessibilityAddTraits([.isStaticText, .updatesFrequently])
             .accessibilityIdentifier(LiveCaptionAccessibility.caption)
+        }
+    }
+}
+
+/// Measure the caption at its actual width and Dynamic Type size. Keep the
+/// latest whole words while leaving history visible above the floating card.
+/// The full reply remains in the transcript; no font size or line is clipped.
+@MainActor
+enum LiveCaptionSizing {
+    static func tail(of text: String, availableSize: CGSize, size: DynamicTypeSize) -> String {
+        let traits = UITraitCollection(preferredContentSizeCategory: contentSizeCategory(size))
+        let body = UIFont.preferredFont(forTextStyle: .body, compatibleWith: traits)
+        let heading = UIFont.preferredFont(forTextStyle: .footnote, compatibleWith: traits)
+        // Match the card's horizontal margins and padding, and its heading,
+        // spacing and vertical padding. Budget 60% of history, retaining at least
+        // the final whole word when even that word exceeds the budget.
+        let width = max(1, availableSize.width - 60)
+        let height = max(body.lineHeight, availableSize.height * 0.6 - heading.lineHeight - 22)
+        let limit = ChatCaption.maxCharacters(isAccessibilitySize: size.isAccessibilitySize)
+        var caption = ChatCaption.tail(of: text, maxCharacters: limit)
+        var previous: String?
+        for count in stride(from: limit, through: 1, by: -1) {
+            let candidate = ChatCaption.tail(of: text, maxCharacters: count)
+            if candidate == previous { continue }
+            caption = candidate
+            previous = candidate
+            let bounds = (caption as NSString).boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: [.font: body], context: nil)
+            if ceil(bounds.height) <= height { break }
+        }
+        return caption
+    }
+
+    private static func contentSizeCategory(_ size: DynamicTypeSize) -> UIContentSizeCategory {
+        switch size {
+        case .xSmall: .extraSmall
+        case .small: .small
+        case .medium: .medium
+        case .large: .large
+        case .xLarge: .extraLarge
+        case .xxLarge: .extraExtraLarge
+        case .xxxLarge: .extraExtraExtraLarge
+        case .accessibility1: .accessibilityMedium
+        case .accessibility2: .accessibilityLarge
+        case .accessibility3: .accessibilityExtraLarge
+        case .accessibility4: .accessibilityExtraExtraLarge
+        case .accessibility5: .accessibilityExtraExtraExtraLarge
+        default: .large
         }
     }
 }
@@ -127,16 +181,20 @@ enum LiveCaptionFixture {
 }
 
 #Preview("Caption") {
-    VStack {
-        Spacer()
-        LiveCaptionCard(text: LiveCaptionFixture.reply)
+    GeometryReader { geometry in
+        VStack {
+            Spacer()
+            LiveCaptionCard(text: LiveCaptionFixture.reply, availableSize: geometry.size)
+        }
     }
 }
 
 #Preview("Caption, largest text") {
-    VStack {
-        Spacer()
-        LiveCaptionCard(text: LiveCaptionFixture.reply)
+    GeometryReader { geometry in
+        VStack {
+            Spacer()
+            LiveCaptionCard(text: LiveCaptionFixture.reply, availableSize: geometry.size)
+        }
     }
     .dynamicTypeSize(.accessibility5)
 }

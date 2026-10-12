@@ -142,7 +142,7 @@ class ConversionTests(unittest.TestCase):
             tokenizer_object=tokenizer, pad_token="[PAD]", unk_token="[UNK]", eos_token="[EOS]"
         ).save_pretrained(directory)
 
-    def build(self, kind: str, root: Path):
+    def build(self, kind: str, root: Path, dtype=None):
         import torch
         from sentence_transformers import SentenceTransformer
         from sentence_transformers.models import Dense, Normalize, Pooling, Transformer
@@ -162,6 +162,8 @@ class ConversionTests(unittest.TestCase):
             from transformers import Qwen3Config, Qwen3Model
 
             model = Qwen3Model(Qwen3Config(**common))
+        if dtype is not None:
+            model.to(dtype=dtype)
         model.save_pretrained(backbone_dir)
         self.save_tokenizer(backbone_dir)
         modules = [Transformer(str(backbone_dir), max_seq_length=16)]
@@ -178,15 +180,17 @@ class ConversionTests(unittest.TestCase):
         SentenceTransformer(modules=modules, device="cpu").save(str(st_dir))
         return st_dir
 
-    def convert_and_check(self, kind: str, candidate_key: str):
+    def convert_and_check(self, kind: str, candidate_key: str, dtype=None):
         import coremltools as ct
+        import torch
 
         import convert_coreml as cc
 
         with tempfile.TemporaryDirectory() as tmp:
-            st_dir = self.build(kind, Path(tmp))
+            st_dir = self.build(kind, Path(tmp), dtype=dtype)
             candidate = dataclasses.replace(CANDIDATES[candidate_key], full_dimensions=32)
             wrapped = cc.build_wrapper(candidate, str(st_dir))
+            self.assertEqual({parameter.dtype for parameter in wrapped.full.parameters()}, {torch.float32})
             texts = ["w1 w2 w3", "w4 w5 w6 w7 w8 w9 w10", "w11"]
             ids = cc.tokenize(wrapped.st, texts, 16)
             expected = wrapped.st.encode(texts, convert_to_numpy=True)
@@ -215,6 +219,11 @@ class ConversionTests(unittest.TestCase):
 
     def test_qwen3_layout(self):
         self.convert_and_check("qwen", "qwen3-embedding-0.6b")
+
+    def test_bfloat16_checkpoint_uses_float32_reference(self):
+        import torch
+
+        self.convert_and_check("qwen", "qwen3-embedding-0.6b", dtype=torch.bfloat16)
 
 
 if __name__ == "__main__":

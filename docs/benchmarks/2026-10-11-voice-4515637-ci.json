@@ -1,0 +1,71 @@
+{
+  "source": "451563796fe1c9b7b150ac8359014dc3ec6bb26a",
+  "run": 38151500854,
+  "status": "completed",
+  "conclusion": "failure",
+  "created_at": "2026-10-11T15:29:46Z",
+  "updated_at": "2026-10-11T16:44:57Z",
+  "end_to_end_seconds": 4511,
+  "original_runtime_target_seconds": 900,
+  "native": {
+    "selected": 310,
+    "passed": 302,
+    "failed": 0,
+    "skipped": 8
+  },
+  "functional_shards": {
+    "1": {
+      "selected": 24,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 1
+    },
+    "2": {
+      "selected": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "3": {
+      "selected": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "4": {
+      "selected": 23,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "functional": {
+    "selected": 93,
+    "passed": 91,
+    "failed": 0,
+    "skipped": 2
+  },
+  "package": {
+    "selected": 3315,
+    "passed": 3247,
+    "failed": 0,
+    "skipped": 68
+  },
+  "performance": {
+    "selected": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "original_latency_ms": [
+    110.4,
+    56.3,
+    81.2,
+    80.3,
+    61.9
+  ],
+  "original_limit_ms": 100,
+  "attachment": "/tmp/voice-voice4515637-perf-attachments/DA1583E0-A844-4960-B04F-E525164E2F64.txt",
+  "full_log": "/tmp/voice-voice4515637-full.log",
+  "qualification": "Exactvoice451source executes all310native and93functionalUIselections, zero functional failures and only existing skips. Original performancefirstsample110.4fails100ms. New score-reuse regression is covered by package tests, but passing functional components do not make requiredCIgreen. PR188 remains open; no same-source repeat or causal performancefix is claimed."
+}

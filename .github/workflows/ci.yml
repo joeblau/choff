@@ -178,7 +178,7 @@ jobs:
         run: make generate
 
       # Package clones and binary artifacts Xcode resolves into DerivedData.
-      # Build products are not cached: a cold app build is about two minutes.
+      # Complete test products have a separate exact-source cache below.
       - name: Cache Swift packages
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -194,6 +194,39 @@ jobs:
         id: simulator
         run: scripts/ci/simulator-destination.sh
 
+      - name: Resolve app test dependencies
+        run: xcodebuild -resolvePackageDependencies -project Blau.xcodeproj -scheme Blau -derivedDataPath .build/DerivedData
+
+      - name: Fingerprint test build inputs
+        id: products-source
+        run: printf 'fingerprint=%s\n' "$(python3 scripts/ci/test-products.py fingerprint)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache complete test products
+        id: products
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/DerivedData/Build/Products
+          key: app-products-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-debug-coverage-${{ steps.products-source.outputs.fingerprint }}
+
+      - name: Build
+        if: steps.products.outputs.cache-hit != 'true'
+        env:
+          TEST_PRODUCTS_SOURCE: ${{ steps.products-source.outputs.fingerprint }}
+          DESTINATION: ${{ steps.simulator.outputs.destination }}
+          XCODEBUILD_FLAGS: "-enableCodeCoverage YES"
+        run: |
+          make build-tests
+          python3 scripts/ci/test-products.py record --products .build/DerivedData/Build/Products --variant debug-coverage --expected-fingerprint "$TEST_PRODUCTS_SOURCE"
+
+      # Save successful builds before running tests. A failed test remains
+      # failed; its unmodified products can be tested again with a warm cache.
+      - name: Save complete test products
+        if: steps.products.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/DerivedData/Build/Products
+          key: ${{ steps.products.outputs.cache-primary-key }}
+
       # Parallel testing is off: it would clone the simulator per worker,
       # which costs more than it saves on a runner this size. Test
       # diagnostics are off: at the end of the session xcodebuild ran
@@ -202,8 +235,8 @@ jobs:
       - name: Test
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-unit-tests.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never"
-        run: make test-unit
+          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-unit-tests.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never -enableCodeCoverage YES"
+        run: make test-built-unit
 
       - name: Shut down simulator
         if: ${{ always() && steps.simulator.outputs.udid != '' }}
@@ -213,19 +246,17 @@ jobs:
 
       - name: Upload xcresult
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: ./.github/actions/upload-xcresult
         with:
           name: app-unit-tests-xcresult-${{ github.run_attempt }}
           path: .build/results/app-unit-tests.xcresult
           if-no-files-found: warn
           retention-days: 14
 
-  # The UI tests, one slice per matrix job: scripts/ci/ui-test-shard.sh deals
-  # the test methods out over strategy.job-total shards, so adding a shard is
-  # adding a number to the list. The 93 UI tests take 45 to 55 minutes in a
-  # row on the runner; with three shards a job took 24 to 36 minutes (up to 8
-  # of them building and 8 warming the simulator on a busy runner), so four
-  # shards keep each job near half its limit.
+  # Balance recorded functional case durations across independent runners.
+  # Eight groups leave more room for build and simulator startup within the
+  # original 15-minute runtime target; CI must establish actual wall time.
+  # Source discovery and the executed-count gate retain every test.
   app-ui-tests:
     name: app-ui-tests (${{ matrix.shard }}/${{ strategy.job-total }})
     runs-on: ${{ vars.BLAU_CI_RUNNER || 'xcode-27' }}
@@ -235,7 +266,7 @@ jobs:
       # failing UI test.
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     env:
       UI_TEST_SUITE: functional
       UI_SHARD: ${{ matrix.shard }}/${{ strategy.job-total }}
@@ -269,15 +300,43 @@ jobs:
         id: simulator
         run: scripts/ci/simulator-destination.sh
 
+      - name: Resolve app test dependencies
+        run: xcodebuild -resolvePackageDependencies -project Blau.xcodeproj -scheme Blau -derivedDataPath .build/DerivedData
+
+      - name: Fingerprint test build inputs
+        id: products-source
+        run: printf 'fingerprint=%s\n' "$(python3 scripts/ci/test-products.py fingerprint)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache complete test products
+        id: products
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/DerivedData/Build/Products
+          key: app-products-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-debug-coverage-${{ steps.products-source.outputs.fingerprint }}
+
       # Build first, then boot the simulator and launch the app once. On a
       # cold simulator the app's first launch outlasted XCUITest's launch
       # timeout and failed each shard's first test; in one job the unit tests
       # used to warm it up. Booting only after the build keeps the boot from
       # starving the build.
       - name: Build
+        if: steps.products.outputs.cache-hit != 'true'
         env:
+          TEST_PRODUCTS_SOURCE: ${{ steps.products-source.outputs.fingerprint }}
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-        run: make build-tests
+          XCODEBUILD_FLAGS: "-enableCodeCoverage YES"
+        run: |
+          make build-tests
+          python3 scripts/ci/test-products.py record --products .build/DerivedData/Build/Products --variant debug-coverage --expected-fingerprint "$TEST_PRODUCTS_SOURCE"
+
+      # Save successful builds before running tests. A failed test remains
+      # failed; its unmodified products can be tested again with a warm cache.
+      - name: Save complete test products
+        if: steps.products.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/DerivedData/Build/Products
+          key: ${{ steps.products.outputs.cache-primary-key }}
 
       # Three to eight minutes on the runner.
       - name: Warm up simulator
@@ -291,8 +350,8 @@ jobs:
         id: test
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
-          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-tests.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never"
-        run: make test-ui UI_SHARD="$UI_SHARD"
+          XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-tests.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never -enableCodeCoverage YES"
+        run: make test-built-ui UI_SHARD="$UI_SHARD" TEST_PRODUCT_VARIANT=debug-coverage
 
       # A selection that matched no test would otherwise pass with nothing
       # run. Also after failing tests, which count, so every run shows the
@@ -309,7 +368,7 @@ jobs:
 
       - name: Upload xcresult
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: ./.github/actions/upload-xcresult
         with:
           name: app-ui-tests-${{ matrix.shard }}-xcresult-${{ github.run_attempt }}
           path: .build/results/app-ui-tests.xcresult
@@ -356,16 +415,43 @@ jobs:
         id: simulator
         run: scripts/ci/simulator-destination.sh
 
+      - name: Resolve app test dependencies
+        run: xcodebuild -resolvePackageDependencies -project Blau.xcodeproj -scheme Blau -derivedDataPath .build/DerivedData
+
+      - name: Fingerprint test build inputs
+        id: products-source
+        run: printf 'fingerprint=%s\n' "$(python3 scripts/ci/test-products.py fingerprint)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache complete test products
+        id: products
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/DerivedData/Build/Products
+          key: app-products-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.xcode.outputs.build }}-optimized-${{ steps.products-source.outputs.fingerprint }}
+
       # Build first, then boot the simulator and launch the app once. On a
       # cold simulator the app's first launch outlasted XCUITest's launch
       # timeout and failed each shard's first test; in one job the unit tests
       # used to warm it up. Booting only after the build keeps the boot from
       # starving the build.
       - name: Build
+        if: steps.products.outputs.cache-hit != 'true'
         env:
+          TEST_PRODUCTS_SOURCE: ${{ steps.products-source.outputs.fingerprint }}
           DESTINATION: ${{ steps.simulator.outputs.destination }}
           XCODEBUILD_FLAGS: "SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
-        run: make build-tests
+        run: |
+          make build-tests
+          python3 scripts/ci/test-products.py record --products .build/DerivedData/Build/Products --variant optimized --expected-fingerprint "$TEST_PRODUCTS_SOURCE"
+
+      # Save successful builds before running tests. A failed test remains
+      # failed; its unmodified products can be tested again with a warm cache.
+      - name: Save complete test products
+        if: steps.products.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .build/DerivedData/Build/Products
+          key: ${{ steps.products.outputs.cache-primary-key }}
 
       # Three to eight minutes on the runner.
       - name: Warm up simulator
@@ -380,7 +466,7 @@ jobs:
         env:
           DESTINATION: ${{ steps.simulator.outputs.destination }}
           XCODEBUILD_FLAGS: "-resultBundlePath .build/results/app-ui-performance.xcresult -parallel-testing-enabled NO -collect-test-diagnostics never SWIFT_OPTIMIZATION_LEVEL=-O SWIFT_COMPILATION_MODE=wholemodule -enableCodeCoverage NO"
-        run: make test-ui UI_SHARD="$UI_SHARD"
+        run: make test-built-ui UI_SHARD="$UI_SHARD" TEST_PRODUCT_VARIANT=optimized
 
       # A selection that matched no test would otherwise pass with nothing
       # run. Also after failing tests, which count, so every run shows the
@@ -397,7 +483,7 @@ jobs:
 
       - name: Upload xcresult
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: ./.github/actions/upload-xcresult
         with:
           name: app-ui-performance-xcresult-${{ github.run_attempt }}
           path: .build/results/app-ui-performance.xcresult

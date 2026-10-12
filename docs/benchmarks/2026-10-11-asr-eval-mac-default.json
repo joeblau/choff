@@ -1,0 +1,2079 @@
+{
+  "commit" : "093c20f",
+  "dataset" : {
+    "audioSeconds" : 165.39,
+    "categories" : [
+      "clean",
+      "cafe",
+      "tv",
+      "accented"
+    ],
+    "fixtures" : 26,
+    "name" : "blau-asr-fixtures",
+    "utterances" : 32
+  },
+  "device" : {
+    "activeProcessorCount" : 16,
+    "chip" : "Apple M3 Max",
+    "isSimulator" : false,
+    "modelIdentifier" : "Mac15,8",
+    "operatingSystem" : "macOS 27.2 (Build 26B5101f)",
+    "physicalMemoryBytes" : 137438953472
+  },
+  "engines" : [
+    {
+      "categories" : [
+        {
+          "metrics" : {
+            "audioSeconds" : 39.6,
+            "computeSeconds" : 1.5027735139999998,
+            "counts" : {
+              "deletions" : 1,
+              "insertions" : 0,
+              "referenceWords" : 74,
+              "substitutions" : 2
+            },
+            "endOfUtterance" : {
+              "count" : 8,
+              "maximum" : 957.940875,
+              "mean" : 936.1032915000001,
+              "minimum" : 930.096625,
+              "p50" : 930.1106035,
+              "p90" : 945.5474331,
+              "p95" : 951.74415405,
+              "p99" : 956.70153081,
+              "standardDeviation" : 9.287245567234761
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 8,
+              "maximum" : 940,
+              "mean" : 933.75,
+              "minimum" : 930,
+              "p50" : 930,
+              "p90" : 940,
+              "p95" : 940,
+              "p99" : 940,
+              "standardDeviation" : 4.841229182759271
+            },
+            "failures" : 0,
+            "firstPartial" : {
+              "count" : 8,
+              "maximum" : 958.561125,
+              "mean" : 862.570682375,
+              "minimum" : 618.474958,
+              "p50" : 938.724125,
+              "p90" : 945.8512544,
+              "p95" : 952.2061897,
+              "p99" : 957.2901379399999,
+              "standardDeviation" : 138.28388104983625
+            },
+            "firstPartialAudio" : {
+              "count" : 8,
+              "maximum" : 940,
+              "mean" : 843.75,
+              "minimum" : 600,
+              "p50" : 920,
+              "p90" : 926,
+              "p95" : 933,
+              "p99" : 938.6,
+              "standardDeviation" : 138.0160769620699
+            },
+            "fixtures" : 6,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.037948826111111104,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 0,
+            "utterances" : 8,
+            "wordErrorRate" : 0.04054054054054054
+          },
+          "name" : "clean"
+        },
+        {
+          "metrics" : {
+            "audioSeconds" : 39.83,
+            "computeSeconds" : 2.3797354680000002,
+            "counts" : {
+              "deletions" : 0,
+              "insertions" : 1,
+              "referenceWords" : 70,
+              "substitutions" : 1
+            },
+            "endOfUtterance" : {
+              "count" : 8,
+              "maximum" : 1558.066208,
+              "mean" : 1279.1203645,
+              "minimum" : 748.13775,
+              "p50" : 1287.7694995000002,
+              "p90" : 1543.4954455,
+              "p95" : 1550.78082675,
+              "p99" : 1556.60913175,
+              "standardDeviation" : 237.9398765666977
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 8,
+              "maximum" : 1540,
+              "mean" : 1261.25,
+              "minimum" : 730,
+              "p50" : 1270,
+              "p90" : 1526,
+              "p95" : 1533,
+              "p99" : 1538.6,
+              "standardDeviation" : 238.03558032361465
+            },
+            "failures" : 0,
+            "firstPartial" : {
+              "count" : 8,
+              "maximum" : 1138.9575,
+              "mean" : 808.456088375,
+              "minimum" : 558.268417,
+              "p50" : 818.330333,
+              "p90" : 1068.9209830999998,
+              "p95" : 1103.93924155,
+              "p99" : 1131.95384831,
+              "standardDeviation" : 188.41558312372356
+            },
+            "firstPartialAudio" : {
+              "count" : 8,
+              "maximum" : 1120,
+              "mean" : 790,
+              "minimum" : 540,
+              "p50" : 800,
+              "p90" : 1050,
+              "p95" : 1085,
+              "p99" : 1113,
+              "standardDeviation" : 188.1488772222678
+            },
+            "fixtures" : 6,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.059747312779312084,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 0,
+            "utterances" : 8,
+            "wordErrorRate" : 0.02857142857142857
+          },
+          "name" : "cafe"
+        },
+        {
+          "metrics" : {
+            "audioSeconds" : 35.82,
+            "computeSeconds" : 2.266101123,
+            "counts" : {
+              "deletions" : 0,
+              "insertions" : 18,
+              "referenceWords" : 68,
+              "substitutions" : 1
+            },
+            "endOfUtterance" : {
+              "count" : 6,
+              "maximum" : 1488.006833,
+              "mean" : 1304.8939375,
+              "minimum" : 1168.03075,
+              "p50" : 1288.296479,
+              "p90" : 1423.104146,
+              "p95" : 1455.5554895,
+              "p99" : 1481.5165643,
+              "standardDeviation" : 100.70267303327157
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 6,
+              "maximum" : 1470,
+              "mean" : 1286.6666666666667,
+              "minimum" : 1150,
+              "p50" : 1270,
+              "p90" : 1405,
+              "p95" : 1437.5,
+              "p99" : 1463.5,
+              "standardDeviation" : 100.77477638553982
+            },
+            "failures" : 0,
+            "firstPartial" : {
+              "count" : 7,
+              "maximum" : 848.350083,
+              "mean" : 639.9778927142858,
+              "minimum" : 498.457833,
+              "p50" : 498.610625,
+              "p90" : 830.6720832,
+              "p95" : 839.5110831000001,
+              "p99" : 846.58228302,
+              "standardDeviation" : 163.60385701605625
+            },
+            "firstPartialAudio" : {
+              "count" : 7,
+              "maximum" : 830,
+              "mean" : 621.4285714285714,
+              "minimum" : 480,
+              "p50" : 480,
+              "p90" : 812,
+              "p95" : 821,
+              "p99" : 828.1999999999999,
+              "standardDeviation" : 163.5698689881982
+            },
+            "fixtures" : 6,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.06326357127303182,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 1,
+            "utterances" : 7,
+            "wordErrorRate" : 0.27941176470588236
+          },
+          "name" : "tv"
+        },
+        {
+          "metrics" : {
+            "audioSeconds" : 50.14,
+            "computeSeconds" : 1.8184417839999998,
+            "counts" : {
+              "deletions" : 3,
+              "insertions" : 0,
+              "referenceWords" : 84,
+              "substitutions" : 2
+            },
+            "endOfUtterance" : {
+              "count" : 9,
+              "maximum" : 950.122958,
+              "mean" : 930.1168611111111,
+              "minimum" : 920.103959,
+              "p50" : 930.112333,
+              "p90" : 934.1335252,
+              "p95" : 942.1282416,
+              "p99" : 948.5240147200001,
+              "standardDeviation" : 8.170001003089205
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 9,
+              "maximum" : 950,
+              "mean" : 930,
+              "minimum" : 920,
+              "p50" : 930,
+              "p90" : 934,
+              "p95" : 942,
+              "p99" : 948.4,
+              "standardDeviation" : 8.16496580927726
+            },
+            "failures" : 0,
+            "firstPartial" : {
+              "count" : 9,
+              "maximum" : 1260.483833,
+              "mean" : 1011.2730973333333,
+              "minimum" : 618.352334,
+              "p50" : 948.659125,
+              "p90" : 1259.531133,
+              "p95" : 1260.007483,
+              "p99" : 1260.388563,
+              "standardDeviation" : 251.3299416112223
+            },
+            "firstPartialAudio" : {
+              "count" : 9,
+              "maximum" : 1240,
+              "mean" : 992.2222222222222,
+              "minimum" : 600,
+              "p50" : 930,
+              "p90" : 1240,
+              "p95" : 1240,
+              "p99" : 1240,
+              "standardDeviation" : 251.12094376029594
+            },
+            "fixtures" : 8,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.03626728727562824,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 0,
+            "utterances" : 9,
+            "wordErrorRate" : 0.05952380952380952
+          },
+          "name" : "accented"
+        }
+      ],
+      "descriptor" : {
+        "id" : "parakeet-eou-320ms",
+        "kind" : "streaming",
+        "model" : "parakeetRealtimeEOU@40a23f4c",
+        "settings" : {
+          "eouDebounce" : "640 ms",
+          "maximumUtterance" : "30 s",
+          "silenceCommitDelay" : "900 ms"
+        },
+        "title" : "Parakeet realtime EOU 120M, 320 ms chunks + Silero VAD (streaming)"
+      },
+      "fixtures" : [
+        {
+          "audioSeconds" : 5.52,
+          "category" : "clean",
+          "computeSeconds" : 0.28036104,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 0
+          },
+          "hypothesis" : "can you remind me what we talked about yesterday",
+          "id" : "clean-01",
+          "reference" : "Can you remind me what we talked about yesterday",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 940,
+              "endOfUtteranceMilliseconds" : 940.235958,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 920,
+              "firstPartialMilliseconds" : 940.404167
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.75,
+          "category" : "clean",
+          "computeSeconds" : 0.322667591,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 16,
+            "substitutions" : 0
+          },
+          "hypothesis" : "i want to practice my answers for the interview on thursday start with the hardest question",
+          "id" : "clean-02",
+          "reference" : "I want to practice my answers for the interview on Thursday Start with the hardest question",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 940,
+              "endOfUtteranceMilliseconds" : 940.124334,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 600,
+              "firstPartialMilliseconds" : 618.474958
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.096625,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 940,
+              "firstPartialMilliseconds" : 958.561125
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.6899999999999995,
+          "category" : "clean",
+          "computeSeconds" : 0.20109655,
+          "counts" : {
+            "deletions" : 1,
+            "insertions" : 0,
+            "referenceWords" : 12,
+            "substitutions" : 1
+          },
+          "hypothesis" : "the meeting moved to threethirty so i have about twenty minutes",
+          "id" : "clean-03",
+          "reference" : "The meeting moved to three thirty so I have about twenty minutes",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.112416,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 920,
+              "firstPartialMilliseconds" : 938.922959
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.57,
+          "category" : "clean",
+          "computeSeconds" : 0.317277042,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 18,
+            "substitutions" : 0
+          },
+          "hypothesis" : "what did i say the budget for the trip was i think it was around two thousand dollars",
+          "id" : "clean-04",
+          "reference" : "What did I say the budget for the trip was I think it was around two thousand dollars",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.108791,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 920,
+              "firstPartialMilliseconds" : 938.70075
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.102042,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 610,
+              "firstPartialMilliseconds" : 628.211167
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.21,
+          "category" : "clean",
+          "computeSeconds" : 0.163041377,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 1
+          },
+          "hypothesis" : "at milk eggs and coffee to my shopping list",
+          "id" : "clean-05",
+          "reference" : "Add milk eggs and coffee to my shopping list",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.105291,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 920,
+              "firstPartialMilliseconds" : 938.7475
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.86,
+          "category" : "clean",
+          "computeSeconds" : 0.218329914,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "let us switch topics and talk about the product launch",
+          "id" : "clean-06",
+          "reference" : "Let us switch topics and talk about the product launch",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 940,
+              "endOfUtteranceMilliseconds" : 957.940875,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 920,
+              "firstPartialMilliseconds" : 938.542833
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.26,
+          "category" : "cafe",
+          "computeSeconds" : 0.38975638,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 11,
+            "substitutions" : 0
+          },
+          "hypothesis" : "tell me again why the investors were worried about the timeline",
+          "id" : "cafe-01",
+          "reference" : "Tell me again why the investors were worried about the timeline",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1380,
+              "endOfUtteranceMilliseconds" : 1398.329167,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 800,
+              "firstPartialMilliseconds" : 818.352083
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.04,
+          "category" : "cafe",
+          "computeSeconds" : 0.501835127,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 16,
+            "substitutions" : 0
+          },
+          "hypothesis" : "i just ordered a coffee so give me a second okay go ahead with the summary",
+          "id" : "cafe-02",
+          "reference" : "I just ordered a coffee so give me a second Okay go ahead with the summary",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1240,
+              "endOfUtteranceMilliseconds" : 1257.877083,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 800,
+              "firstPartialMilliseconds" : 818.430875
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 1520,
+              "endOfUtteranceMilliseconds" : 1537.250833,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 600,
+              "firstPartialMilliseconds" : 618.068458
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.96,
+          "category" : "cafe",
+          "computeSeconds" : 0.281140127,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 8,
+            "substitutions" : 0
+          },
+          "hypothesis" : "remember that my sister is visiting next weekend",
+          "id" : "cafe-03",
+          "reference" : "Remember that my sister is visiting next weekend",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1200,
+              "endOfUtteranceMilliseconds" : 1218.390292,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 640,
+              "firstPartialMilliseconds" : 658.357458
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.02,
+          "category" : "cafe",
+          "computeSeconds" : 0.372499125,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 1,
+            "referenceWords" : 11,
+            "substitutions" : 1
+          },
+          "hypothesis" : "what one of the three things i wanted to finish before friday",
+          "id" : "cafe-04",
+          "reference" : "What were the three things I wanted to finish before Friday",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1300,
+              "endOfUtteranceMilliseconds" : 1317.661916,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 1120,
+              "firstPartialMilliseconds" : 1138.9575
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 7.38,
+          "category" : "cafe",
+          "computeSeconds" : 0.463222541,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 14,
+            "substitutions" : 0
+          },
+          "hypothesis" : "can you read me the notes from this morning only the parts about hiring",
+          "id" : "cafe-05",
+          "reference" : "Can you read me the notes from this morning Only the parts about hiring",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1180,
+              "endOfUtteranceMilliseconds" : 1197.249667,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 800,
+              "firstPartialMilliseconds" : 818.308583
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 1540,
+              "endOfUtteranceMilliseconds" : 1558.066208,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 540,
+              "firstPartialMilliseconds" : 558.268417
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.17,
+          "category" : "cafe",
+          "computeSeconds" : 0.371282168,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "i think the second design was much easier to understand",
+          "id" : "cafe-06",
+          "reference" : "I think the second design was much easier to understand",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 730,
+              "endOfUtteranceMilliseconds" : 748.13775,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 1020,
+              "firstPartialMilliseconds" : 1038.905333
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.34,
+          "category" : "tv",
+          "computeSeconds" : 0.332589501,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 0
+          },
+          "hypothesis" : "turn this into a short list of action items",
+          "id" : "tv-01",
+          "reference" : "Turn this into a short list of action items",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1340,
+              "endOfUtteranceMilliseconds" : 1358.2014589999999,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 800,
+              "firstPartialMilliseconds" : 818.88675
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 7.7,
+          "category" : "tv",
+          "computeSeconds" : 0.487198201,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 3,
+            "referenceWords" : 15,
+            "substitutions" : 0
+          },
+          "hypothesis" : "up to the how long have we been talking about the pricing page let us wrap that up",
+          "id" : "tv-02",
+          "reference" : "How long have we been talking about the pricing page Let us wrap that up",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1470,
+              "endOfUtteranceMilliseconds" : 1488.006833,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 480,
+              "firstPartialMilliseconds" : 498.491708
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 1220,
+              "endOfUtteranceMilliseconds" : 1238.531625,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 830,
+              "firstPartialMilliseconds" : 848.350083
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.03,
+          "category" : "tv",
+          "computeSeconds" : 0.373552001,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 3,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "to the news please remember that the dentist appointment is on tuesday morning",
+          "id" : "tv-03",
+          "reference" : "Please remember that the dentist appointment is on Tuesday morning",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1290,
+              "endOfUtteranceMilliseconds" : 1308.142208,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 480,
+              "firstPartialMilliseconds" : 498.457833
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.75,
+          "category" : "tv",
+          "computeSeconds" : 0.355492297,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 12,
+            "substitutions" : 0
+          },
+          "hypothesis" : "what is a good way to explain this to a new customer",
+          "id" : "tv-04",
+          "reference" : "What is a good way to explain this to a new customer",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1250,
+              "endOfUtteranceMilliseconds" : 1268.45075,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 800,
+              "firstPartialMilliseconds" : 818.551166
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.15,
+          "category" : "tv",
+          "computeSeconds" : 0.344646081,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 10,
+            "referenceWords" : 10,
+            "substitutions" : 1
+          },
+          "hypothesis" : "possible in low back to what we said about the onboarding flow the city council has approved a new plan",
+          "id" : "tv-05",
+          "reference" : "Go back to what we said about the onboarding flow",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 2200,
+              "endOfUtteranceMilliseconds" : 2240.060125,
+              "endedByStreamEnd" : true,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 480,
+              "firstPartialMilliseconds" : 498.497084
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.85,
+          "category" : "tv",
+          "computeSeconds" : 0.372623042,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 2,
+            "referenceWords" : 12,
+            "substitutions" : 0
+          },
+          "hypothesis" : "terminal and i need a better answer for why now is the right time",
+          "id" : "tv-06",
+          "reference" : "I need a better answer for why now is the right time",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 1150,
+              "endOfUtteranceMilliseconds" : 1168.03075,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 480,
+              "firstPartialMilliseconds" : 498.610625
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.03,
+          "category" : "accented",
+          "computeSeconds" : 0.219528249,
+          "counts" : {
+            "deletions" : 1,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "you summarize the conversation we had about the budget",
+          "id" : "accented-01",
+          "reference" : "Could you summarize the conversation we had about the budget",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 950,
+              "endOfUtteranceMilliseconds" : 950.122958,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 1240,
+              "firstPartialMilliseconds" : 1259.292958
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.42,
+          "category" : "accented",
+          "computeSeconds" : 0.297097369,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 15,
+            "substitutions" : 0
+          },
+          "hypothesis" : "i would like to go over my notes before the call start from the top",
+          "id" : "accented-02",
+          "reference" : "I would like to go over my notes before the call Start from the top",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.108375,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 600,
+              "firstPartialMilliseconds" : 618.352334
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 920,
+              "endOfUtteranceMilliseconds" : 920.105,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 930,
+              "firstPartialMilliseconds" : 948.659125
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.85,
+          "category" : "accented",
+          "computeSeconds" : 0.203241586,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "remind me to send the contract to the lawyer tomorrow",
+          "id" : "accented-03",
+          "reference" : "Remind me to send the contract to the lawyer tomorrow",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.112333,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 920,
+              "firstPartialMilliseconds" : 938.540208
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.77,
+          "category" : "accented",
+          "computeSeconds" : 0.208096263,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "what questions do you think the panel will ask me",
+          "id" : "accented-04",
+          "reference" : "What questions do you think the panel will ask me",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.13025,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 920,
+              "firstPartialMilliseconds" : 938.5795
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.43,
+          "category" : "accented",
+          "computeSeconds" : 0.253859866,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "let us talk about the hiring plan for next quarter",
+          "id" : "accented-05",
+          "reference" : "Let us talk about the hiring plan for next quarter",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.124041,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 1240,
+              "firstPartialMilliseconds" : 1260.483833
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.85,
+          "category" : "accented",
+          "computeSeconds" : 0.211072167,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "can you explain the difference between the two options again",
+          "id" : "accented-06",
+          "reference" : "Can you explain the difference between the two options again",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.136167,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 600,
+              "firstPartialMilliseconds" : 619.694709
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.93,
+          "category" : "accented",
+          "computeSeconds" : 0.224264042,
+          "counts" : {
+            "deletions" : 1,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 1
+          },
+          "hypothesis" : "need till finish the presentation before the weekend",
+          "id" : "accented-07",
+          "reference" : "I need to finish the presentation before the weekend",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 930,
+              "endOfUtteranceMilliseconds" : 930.108667,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 1240,
+              "firstPartialMilliseconds" : 1258.897834
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.86,
+          "category" : "accented",
+          "computeSeconds" : 0.201282242,
+          "counts" : {
+            "deletions" : 1,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 1
+          },
+          "hypothesis" : "tell me what were decided about the new office",
+          "id" : "accented-08",
+          "reference" : "Please tell me what we decided about the new office",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 920,
+              "endOfUtteranceMilliseconds" : 920.103959,
+              "endedByStreamEnd" : false,
+              "finals" : 1,
+              "firstPartialAudioMilliseconds" : 1240,
+              "firstPartialMilliseconds" : 1258.957375
+            }
+          ]
+        }
+      ],
+      "overall" : {
+        "audioSeconds" : 165.39000000000001,
+        "computeSeconds" : 7.967051888999999,
+        "counts" : {
+          "deletions" : 4,
+          "insertions" : 19,
+          "referenceWords" : 296,
+          "substitutions" : 6
+        },
+        "endOfUtterance" : {
+          "count" : 31,
+          "maximum" : 1558.066208,
+          "mean" : 1094.2646652580645,
+          "minimum" : 748.13775,
+          "p50" : 940.235958,
+          "p90" : 1398.329167,
+          "p95" : 1512.628833,
+          "p99" : 1551.8215955,
+          "standardDeviation" : 219.76834333127076
+        },
+        "endOfUtteranceAudio" : {
+          "count" : 31,
+          "maximum" : 1540,
+          "mean" : 1085.483870967742,
+          "minimum" : 730,
+          "p50" : 940,
+          "p90" : 1380,
+          "p95" : 1495,
+          "p99" : 1534,
+          "standardDeviation" : 213.0248919224324
+        },
+        "failures" : 0,
+        "firstPartial" : {
+          "count" : 32,
+          "maximum" : 1260.483833,
+          "mean" : 842.1724153437497,
+          "minimum" : 498.457833,
+          "p50" : 833.6184165,
+          "p90" : 1246.9038006000003,
+          "p95" : 1259.10838735,
+          "p99" : 1260.11466175,
+          "standardDeviation" : 233.773655265194
+        },
+        "firstPartialAudio" : {
+          "count" : 32,
+          "maximum" : 1240,
+          "mean" : 823.4375,
+          "minimum" : 480,
+          "p50" : 815,
+          "p90" : 1228.0000000000002,
+          "p95" : 1240,
+          "p99" : 1240,
+          "standardDeviation" : 233.50066079938617
+        },
+        "fixtures" : 26,
+        "missedUtterances" : 0,
+        "realTimeFactor" : 0.04817130351895518,
+        "splitUtterances" : 0,
+        "unendedUtterances" : 1,
+        "utterances" : 32,
+        "wordErrorRate" : 0.09797297297297297
+      }
+    },
+    {
+      "categories" : [
+        {
+          "metrics" : {
+            "audioSeconds" : 39.6,
+            "computeSeconds" : 0.38421504300000003,
+            "counts" : {
+              "deletions" : 0,
+              "insertions" : 0,
+              "referenceWords" : 74,
+              "substitutions" : 0
+            },
+            "endOfUtterance" : {
+              "count" : 8,
+              "maximum" : 172.824375,
+              "mean" : 168.026880375,
+              "minimum" : 159.885,
+              "p50" : 169.2191665,
+              "p90" : 172.1638669,
+              "p95" : 172.49412095,
+              "p99" : 172.75832419,
+              "standardDeviation" : 3.920988734490414
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 8,
+              "maximum" : 120,
+              "mean" : 120,
+              "minimum" : 120,
+              "p50" : 120,
+              "p90" : 120,
+              "p95" : 120,
+              "p99" : 120,
+              "standardDeviation" : 0
+            },
+            "failures" : 0,
+            "fixtures" : 6,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.009702400075757575,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 0,
+            "utterances" : 8,
+            "wordErrorRate" : 0
+          },
+          "name" : "clean"
+        },
+        {
+          "metrics" : {
+            "audioSeconds" : 39.83,
+            "computeSeconds" : 0.36119766799999997,
+            "counts" : {
+              "deletions" : 0,
+              "insertions" : 0,
+              "referenceWords" : 70,
+              "substitutions" : 0
+            },
+            "endOfUtterance" : {
+              "count" : 8,
+              "maximum" : 173.665417,
+              "mean" : 165.14970849999997,
+              "minimum" : 159.84812499999998,
+              "p50" : 165.599021,
+              "p90" : 170.6560582,
+              "p95" : 172.1607376,
+              "p99" : 173.36448112,
+              "standardDeviation" : 4.56454574995292
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 8,
+              "maximum" : 120,
+              "mean" : 120,
+              "minimum" : 120,
+              "p50" : 120,
+              "p90" : 120,
+              "p95" : 120,
+              "p99" : 120,
+              "standardDeviation" : 0
+            },
+            "failures" : 0,
+            "fixtures" : 6,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.009068482751694702,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 0,
+            "utterances" : 8,
+            "wordErrorRate" : 0
+          },
+          "name" : "cafe"
+        },
+        {
+          "metrics" : {
+            "audioSeconds" : 35.82,
+            "computeSeconds" : 0.328593499,
+            "counts" : {
+              "deletions" : 0,
+              "insertions" : 2,
+              "referenceWords" : 68,
+              "substitutions" : 0
+            },
+            "endOfUtterance" : {
+              "count" : 7,
+              "maximum" : 172.6205,
+              "mean" : 166.94192842857143,
+              "minimum" : 160.38941599999998,
+              "p50" : 167.157292,
+              "p90" : 170.8959998,
+              "p95" : 171.75824989999998,
+              "p99" : 172.44804997999998,
+              "standardDeviation" : 3.529513207898623
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 7,
+              "maximum" : 120,
+              "mean" : 120,
+              "minimum" : 120,
+              "p50" : 120,
+              "p90" : 120,
+              "p95" : 120,
+              "p99" : 120,
+              "standardDeviation" : 0
+            },
+            "failures" : 0,
+            "fixtures" : 6,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.009173464517029592,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 0,
+            "utterances" : 7,
+            "wordErrorRate" : 0.029411764705882353
+          },
+          "name" : "tv"
+        },
+        {
+          "metrics" : {
+            "audioSeconds" : 50.14,
+            "computeSeconds" : 0.425254168,
+            "counts" : {
+              "deletions" : 2,
+              "insertions" : 0,
+              "referenceWords" : 84,
+              "substitutions" : 1
+            },
+            "endOfUtterance" : {
+              "count" : 9,
+              "maximum" : 171.950667,
+              "mean" : 167.25046311111112,
+              "minimum" : 155.769375,
+              "p50" : 168.269417,
+              "p90" : 170.1977334,
+              "p95" : 171.0742002,
+              "p99" : 171.77537364,
+              "standardDeviation" : 4.331938961623524
+            },
+            "endOfUtteranceAudio" : {
+              "count" : 9,
+              "maximum" : 120,
+              "mean" : 120,
+              "minimum" : 120,
+              "p50" : 120,
+              "p90" : 120,
+              "p95" : 120,
+              "p99" : 120,
+              "standardDeviation" : 0
+            },
+            "failures" : 0,
+            "fixtures" : 8,
+            "missedUtterances" : 0,
+            "realTimeFactor" : 0.008481335620263262,
+            "splitUtterances" : 0,
+            "unendedUtterances" : 0,
+            "utterances" : 9,
+            "wordErrorRate" : 0.03571428571428571
+          },
+          "name" : "accented"
+        }
+      ],
+      "descriptor" : {
+        "id" : "parakeet-tdt-v3",
+        "kind" : "offline",
+        "model" : "parakeetTDTv3@7dd20fe6",
+        "settings" : {
+          "leadingPadding" : "100 ms",
+          "segmentation" : "reference labels",
+          "trailingPadding" : "120 ms"
+        },
+        "title" : "Parakeet TDT 0.6B v3 per utterance (second pass, offline)"
+      },
+      "fixtures" : [
+        {
+          "audioSeconds" : 5.52,
+          "category" : "clean",
+          "computeSeconds" : 0.048654708,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Can you remind me what we talked about yesterday?",
+          "id" : "clean-01",
+          "reference" : "Can you remind me what we talked about yesterday",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 168.654708,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.75,
+          "category" : "clean",
+          "computeSeconds" : 0.091765792,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 16,
+            "substitutions" : 0
+          },
+          "hypothesis" : "I want to practice my answers for the interview on Thursday. Start with the hardest question.",
+          "id" : "clean-02",
+          "reference" : "I want to practice my answers for the interview on Thursday Start with the hardest question",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 171.88079199999999,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 159.885,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.6899999999999995,
+          "category" : "clean",
+          "computeSeconds" : 0.052824375,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 12,
+            "substitutions" : 0
+          },
+          "hypothesis" : "The meeting moved to 3.30 so I have about 20 minutes.",
+          "id" : "clean-03",
+          "reference" : "The meeting moved to three thirty so I have about twenty minutes",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 172.824375,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.57,
+          "category" : "clean",
+          "computeSeconds" : 0.091252126,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 18,
+            "substitutions" : 0
+          },
+          "hypothesis" : "What did I say the budget for the trip was? I think it was around $2,000.",
+          "id" : "clean-04",
+          "reference" : "What did I say the budget for the trip was I think it was around two thousand dollars",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 165.932292,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 165.31983400000001,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.21,
+          "category" : "clean",
+          "computeSeconds" : 0.049783625,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Add milk eggs and coffee to my shopping list.",
+          "id" : "clean-05",
+          "reference" : "Add milk eggs and coffee to my shopping list",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 169.783625,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.86,
+          "category" : "clean",
+          "computeSeconds" : 0.049934417,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Let us switch topics and talk about the product launch.",
+          "id" : "clean-06",
+          "reference" : "Let us switch topics and talk about the product launch",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 169.934417,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.26,
+          "category" : "cafe",
+          "computeSeconds" : 0.049366333,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 11,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Tell me again why the investors were worried about the timeline.",
+          "id" : "cafe-01",
+          "reference" : "Tell me again why the investors were worried about the timeline",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 169.366333,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.04,
+          "category" : "cafe",
+          "computeSeconds" : 0.085452417,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 16,
+            "substitutions" : 0
+          },
+          "hypothesis" : "I just ordered a coffee, so give me a second. Okay go ahead with the summary.",
+          "id" : "cafe-02",
+          "reference" : "I just ordered a coffee so give me a second Okay go ahead with the summary",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 165.604292,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 159.84812499999998,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.96,
+          "category" : "cafe",
+          "computeSeconds" : 0.04559375,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 8,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Remember that my sister is visiting next weekend.",
+          "id" : "cafe-03",
+          "reference" : "Remember that my sister is visiting next weekend",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 165.59375,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.02,
+          "category" : "cafe",
+          "computeSeconds" : 0.053665417,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 11,
+            "substitutions" : 0
+          },
+          "hypothesis" : "What were the three things I wanted to finish before Friday?",
+          "id" : "cafe-04",
+          "reference" : "What were the three things I wanted to finish before Friday",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 173.665417,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 7.38,
+          "category" : "cafe",
+          "computeSeconds" : 0.080705334,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 14,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Can you read me the notes from this morning? Only the parts about hiring.",
+          "id" : "cafe-05",
+          "reference" : "Can you read me the notes from this morning Only the parts about hiring",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 160.706292,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 159.999042,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.17,
+          "category" : "cafe",
+          "computeSeconds" : 0.046414417,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "I think the second design was much easier to understand.",
+          "id" : "cafe-06",
+          "reference" : "I think the second design was much easier to understand",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 166.41441700000001,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.34,
+          "category" : "tv",
+          "computeSeconds" : 0.046169,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Turn this into a short list of action items.",
+          "id" : "tv-01",
+          "reference" : "Turn this into a short list of action items",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 166.169,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 7.7,
+          "category" : "tv",
+          "computeSeconds" : 0.087778416,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 2,
+            "referenceWords" : 15,
+            "substitutions" : 0
+          },
+          "hypothesis" : "How long have we been talking about the pricing page? Let us wrap that up with the",
+          "id" : "tv-02",
+          "reference" : "How long have we been talking about the pricing page Let us wrap that up",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 167.389,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 160.38941599999998,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.03,
+          "category" : "tv",
+          "computeSeconds" : 0.0526205,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Please remember that the dentist appointment is on Tuesday morning.",
+          "id" : "tv-03",
+          "reference" : "Please remember that the dentist appointment is on Tuesday morning",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 172.6205,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.75,
+          "category" : "tv",
+          "computeSeconds" : 0.049746333,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 12,
+            "substitutions" : 0
+          },
+          "hypothesis" : "What is a good way to explain this to a new customer?",
+          "id" : "tv-04",
+          "reference" : "What is a good way to explain this to a new customer",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 169.746333,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.15,
+          "category" : "tv",
+          "computeSeconds" : 0.045121958,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Go back to what we said about the onboarding flow.",
+          "id" : "tv-05",
+          "reference" : "Go back to what we said about the onboarding flow",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 165.121958,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.85,
+          "category" : "tv",
+          "computeSeconds" : 0.047157292,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 12,
+            "substitutions" : 0
+          },
+          "hypothesis" : "I need a better answer for why now is the right time.",
+          "id" : "tv-06",
+          "reference" : "I need a better answer for why now is the right time",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 167.157292,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.03,
+          "category" : "accented",
+          "computeSeconds" : 0.04708375,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Could you summarize the conversation we had about the budget?",
+          "id" : "accented-01",
+          "reference" : "Could you summarize the conversation we had about the budget",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 167.08375,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 8.42,
+          "category" : "accented",
+          "computeSeconds" : 0.082920042,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 15,
+            "substitutions" : 0
+          },
+          "hypothesis" : "I would like to go over my notes before the call. Start from the top.",
+          "id" : "accented-02",
+          "reference" : "I would like to go over my notes before the call Start from the top",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 167.150667,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            },
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 155.769375,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.85,
+          "category" : "accented",
+          "computeSeconds" : 0.051950667,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Remind me to send the contract to the lawyer tomorrow.",
+          "id" : "accented-03",
+          "reference" : "Remind me to send the contract to the lawyer tomorrow",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 171.950667,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.77,
+          "category" : "accented",
+          "computeSeconds" : 0.047033333,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "What questions do you think the panel will ask me?",
+          "id" : "accented-04",
+          "reference" : "What questions do you think the panel will ask me",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 167.033333,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 6.43,
+          "category" : "accented",
+          "computeSeconds" : 0.048578042,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Let us talk about the hiring plan for next quarter.",
+          "id" : "accented-05",
+          "reference" : "Let us talk about the hiring plan for next quarter",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 168.578042,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.85,
+          "category" : "accented",
+          "computeSeconds" : 0.048269417,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Can you explain the difference between the two options again?",
+          "id" : "accented-06",
+          "reference" : "Can you explain the difference between the two options again",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 168.269417,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.93,
+          "category" : "accented",
+          "computeSeconds" : 0.0497595,
+          "counts" : {
+            "deletions" : 2,
+            "insertions" : 0,
+            "referenceWords" : 9,
+            "substitutions" : 1
+          },
+          "hypothesis" : "Inito finish the presentation before the weekend.",
+          "id" : "accented-07",
+          "reference" : "I need to finish the presentation before the weekend",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 169.7595,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        },
+        {
+          "audioSeconds" : 5.86,
+          "category" : "accented",
+          "computeSeconds" : 0.049659417,
+          "counts" : {
+            "deletions" : 0,
+            "insertions" : 0,
+            "referenceWords" : 10,
+            "substitutions" : 0
+          },
+          "hypothesis" : "Please tell me what we decided about the new office.",
+          "id" : "accented-08",
+          "reference" : "Please tell me what we decided about the new office",
+          "utterances" : [
+            {
+              "endOfUtteranceAudioMilliseconds" : 120,
+              "endOfUtteranceMilliseconds" : 169.659417,
+              "endedByStreamEnd" : false,
+              "finals" : 1
+            }
+          ]
+        }
+      ],
+      "overall" : {
+        "audioSeconds" : 165.39000000000001,
+        "computeSeconds" : 1.499260378,
+        "counts" : {
+          "deletions" : 2,
+          "insertions" : 2,
+          "referenceWords" : 296,
+          "substitutions" : 1
+        },
+        "endOfUtterance" : {
+          "count" : 32,
+          "maximum" : 173.665417,
+          "mean" : 166.8518868125,
+          "minimum" : 155.769375,
+          "p50" : 167.1539795,
+          "p90" : 171.9436795,
+          "p95" : 172.71224375,
+          "p99" : 173.40469398,
+          "standardDeviation" : 4.262767705852594
+        },
+        "endOfUtteranceAudio" : {
+          "count" : 32,
+          "maximum" : 120,
+          "mean" : 120,
+          "minimum" : 120,
+          "p50" : 120,
+          "p90" : 120,
+          "p95" : 120,
+          "p99" : 120,
+          "standardDeviation" : 0
+        },
+        "failures" : 0,
+        "fixtures" : 26,
+        "missedUtterances" : 0,
+        "realTimeFactor" : 0.009065000169296813,
+        "splitUtterances" : 0,
+        "unendedUtterances" : 0,
+        "utterances" : 32,
+        "wordErrorRate" : 0.016891891891891893
+      }
+    }
+  ],
+  "gate" : {
+    "checks" : [
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 0.13,
+        "metric" : "WER",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.09797297297297297
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 0.1,
+        "metric" : "WER accented",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.05952380952380952
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 0.07,
+        "metric" : "WER cafe",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.02857142857142857
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 0.08,
+        "metric" : "WER clean",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.04054054054054054
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 0.33,
+        "metric" : "WER tv",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.27941176470588236
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 2000,
+        "metric" : "first partial p95",
+        "passed" : true,
+        "unit" : "milliseconds",
+        "value" : 1259.10838735
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 1400,
+        "metric" : "first partial p95 (audio)",
+        "passed" : true,
+        "unit" : "milliseconds",
+        "value" : 1240
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 3500,
+        "metric" : "end of utterance p95",
+        "passed" : true,
+        "unit" : "milliseconds",
+        "value" : 1512.628833
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 1900,
+        "metric" : "end of utterance p95 (audio)",
+        "passed" : true,
+        "unit" : "milliseconds",
+        "value" : 1495
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 0.5,
+        "metric" : "RTF",
+        "passed" : true,
+        "unit" : "factor",
+        "value" : 0.04817130351895518
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 1,
+        "metric" : "missed utterances",
+        "passed" : true,
+        "unit" : "count",
+        "value" : 0
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 1,
+        "metric" : "split utterances",
+        "passed" : true,
+        "unit" : "count",
+        "value" : 0
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 3,
+        "metric" : "unended utterances",
+        "passed" : true,
+        "unit" : "count",
+        "value" : 1
+      },
+      {
+        "engine" : "parakeet-eou-320ms",
+        "limit" : 0,
+        "metric" : "failures",
+        "passed" : true,
+        "unit" : "count",
+        "value" : 0
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0.03,
+        "metric" : "WER",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.016891891891891893
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0.08,
+        "metric" : "WER accented",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.03571428571428571
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0.05,
+        "metric" : "WER cafe",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0.05,
+        "metric" : "WER clean",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0.08,
+        "metric" : "WER tv",
+        "passed" : true,
+        "unit" : "ratio",
+        "value" : 0.029411764705882353
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 5000,
+        "metric" : "end of utterance p95",
+        "passed" : true,
+        "unit" : "milliseconds",
+        "value" : 172.71224375
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 180,
+        "metric" : "end of utterance p95 (audio)",
+        "passed" : true,
+        "unit" : "milliseconds",
+        "value" : 120
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 1,
+        "metric" : "RTF",
+        "passed" : true,
+        "unit" : "factor",
+        "value" : 0.009065000169296813
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0,
+        "metric" : "missed utterances",
+        "passed" : true,
+        "unit" : "count",
+        "value" : 0
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0,
+        "metric" : "split utterances",
+        "passed" : true,
+        "unit" : "count",
+        "value" : 0
+      },
+      {
+        "engine" : "parakeet-tdt-v3",
+        "limit" : 0,
+        "metric" : "failures",
+        "passed" : true,
+        "unit" : "count",
+        "value" : 0
+      }
+    ]
+  },
+  "generatedAt" : "2026-10-11T06:30:53Z",
+  "schemaVersion" : 1
+}

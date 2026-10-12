@@ -1,0 +1,405 @@
+{
+  "date_utc": "2026-10-11",
+  "production_source_commit": "093c20fe638bcfd6c0761f758271946c08152696",
+  "host": {
+    "cpu": "Apple M3 Max",
+    "memory_bytes": 137438953472,
+    "macos": "27.2"
+  },
+  "asr_hour": {
+    "test": "ParakeetLiveTests.anHourOfSpeechKeepsMemoryAndChunkTimeFlat",
+    "pinned_eou_model_revision": "40a23f4c0b333aa17ad8c0f2ea47ec2347f2f355",
+    "suite_functions_passed": 3,
+    "suite_failed": 0,
+    "suite_skipped": 0,
+    "audio_minutes": 60,
+    "wall_seconds": 148.02078425000002,
+    "utterances": 704,
+    "chunks": 7808,
+    "mean_chunk_ms": 18.581876599129096,
+    "slowest_chunk_ms": 92.464666,
+    "settled_early_mean_chunk_ms": 18.740184015798075,
+    "settled_late_mean_chunk_ms": 18.563098168523293,
+    "settled_footprint_growth_mb_rounded": 0,
+    "minute_samples": [
+      {
+        "minute": 1,
+        "chunks": 128,
+        "mean_chunk_ms": 19.274814421875,
+        "footprint_mb_rounded": 171
+      },
+      {
+        "minute": 2,
+        "chunks": 128,
+        "mean_chunk_ms": 18.8951728671875,
+        "footprint_mb_rounded": 171
+      },
+      {
+        "minute": 3,
+        "chunks": 130,
+        "mean_chunk_ms": 18.448843876923075,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 4,
+        "chunks": 128,
+        "mean_chunk_ms": 18.433508796875,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 5,
+        "chunks": 130,
+        "mean_chunk_ms": 18.527363753846153,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 6,
+        "chunks": 125,
+        "mean_chunk_ms": 18.66555676,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 7,
+        "chunks": 130,
+        "mean_chunk_ms": 18.466758023076924,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 8,
+        "chunks": 128,
+        "mean_chunk_ms": 19.0808141328125,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 9,
+        "chunks": 130,
+        "mean_chunk_ms": 18.97348556153846,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 10,
+        "chunks": 128,
+        "mean_chunk_ms": 18.514305601562498,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 11,
+        "chunks": 129,
+        "mean_chunk_ms": 18.55594637984496,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 12,
+        "chunks": 133,
+        "mean_chunk_ms": 18.45121115037594,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 13,
+        "chunks": 132,
+        "mean_chunk_ms": 18.729179325757574,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 14,
+        "chunks": 133,
+        "mean_chunk_ms": 18.77968018045113,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 15,
+        "chunks": 126,
+        "mean_chunk_ms": 19.43911411904762,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 16,
+        "chunks": 132,
+        "mean_chunk_ms": 18.418042037878788,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 17,
+        "chunks": 126,
+        "mean_chunk_ms": 18.601345587301587,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 18,
+        "chunks": 132,
+        "mean_chunk_ms": 18.635232674242424,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 19,
+        "chunks": 127,
+        "mean_chunk_ms": 18.59374738582677,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 20,
+        "chunks": 129,
+        "mean_chunk_ms": 18.40600318604651,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 21,
+        "chunks": 129,
+        "mean_chunk_ms": 18.53118023255814,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 22,
+        "chunks": 129,
+        "mean_chunk_ms": 18.45936075968992,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 23,
+        "chunks": 128,
+        "mean_chunk_ms": 18.6380445859375,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 24,
+        "chunks": 129,
+        "mean_chunk_ms": 18.403352403100776,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 25,
+        "chunks": 129,
+        "mean_chunk_ms": 18.680116604651158,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 26,
+        "chunks": 128,
+        "mean_chunk_ms": 18.690498703124998,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 27,
+        "chunks": 126,
+        "mean_chunk_ms": 18.533672642857145,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 28,
+        "chunks": 133,
+        "mean_chunk_ms": 18.454079556390976,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 29,
+        "chunks": 133,
+        "mean_chunk_ms": 18.47199689473684,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 30,
+        "chunks": 132,
+        "mean_chunk_ms": 18.49797346969697,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 31,
+        "chunks": 132,
+        "mean_chunk_ms": 18.43672340909091,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 32,
+        "chunks": 127,
+        "mean_chunk_ms": 18.534340866141733,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 33,
+        "chunks": 131,
+        "mean_chunk_ms": 18.497690870229007,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 34,
+        "chunks": 127,
+        "mean_chunk_ms": 18.431020968503937,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 35,
+        "chunks": 129,
+        "mean_chunk_ms": 18.483957674418605,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 36,
+        "chunks": 130,
+        "mean_chunk_ms": 18.559191984615385,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 37,
+        "chunks": 127,
+        "mean_chunk_ms": 18.431701102362204,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 38,
+        "chunks": 131,
+        "mean_chunk_ms": 18.563196832061067,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 39,
+        "chunks": 125,
+        "mean_chunk_ms": 18.555933648,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 40,
+        "chunks": 130,
+        "mean_chunk_ms": 18.498633038461538,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 41,
+        "chunks": 128,
+        "mean_chunk_ms": 18.29888996875,
+        "footprint_mb_rounded": 161
+      },
+      {
+        "minute": 42,
+        "chunks": 130,
+        "mean_chunk_ms": 18.565295861538463,
+        "footprint_mb_rounded": 162
+      },
+      {
+        "minute": 43,
+        "chunks": 128,
+        "mean_chunk_ms": 18.566418648437498,
+        "footprint_mb_rounded": 162
+      },
+      {
+        "minute": 44,
+        "chunks": 128,
+        "mean_chunk_ms": 18.65587234375,
+        "footprint_mb_rounded": 162
+      },
+      {
+        "minute": 45,
+        "chunks": 133,
+        "mean_chunk_ms": 18.370090857142856,
+        "footprint_mb_rounded": 162
+      },
+      {
+        "minute": 46,
+        "chunks": 133,
+        "mean_chunk_ms": 18.578864706766915,
+        "footprint_mb_rounded": 162
+      },
+      {
+        "minute": 47,
+        "chunks": 132,
+        "mean_chunk_ms": 18.442382575757577,
+        "footprint_mb_rounded": 162
+      },
+      {
+        "minute": 48,
+        "chunks": 127,
+        "mean_chunk_ms": 18.494023866141735,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 49,
+        "chunks": 131,
+        "mean_chunk_ms": 18.769131641221374,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 50,
+        "chunks": 127,
+        "mean_chunk_ms": 18.823786787401577,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 51,
+        "chunks": 132,
+        "mean_chunk_ms": 18.59477614393939,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 52,
+        "chunks": 126,
+        "mean_chunk_ms": 18.39241468253968,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 53,
+        "chunks": 130,
+        "mean_chunk_ms": 18.489140423076925,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 54,
+        "chunks": 128,
+        "mean_chunk_ms": 18.472185921875,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 55,
+        "chunks": 130,
+        "mean_chunk_ms": 18.44715320769231,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 56,
+        "chunks": 128,
+        "mean_chunk_ms": 18.528745117187498,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 57,
+        "chunks": 128,
+        "mean_chunk_ms": 18.5478847265625,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 58,
+        "chunks": 129,
+        "mean_chunk_ms": 18.698741286821704,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 59,
+        "chunks": 128,
+        "mean_chunk_ms": 18.4707085703125,
+        "footprint_mb_rounded": 160
+      },
+      {
+        "minute": 60,
+        "chunks": 127,
+        "mean_chunk_ms": 18.56941114173228,
+        "footprint_mb_rounded": 160
+      }
+    ],
+    "assertions_and_budgets_unchanged": true,
+    "scope": "Fast replay through the real model with scripted VAD and ManualClock; not an hour of wall-clock microphone recording or a locked/background phone run."
+  },
+  "topic_labels": {
+    "suite": "FoundationModelsTopicLabelerTests",
+    "test_functions_passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "actual_foundation_models_labels": 22,
+    "every_title_at_most_five_words": true,
+    "true_boundaries_confirmed": 8,
+    "true_boundaries_total": 8,
+    "digressions_vetoed": 0,
+    "digressions_total": 1,
+    "latency_p50_seconds": 1.655918,
+    "latency_p90_seconds": 1.868976875,
+    "latency_max_seconds": 2.334416417,
+    "limitation": "The model did not veto the brief digression; streaming hysteresis tests remain separate. Mac results do not establish physical-phone label latency."
+  }
+}

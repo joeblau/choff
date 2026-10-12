@@ -446,6 +446,40 @@ expect "ui-test-shard: a performance selector that ran zero tests fails" \
     env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=performance XCRESULT_SUMMARY_JSON="$work/summary-0.json" \
     "$shard" --check 1/1 unused.xcresult
 
+# A long case gets its own shard; unknown cases still appear exactly once.
+cat >"$work/timings.json" <<'EOF'
+{ "durationSeconds": { "OtherUITests/testOther": 90, "TopicDetailUITests/testShowsDetail": 1 } }
+EOF
+expect "ui-test-shard: balances a long functional case into its own shard" \
+    0 "OtherUITests/testOther" \
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/timings.json" \
+    "$shard" --list 1/2
+expect "ui-test-shard: retains the remaining functional case" \
+    0 "TopicDetailUITests/testShowsDetail" \
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/timings.json" \
+    "$shard" --list 2/2
+cat >>"$partitioned/TopicDetailUITests.swift" <<'EOF'
+final class NewUITests: XCTestCase {
+    func testWithoutRecordedTiming() {}
+}
+EOF
+: >"$work/balanced-union"
+for k in 1 2 3; do
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/timings.json" \
+        "$shard" --list "$k/3" >>"$work/balanced-union"
+done
+env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional "$shard" --list 1/1 >"$work/balanced-all"
+if [ "$(LC_ALL=C sort "$work/balanced-union")" = "$(cat "$work/balanced-all")" ]; then
+    pass "ui-test-shard: balanced shards retain every case, including a new unrecorded case, exactly once"
+else
+    fail "ui-test-shard: balanced shards retain every case exactly once"
+fi
+printf '{ "durationSeconds": { "OtherUITests/testOther": -1 } }\n' >"$work/invalid-timings.json"
+expect "ui-test-shard: rejects invalid scheduling durations instead of dropping tests" \
+    2 "" \
+    env UI_TESTS_DIR="$partitioned" UI_TEST_SUITE=functional UI_SHARD_TIMINGS="$work/invalid-timings.json" \
+    "$shard" --list 1/2
+
 # The real UI tests: every test-like method is placed (the script fails
 # otherwise), and the shards of ci.yml's app-ui-tests matrix (shard: [1, ..., N],
 # run as K/N) cover them all exactly once.
@@ -565,15 +599,27 @@ else
     pass "ci.yml maps no repository secrets into jobs"
 fi
 
-# Third-party code runs with the repo token, so every action is pinned to a
-# full commit SHA rather than a movable tag.
-unpinned=$(grep -E '^[[:space:]-]*uses:' "$work/workflow-config" | grep -Ev 'uses: [^@[:space:]]+@[0-9a-f]{40}( |$)' || true)
+# Third-party code runs with the repo token, so every external action is
+# pinned to a full commit SHA, including actions called by local composites.
+cp "$work/workflow-config" "$work/action-config"
+for action in "$repo"/.github/actions/*/action.yml; do
+    [ -f "$action" ] || continue
+    grep -Ev '^[[:space:]]*#' "$action" >>"$work/action-config"
+done
+unpinned=$(grep -E '^[[:space:]-]*uses:' "$work/action-config" | grep -Ev 'uses: ([^@[:space:]]+@[0-9a-f]{40}|\./\.github/actions/[A-Za-z0-9_-]+)( |$)' || true)
 if [ -z "$unpinned" ]; then
-    pass "ci.yml pins every action to a commit SHA"
+    pass "ci.yml and local composites pin every external action to a commit SHA"
 else
-    fail "ci.yml pins every action to a commit SHA"
+    fail "ci.yml and local composites pin every external action to a commit SHA"
     echo "$unpinned" | sed 's/^/       /'
 fi
+for action in $(sed -n 's|.*uses: \(\./\.github/actions/[A-Za-z0-9_-]*\).*|\1|p' "$work/action-config"); do
+    if [ -f "$repo/$action/action.yml" ]; then
+        pass "local action $action exists in the checked-out source"
+    else
+        fail "local action $action exists in the checked-out source"
+    fi
+done
 
 for job in lint package-tests app-unit-tests app-ui-tests app-ui-performance app-tests perf-kit perf soak asr-eval memory-eval; do
     if grep -Eq "^  $job:" "$workflow"; then

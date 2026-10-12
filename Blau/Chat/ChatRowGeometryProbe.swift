@@ -12,30 +12,30 @@
     struct ChatRowGeometryProbe: ViewModifier {
         let identifier: String
         @Environment(\.reportsChatRowFrames) private var reportsFrames
-        @State private var rectangle = CGRect.zero
 
         func body(content: Content) -> some View {
             if reportsFrames {
                 content
-                    .onGeometryChange(for: CGRect.self) {
-                        $0.frame(in: .global)
-                    } action: {
-                        rectangle = $0
-                    }
                     .overlay(alignment: .topLeading) {
-                        Text("")
-                            .frame(width: 1, height: 1)
-                            .accessibilityElement(children: .ignore)
-                            .accessibilityLabel("Transcript row layout")
-                            .accessibilityValue(Text(verbatim: geometryValue))
-                            .accessibilityIdentifier("\(identifier).geometry")
+                        // Read this layout pass directly. Publishing a stored
+                        // rectangle schedules another pass and can expose the
+                        // previous text size while the viewport is settling.
+                        GeometryReader { geometry in
+                            Text("")
+                                .frame(width: 1, height: 1)
+                                .accessibilityElement(children: .ignore)
+                                .accessibilityLabel("Transcript row layout")
+                                .accessibilityValue(Text(verbatim: geometryValue(geometry.frame(in: .global))))
+                                .accessibilityIdentifier("\(identifier).geometry")
+                        }
+                        .allowsHitTesting(false)
                     }
             } else {
                 content
             }
         }
 
-        private var geometryValue: String {
+        private func geometryValue(_ rectangle: CGRect) -> String {
             "\(rectangle.minX),\(rectangle.minY),\(rectangle.width),\(rectangle.height)"
         }
     }
